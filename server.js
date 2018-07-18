@@ -15,7 +15,7 @@ app.get('/salesforce/authToken', salesforce.authToken)
 app.get('/salesforce', salesforce.query)
 
 // serve
-const port = 2018
+const port = process.env.PORT || 2018
 
 app.listen(port, () => {
     console.log(`app listening on ${port}`)
