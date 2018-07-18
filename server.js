@@ -2,6 +2,7 @@
 const express = require('express')
 const app = express()
 const parser = require('body-parser')
+require('dotenv').config()
 
 // imports
 const salesforce = require('./apis/salesforce')
@@ -10,6 +11,7 @@ const salesforce = require('./apis/salesforce')
 app.use(parser.urlencoded({ extended: false }))
 
 // REST api
+app.get('/salesforce/authToken', salesforce.authToken)
 app.get('/salesforce', salesforce.query)
 
 // serve
