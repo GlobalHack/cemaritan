@@ -11,11 +11,12 @@ exports.authToken = (req, res) => {
     const password = process.env.salesforcePassword
     const securityToken = process.env.salesforceSecurityToken
     const username = process.env.salesforceUsername
-    const url = `https://login.salesforce.com/services/oauth2/authorize?grant_type=password&client_id=${clientId}&client_secret=${clientSecret}&username=${username}&password=${password}${securityToken}`
+    // const url = `https://login.salesforce.com/services/oauth2/authorize?response_type=token&client_id=${clientId}&redirect_uri=https%3A%2F%2Fwww.mysite.com%2Fuser_callback.jsp`
+    const url = `https://login.salesforce.com/services/oauth2/token?grant_type=password&client_id=${clientId}&client_secret=${clientSecret}&username=${username}&password=${password}${securityToken}`
     const opts = {
         method: 'POST',
         headers: new Headers({
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded', //application/json
         })
     }
     fetch(url, opts)
