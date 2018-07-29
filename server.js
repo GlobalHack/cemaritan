@@ -11,7 +11,7 @@ const salesforce = require('./apis/salesforce')
 app.use(parser.urlencoded({ extended: false }))
 
 // REST api
-app.get('/salesforce/authToken', salesforce.authToken)
+// app.get('/salesforce/authToken', salesforce.authToken)
 app.get('/salesforce', salesforce.query)
 
 // serve
