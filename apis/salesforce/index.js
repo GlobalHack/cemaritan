@@ -16,9 +16,8 @@ const getAuthToken = () => {
         })
     }
 
-    // TODO add check for existing authToken before fetching a new one
-    // if (!authToken) {
-        return fetch(url, opts)
+    return !authToken
+        ? fetch(url, opts)
             .then(result => result.json())
             .then(result => {
                 authToken = result
@@ -28,7 +27,7 @@ const getAuthToken = () => {
                 console.log(err)
                 return res.json(err)
             })
-    // }
+        : new Promise((resolve) => resolve(authToken))
 }
 
 // GET /salesforce/all
@@ -79,7 +78,7 @@ exports.getRecord = (req, res) => {
         })
 }
 
-// PUT /salesforce
+// PATCH /salesforce
 exports.updateRecord = (req, res) => {
     const id = 'a0oQ0000005Un3HIAS'
     return getAuthToken()
@@ -96,8 +95,10 @@ exports.updateRecord = (req, res) => {
             }
             return fetch(url, opts)
         })
-        .then(result => {
-            return res.status(result.status).json(result)
+        .then(response => {
+            return response.status == '204'
+                ? res.status(200).json({ message: 'Record updated successfully!'})
+                : res.status(response.status).json(res)
         })
         .catch(err => {
             console.log(err)

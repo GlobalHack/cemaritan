@@ -15,7 +15,7 @@ app.use(parser.urlencoded({ extended: false }))
 app.get('/salesforce', salesforce.getRecord)
 app.get('/salesforce/all', salesforce.getAll)
 
-app.put('/salesforce', salesforce.updateRecord)
+app.patch('/salesforce', salesforce.updateRecord)
 
 // serve
 const port = process.env.PORT || 2018
