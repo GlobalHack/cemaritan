@@ -8,7 +8,6 @@ const getAuthToken = () => {
     const password = process.env.salesforcePassword
     const securityToken = process.env.salesforceSecurityToken
     const username = process.env.salesforceUsername
-    // const url = `https://login.salesforce.com/services/oauth2/authorize?response_type=token&client_id=${clientId}&redirect_uri=https%3A%2F%2Fwww.mysite.com%2Fuser_callback.jsp`
     const url = `https://test.salesforce.com/services/oauth2/token?grant_type=password&client_id=${clientId}&client_secret=${clientSecret}&username=${username}&password=${password}${securityToken}`
     const opts = {
         method: 'POST',
@@ -16,9 +15,39 @@ const getAuthToken = () => {
             'Content-Type': 'application/x-www-form-urlencoded',
         })
     }
-    return fetch(url, opts)
+
+    // TODO add check for existing authToken before fetching a new one
+    // if (!authToken) {
+        return fetch(url, opts)
+            .then(result => result.json())
+            .then(result => {
+                authToken = result
+                return result
+            })
+            .catch(err => {
+                console.log(err)
+                return res.json(err)
+            })
+    // }
+}
+
+// GET /salesforce/all
+exports.getAll = (req, res) => {
+    return getAuthToken()
+        .then(token => {
+            const url = 'https://cs3.salesforce.com/services/data/v43.0/sobjects/OLI_Client__c'
+            const opts = {
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    'Authorization': `${token.token_type} ${token.access_token}`
+                })
+            }
+            return fetch(url, opts)
+        })
         .then(result => result.json())
-        .then(result => result)
+        .then(result => {
+            return res.status(200).json(result)
+        })
         .catch(err => {
             console.log(err)
             return res.json(err)
@@ -26,31 +55,52 @@ const getAuthToken = () => {
 }
 
 // GET /salesforce
-exports.query = async (req, res) => {
-    if (!authToken) {
-        getAuthToken()
-            .then(token => {
-                authToken = token.access_token
-                return authToken
-            })
-            .then(token => {
-                const url = 'https://cs3.salesforce.com/services/data/v43.0/'
-                const opts = {
-                    headers: new Headers({
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    })
-                }
-                return fetch(url, opts)
-            })
-            .then(result => result.json())
-            .then(result => {
-                console.log('result', result)
-                return res.status(200).json(result)
-            })
-            .catch(err => {
-                console.log(err)
-                return res.json(err)
-            })
-    }
+exports.getRecord = (req, res) => {
+    const id = 'a0oQ0000005Un3HIAS'
+
+    return getAuthToken()
+        .then(token => {
+            const url = `https://cs3.salesforce.com/services/data/v43.0/sobjects/OLI_Client__c/${id}`
+            const opts = {
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    'Authorization': `${token.token_type} ${token.access_token}`
+                })
+            }
+            return fetch(url, opts)
+        })
+        .then(result => result.json())
+        .then(result => {
+            return res.status(200).json(result)
+        })
+        .catch(err => {
+            console.log(err)
+            return res.json(err)
+        })
+}
+
+// PUT /salesforce
+exports.updateRecord = (req, res) => {
+    const id = 'a0oQ0000005Un3HIAS'
+    return getAuthToken()
+        .then(record => {
+            const updatedRecord = { First_Name__c: 'Joshua', Middle_Name__c: 'Tree', Last_Name__c: 'Stäzrad' }
+            const url = `https://cs3.salesforce.com/services/data/v43.0/sobjects/OLI_Client__c/${id}`
+            const opts = {
+                method: 'PATCH',
+                body: JSON.stringify(updatedRecord),
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    'Authorization': `${authToken.token_type} ${authToken.access_token}`
+                })
+            }
+            return fetch(url, opts)
+        })
+        .then(result => {
+            return res.status(result.status).json(result)
+        })
+        .catch(err => {
+            console.log(err)
+            return res.json(err)
+        })
 }

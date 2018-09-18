@@ -12,7 +12,10 @@ app.use(parser.urlencoded({ extended: false }))
 
 // REST api
 // app.get('/salesforce/authToken', salesforce.authToken)
-app.get('/salesforce', salesforce.query)
+app.get('/salesforce', salesforce.getRecord)
+app.get('/salesforce/all', salesforce.getAll)
+
+app.put('/salesforce', salesforce.updateRecord)
 
 // serve
 const port = process.env.PORT || 2018
