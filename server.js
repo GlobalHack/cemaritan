@@ -3,28 +3,12 @@ const express = require('express')
 const app = express()
 const parser = require('body-parser')
 require('dotenv').config()
-const { PythonShell } = require('python-shell')
 
 // imports
 const salesforce = require('./apis/salesforce')
-// const pyshell = new PythonShell('./python/sample.py')
 
-var options = {
-    mode: 'text',
-    pythonOptions: ['-u'],
-    args: ['value1', 'value2', 'value3']
-};
-
-PythonShell.run('./python/sample.py', options, (err, results) => {
-    if (err) throw err;
-    // results is an array consisting of messages collected during execution
-    console.log('results: %j', results);
-});
-
-// pyshell.on('message', function (message) {
-//     // received a message sent from the Python script (a simple "print" statement)
-//     console.log(message);
-// });
+const python = require('./scripts/converter')
+python.run()
 
 // middleware
 app.use(parser.urlencoded({ extended: false }))
