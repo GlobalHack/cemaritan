@@ -1,7 +1,7 @@
 const { PythonShell } = require('python-shell')
 const clientJSON = require('../data/client.json')
 const options = {
-    args: [clientJSON]
+    args: [JSON.stringify(clientJSON)]
 }
 
 exports.run = () => PythonShell.run('./conversion/__init__.py', options, (err, results) => {

@@ -5,7 +5,7 @@ from typing import Dict
 
 def load_mapping() -> Dict:
     """Load the OLI to HIMS mapping into a dict."""
-    return json.load(open('oli_mapping.json', 'r'))
+    return json.load(open('./conversion/oli_mapping.json', 'r'))
 
 
 def convert_record(record: Dict, mapping: Dict) -> Dict[str, Dict[str, str]]:
@@ -26,7 +26,7 @@ def convert_record(record: Dict, mapping: Dict) -> Dict[str, Dict[str, str]]:
                 hmis = elt['HMIS']
                 csv_files.setdefault(hmis['csv filename'], {})[hmis['element']] = source_value
                 mapped = True
-                
+
         else:
             for source in elt['Source']:
                 source_object = source['SF Object']
@@ -53,7 +53,7 @@ def write_record_to_csv(converted_record: Dict) -> Dict:
             header = data.keys()
             f.write('\t'.join(header))
             f.write('\n')
-            f.write('\t'.join(data[k] for k in header))            
+            f.write('\t'.join(data[k] for k in header))
 
 
 def convert(record: Dict) -> Dict[str, Dict[str, str]]:
