@@ -59,6 +59,7 @@ exports.getRecord = (req, res) => {
 
     return getAuthToken()
         .then(token => {
+            console.log(token)
             const url = `https://cs3.salesforce.com/services/data/v43.0/sobjects/OLI_Client__c/${id}`
             const opts = {
                 headers: new Headers({

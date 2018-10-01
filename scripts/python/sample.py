@@ -10,5 +10,5 @@ arg3 = sys.argv[3]
 result = arg1 * arg2
 
 print(str(result))
-print(arg3)
+print(result, arg3)
 sys.stdout.flush()
