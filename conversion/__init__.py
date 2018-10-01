@@ -1,3 +1,4 @@
+import sys
 import json
 from typing import Dict
 
@@ -61,3 +62,11 @@ def convert(record: Dict) -> Dict[str, Dict[str, str]]:
     """
     mapping = load_mapping()
     return json.dumps(convert_record(record=record, mapping=mapping))
+
+
+def main():
+    record = json.loads(sys.argv[1])
+    print(convert(record))
+
+if __name__=='__main__':
+    main()
