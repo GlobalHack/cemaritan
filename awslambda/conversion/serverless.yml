@@ -1,0 +1,15 @@
+service: aws-python-convert-record
+
+frameworkVersion: ">=1.2.0 <2.0.0"
+
+provider:
+  name: aws
+  runtime: python3.6
+
+functions:
+  convert:
+    handler: conversion.endpoint
+    events:
+      - http:
+          path: convert
+          method: post
