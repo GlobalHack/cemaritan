@@ -1,6 +1,8 @@
+import os
 import sys
 import json
 from typing import Dict
+
 
 RACE_FIELDS = ['AmIndAKNative', 'Asian', 'BlackAfAmerican', 'NativeHIOtherPacific', 'White']
 
@@ -42,28 +44,11 @@ def convert_record(record: Dict, mapping: Dict) -> Dict[str, Dict[str, str]]:
                         hmis = elt['HMIS']
                         csv_files.setdefault(hmis['csv filename'], {})[hmis['element']] = source['SF Value']
                         mapped = True
-        # Need to track which columsn don't get values and write out there default values.
+        # Need to track which columns don't get values and write out there default values.
         if not mapped:
             hmis = elt['HMIS']
             csv_files.setdefault(hmis['csv filename'], {})[hmis['element']] = ''
     return csv_files
-
-def hmis_conversion_logic(csv_files: Dict[str, Dict[str, str]]) -> Dict[str, Dict[str, str]]:
-    """Update dicts representing csv files with logic that applies to all conversions."""
-    ### Client.csv
-    client_csv = csv_files['Client.csv']
-    # Races
-    if all((not client_csv[r]) for r in RACE_FIELDS):
-        
-
-
-def write_record_to_csv(converted_record: Dict) -> Dict:
-    for fn, data in csv_files.items():
-        with open(fn, 'w') as f:
-            header = data.keys()
-            f.write('\t'.join(header))
-            f.write('\n')
-            f.write('\t'.join(data[k] for k in header))            
 
 
 def convert(record: Dict) -> Dict[str, Dict[str, str]]:
@@ -71,7 +56,8 @@ def convert(record: Dict) -> Dict[str, Dict[str, str]]:
     eventually into files.
     """
     mapping = load_mapping()
-    return json.dumps(convert_record(record=record, mapping=mapping))
+    return convert_record(record=record, mapping=mapping)
+    #return json.dumps(convert_record(record=record, mapping=mapping))
 
 
 def main():
@@ -79,15 +65,3 @@ def main():
     print(convert(record))
 
 
-### Lambda handler
-
-def endpoint(event, context):
-    
-    body = convert(json.loads(event['body']))
-    
-    response = {
-        "statusCode": 200,
-        "body": json.dumps(body)
-    }
-
-    return response

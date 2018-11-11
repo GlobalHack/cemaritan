@@ -7,7 +7,7 @@ node_modules
 *.sqllite
 *.swp
 .coverage
-.DS_Store
+*.DS_Store
 .eggs
 .idea
 .python-version
@@ -27,3 +27,7 @@ env_py3
 envpy3
 local_config.py
 tmp
+
+*.serverless/
+
+.DS_Store
