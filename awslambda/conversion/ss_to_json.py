@@ -26,7 +26,7 @@ def convert_spreadsheet_to_json(source: str, destination_path: str):
 def _load_mapping_spreadsheet(path: str) -> pd.DataFrame:
     """Load the mapping from an Excel spreadsheet and nulls to None."""
     df = pd.read_csv(path, sep='\t', dtype='object')
-    df = df.where((pd.notnull(df)), None)
+    df = df.where(pd.notnull(df), None)
     return df
 
 
@@ -58,7 +58,7 @@ def _convert_df_to_dict(df: pd.DataFrame) -> Dict:
             mapping.append({'HMIS': hmis, 'Source': sf, 'SingleValue': True})
         else:
             # More than one row in group, which means there is a 
-            # values list for this HMIS element which each need 
+            # values list for this HMIS element each member of which needs 
             # to be mapped.
             # Get HMIS info
             hmis = {}
@@ -71,7 +71,7 @@ def _convert_df_to_dict(df: pd.DataFrame) -> Dict:
             temp.columns = new_col_names
             sf = temp.to_dict(orient='records')
             mapping.append({'HMIS': hmis, 'Source': sf, 'SingleValue': False})
-            
+
     # Validate mapping elements.
     _ = [_validate_mapping_element(e) for e in mapping]
     # Save field order per csv field.

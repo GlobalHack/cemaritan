@@ -15,7 +15,10 @@ on what to do in that situation.
 
 import logging
 import re
-from typing import Dict
+from typing import Dict, List, Any
+
+from customtyping import *
+
 
 
 RACE_FIELDS = ['AmIndAKNative', 'Asian', 'BlackAfAmerican', 'NativeHIOtherPacific', 'White']
@@ -24,20 +27,22 @@ RACE_NOT_SELECTED = '0'
 DATA_NOT_COLLECTED = '99'
 
 
-def hmis_post_conversion_logic(csv_files: Dict[str, Dict[str, str]]) -> Dict[str, Dict[str, str]]:
+def hmis_post_conversion_logic(csv_files: Dict[str, CsvFile]) -> Dict[str, CsvFile]:
     """Update dicts representing csv files with logic that applies to all conversions."""
     ### Client.csv
-    csv_files['Client.csv'] = client(csv_files['Client.csv'])
+    csv_files['Client.csv'] = [client(d) for d in csv_files['Client.csv']]
     
-    
-def client(client_csv: Dict[str, str]) -> Dict[str, str]:
+
+### Functions to apply HMIS logic and validation to individual Csv Rows.
+
+def client(client_csv: CsvRow) -> CsvRow:
     """Perform post conversion HMIS logic on Client.csv data."""
     client_csv = race(client_csv)
     client_csv = veteran(client_csv)
     return client_csv
     
     
-def race(client_csv: Dict[str, str]) -> Dict[str, str]:
+def race(client_csv: CsvRow) -> CsvRow:
     """Apply HMIS logic to race fields."""
     ### Races
     # Check if any race was select.
@@ -72,7 +77,7 @@ def race(client_csv: Dict[str, str]) -> Dict[str, str]:
     return client_csv
 
 
-def veteran(client_csv: Dict[str, str]) -> Dict[str, str]:
+def veteran(client_csv: CsvRow) -> CsvRow:
     """Apply HMIS logic to veteran fields."""
     # Fill in DNC if blank
     if client_csv['VeteranStatus'] == '':

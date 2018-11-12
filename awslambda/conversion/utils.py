@@ -1,5 +1,16 @@
 
-from typing import Dict
+from typing import Dict, List
+
+from customtyping import *
+
+# # Define new types
+# CsvRow = Dict[str, str]
+# CsvFile = Dict[str, List[CsvRow]]
+
+# SfObject = Dict[str, str]
+# SfRecord = Dict[str, SfObject]
+
+# MappingType = List[Dict[str, Any]]
 
     
 def write_records_to_str(csv_files: Dict[str, str], field_order: Dict[str, str]) -> str:
