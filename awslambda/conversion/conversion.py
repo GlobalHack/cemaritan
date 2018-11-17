@@ -13,12 +13,17 @@ from customtyping import *
 RACE_FIELDS = ['AmIndAKNative', 'Asian', 'BlackAfAmerican', 'NativeHIOtherPacific', 'White']
 
 
-def load_mapping() -> Dict:
+def load_mapping() -> MappingType:
     """Load the OLI to HIMS mapping into a dict."""
     return json.load(open('oli_mapping.json', 'r'))
 
 
-def convert_record(record_object: SfRecord, mapping: MappingType) -> Dict[str, CsvFile]:
+def load_field_order() -> Dict[str, List[str]]:
+    """Load the HMIS field order for each csv file."""
+    return json.load(open('hmis_field_order.json', 'r'))
+
+
+def convert_record(record_object: SfRecord, mapping: MappingType, field_order: Dict[str, List[str]]) -> Dict[str, CsvFile]:
     """Convert `record_object` according to `mapping` and return a dict of data
     ready to be written to HMIS csv files.
 
@@ -50,6 +55,9 @@ def convert_record(record_object: SfRecord, mapping: MappingType) -> Dict[str, C
                     },
             "SingleValue": true
         }
+
+    field_order : Dict
+        This is used to specify the field order in the returned dict. Python 3.6+ is required to ensure field order.
 
     Returns
     --------
@@ -85,8 +93,15 @@ def convert_record(record_object: SfRecord, mapping: MappingType) -> Dict[str, C
     csv_files['HealthAndDV.csv'] = [convert_object_single_csv(record_object=record_object, mapping=mappings_by_csv['HealthAndDV.csv'])]
     # Services.csv
     csv_files['Services.csv'] = convert_services(record_object=record_object, mapping=mappings_by_csv['Services.csv'])
-    return csv_files
 
+    # Reorder fields
+    csv_files_ordered = {}
+    for filename, f_order in field_order.items():
+        # Get list of unordered dicts.
+        unordered_file = csv_files[filename]
+        # Create new list of dicts with ordered fields.
+        csv_files_ordered[filename] = [{f:_csvrow[f] for f in f_order} for _csvrow in unordered_file]
+    return csv_files_ordered
 
 
 ### Generic convert_object function. Used by specific conversion functions.
@@ -137,11 +152,12 @@ def convert_object_single_csv(record_object: SfRecord, mapping: MappingType) -> 
 
 
 ### Functions for converting specific csv files.
-# Must return: List[Dict[str, str]]
+# Must return: CsvFile = List[Dict[str, str]]
 
 def convert_enrollment(record_object: SfRecord, mapping: MappingType) -> CsvFile:
     enroll = convert_object_single_csv(record_object=record_object, mapping=mapping)
     # Hardcoding value because OLI only has one type.
+    # TODO 2: Looking at the OLI STC data, this is not true. Need to revisit.
     enroll['RelationshipToHoH'] = 1
     return [enroll]
 
@@ -160,57 +176,21 @@ def convert_services(record_object: SfRecord, mapping: MappingType) -> CsvFile:
     return converted
 
 
-# Main convert function
+# Main convert record function
 def convert(record: SfRecord) -> Dict[str, CsvFile]:
-    """Main conversion function to convert a record to a dict, but
-    eventually into files.
+    """
+    Main conversion function to convert a record to a dict.
+
+    Calls functions to convert/translate the record from SF to HMIS,
+    perform HMIS logic, and HMIS validation.
     """
     mapping = load_mapping()
-    return convert_record(record_object=record, mapping=mapping)
-    #return json.dumps(convert_record(record=record, mapping=mapping))
-
+    field_order = load_field_order()
+    converted_csv_files = convert_record(record_object=record, mapping=mapping, field_order=field_order)
+    validated_csv_files = validation.validate_csv_files(converted_csv_files=converted_csv_files)
+    return validated_csv_files
+    
 
 def main():
     record = json.loads(sys.argv[1])
-    print(validation.hmis_post_conversion_logic(convert(record)))
-
-
-
-
-# def convert_record(record: Dict, mapping: List) -> Dict[str, Dict[str, str]]:
-#     """Convert `record` according to `mapping` and return a dict of data
-#     ready to be written to HMIS csv files.
-#     """
-#     csv_files = {}
-#     source_record = record
-#     for elt in mapping:
-#         mapped = False
-#         if elt['SingleValue']:
-#             source_object = elt['Source']['SF Object']
-#             source_field = elt['Source']['SF Field']
-#             source_value = None
-#             if source_field is not None:
-#                 source_value = source_record[source_object][source_field]
-#             if source_value is not None:
-#                 hmis = elt['HMIS']
-#                 csv_files.setdefault(hmis['csv filename'], {})[hmis['element']] = source_value
-#                 mapped = True
-                
-#         else:
-#             for source in elt['Source']:
-#                 source_object = source['SF Object']
-#                 source_field = source['SF Field']
-#                 source_value = None
-#                 if source_field is not None:
-#                     source_value = source_record[source_object][source_field]
-#                 if source_value is not None:
-#                     if source_value == source['HMIS Text']:
-#                         #print(source_value)
-#                         hmis = elt['HMIS']
-#                         csv_files.setdefault(hmis['csv filename'], {})[hmis['element']] = source['SF Value']
-#                         mapped = True
-#         # Need to track which columns don't get values and write out their default values.
-#         if not mapped:
-#             hmis = elt['HMIS']
-#             csv_files.setdefault(hmis['csv filename'], {})[hmis['element']] = ''
-#     return csv_files
+    print(convert(record))

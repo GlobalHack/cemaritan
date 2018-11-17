@@ -15,34 +15,35 @@ on what to do in that situation.
 
 import logging
 import re
-from typing import Dict, List, Any
+from typing import Any, Dict, List
 
 from customtyping import *
 
-
-
 RACE_FIELDS = ['AmIndAKNative', 'Asian', 'BlackAfAmerican', 'NativeHIOtherPacific', 'White']
-
 RACE_NOT_SELECTED = '0'
 DATA_NOT_COLLECTED = '99'
 
 
-def hmis_post_conversion_logic(csv_files: Dict[str, CsvFile]) -> Dict[str, CsvFile]:
-    """Update dicts representing csv files with logic that applies to all conversions."""
-    ### Client.csv
-    csv_files['Client.csv'] = [client(d) for d in csv_files['Client.csv']]
+def validate_csv_files(converted_csv_files: Dict[str, CsvFile]) -> Dict[str, CsvFile]:
+    """Perform HMIS logic and validation on a converted record.
+    
+    This is an in-place operation because any unaltered values still 
+    need to be return as part of the object.
+    """
+    converted_csv_files['Client.csv'] = [_client(_csvrow) for _csvrow in converted_csv_files['Client.csv']]
+    return converted_csv_files
     
 
 ### Functions to apply HMIS logic and validation to individual Csv Rows.
 
-def client(client_csv: CsvRow) -> CsvRow:
+def _client(client_csv: CsvRow) -> CsvRow:
     """Perform post conversion HMIS logic on Client.csv data."""
-    client_csv = race(client_csv)
-    client_csv = veteran(client_csv)
+    client_csv = _race(client_csv)
+    client_csv = _veteran(client_csv)
     return client_csv
     
     
-def race(client_csv: CsvRow) -> CsvRow:
+def _race(client_csv: CsvRow) -> CsvRow:
     """Apply HMIS logic to race fields."""
     ### Races
     # Check if any race was select.
@@ -63,7 +64,7 @@ def race(client_csv: CsvRow) -> CsvRow:
             # RaceNone field is empty, so print a warning and set it to DNC.
             # Printing a warning, because not sure what should actually be done here 
             # according to HMIS specs.
-            logging.warning('Value is missing for: RaceNone')
+            logging.warning('Value is missing for: RaceNone. Setting to DNC.')
             client_csv['RaceNone'] = DATA_NOT_COLLECTED
         # Check if RaceNone is DNC
         if client_csv['RaceNone'] == DATA_NOT_COLLECTED:
@@ -77,7 +78,7 @@ def race(client_csv: CsvRow) -> CsvRow:
     return client_csv
 
 
-def veteran(client_csv: CsvRow) -> CsvRow:
+def _veteran(client_csv: CsvRow) -> CsvRow:
     """Apply HMIS logic to veteran fields."""
     # Fill in DNC if blank
     if client_csv['VeteranStatus'] == '':
@@ -91,6 +92,3 @@ def veteran(client_csv: CsvRow) -> CsvRow:
         if len(year_re.find(client_csv['YearSeparated'])) < 1:
             raise ValueError(f"Invalid value of {client_csv['YearSeparated']} for YearSeparated.")
     return client_csv
-    
-    
-

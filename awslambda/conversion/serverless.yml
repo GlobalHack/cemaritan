@@ -8,8 +8,8 @@ provider:
 
 functions:
   convert:
-    handler: conversion.endpoint
+    handler: conversion.convertsingle
     events:
       - http:
-          path: convert
+          path: convertsingle
           method: post

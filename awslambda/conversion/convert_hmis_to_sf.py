@@ -14,7 +14,7 @@ from typing import Any, Dict, List, Tuple
 import pandas as pd
 
 
-def get_sf_value(hmis_value: str, source: Any, singlevalue: bool) -> Tuple[str, str, str]:
+def _get_sf_value(hmis_value: str, source: Any, singlevalue: bool) -> Tuple[str, str, str]:
     """Retrieve SF value corresponding to the supplied HMIS value.
     
     Parameters
@@ -53,7 +53,7 @@ def collect_mappings_by_filename(mapping: List[Dict[str, Dict[str, Any]]]) -> Di
     return mappings_by_csv
 
 
-def create_lists_of_tuples(client_files_dfs: Dict[str, pd.DataFrame], 
+def _create_lists_of_tuples(client_files_dfs: Dict[str, pd.DataFrame], 
                            mappings_by_csv: Dict[str, Dict]) -> Dict[str, List[Tuple[str, str, str]]]:
     """Convert HMIS csv files into lists of tuples, mapped to by client Ids.
     
@@ -82,7 +82,7 @@ def create_lists_of_tuples(client_files_dfs: Dict[str, pd.DataFrame],
                 # and pass to function to build SF object.
                 for elt in file_mapping:
                     hmis_val = row[1][elt['HMIS']['element']]
-                    res = get_sf_value(hmis_val, elt['Source'], elt['SingleValue'])
+                    res = _get_sf_value(hmis_val, elt['Source'], elt['SingleValue'])
                     if res is not None:
                         temp.append(res)
                 if len(temp) > 0:
@@ -90,7 +90,7 @@ def create_lists_of_tuples(client_files_dfs: Dict[str, pd.DataFrame],
     return id_to_tuples
 
 
-def build_object(list_of_tuples: List[Tuple[str, str, str]]) -> Dict[str, str]:
+def _build_object(list_of_tuples: List[Tuple[str, str, str]]) -> Dict[str, str]:
     """Convert list of tuples into a SF object."""
     obj = {}
     for tup in list_of_tuples:
@@ -101,13 +101,13 @@ def build_object(list_of_tuples: List[Tuple[str, str, str]]) -> Dict[str, str]:
 singletons = ['OLI_Client__c']
 multiples = ['Snapshots_Forms__c']
 
-def create_sf_object(all_list_of_tuples: Any) -> Dict[str, Dict[str, str]]:
+def _create_sf_object(all_list_of_tuples: Any) -> Dict[str, Dict[str, str]]:
     """Convert list of (possibly lists) of tuples into SF objects."""
     objs_for_client = {}
     # Handle records for objects that are one per client.
     for obj_name in singletons:
         list_of_tuples = list(itertools.chain.from_iterable(x for x in all_list_of_tuples if x[0][0] == obj_name))
-        res = build_object(list_of_tuples)
+        res = _build_object(list_of_tuples)
         objs_for_client[obj_name] = res
         
     # Handle records for objects that can have multiple instances per client.
@@ -115,13 +115,13 @@ def create_sf_object(all_list_of_tuples: Any) -> Dict[str, Dict[str, str]]:
         temp = []
         list_of_lists_of_tuples = [x for x in all_list_of_tuples if x[0][0] == obj_name]
         for list_of_tuples in list_of_lists_of_tuples:
-            res = build_object(list_of_tuples)
+            res = _build_object(list_of_tuples)
             temp.append(res)
         objs_for_client[obj_name] = temp
     return objs_for_client
     
 
-def convert_files(csv_folder_path: str, mapping_path: str, output_folder_path: str):
+def convert_files(csv_folder_path: str, mapping_path: str, output_folder_path: str=None):
     """Converts 9 of the HMIS standard csv files to SF objects.
 
     Converts the following files. Only Client.csv is required.
@@ -156,9 +156,9 @@ def convert_files(csv_folder_path: str, mapping_path: str, output_folder_path: s
     dfs = {fn: pd.read_csv(os.path.join(csv_folder_path, fn)) for fn in fns}
 
     # Create lists of (possibly lists) of tuples[filename, SF object name, value]
-    id_to_tuples = create_lists_of_tuples(client_files_dfs=dfs, mappings_by_csv=mappings_by_csv)
+    id_to_tuples = _create_lists_of_tuples(client_files_dfs=dfs, mappings_by_csv=mappings_by_csv)
 
     # Convert the lists (of lists) of tuples into SF objects.
-    sf_objects = {id_: create_sf_object(tuples) for id_, tuples in id_to_tuples.items()}
+    sf_objects = {id_: _create_sf_object(tuples) for id_, tuples in id_to_tuples.items()}
 
     return sf_objects
