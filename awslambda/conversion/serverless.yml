@@ -7,9 +7,15 @@ provider:
   runtime: python3.6
 
 functions:
-  convert:
+  convertsingle:
     handler: conversion.convertsingle
     events:
       - http:
           path: convertsingle
+          method: post
+  convertbulk:
+    handler: conversion.convertbulk
+    events:
+      - http:
+          path: convertbulk
           method: post

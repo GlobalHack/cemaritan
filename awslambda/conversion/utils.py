@@ -38,7 +38,7 @@ def combine_csv_files(csv_files: List[Dict[str, CsvFile]]) -> Dict[str, CsvFile]
     combined_files = {}
     for single_client_dict in csv_files:
         # Dict[str, CsvFile]
-        for filename, csvfile in single_client_dict.item():
+        for filename, csvfile in single_client_dict.items():
             combined_files.setdefault(filename, []).extend(csvfile)
     return combined_files
 
