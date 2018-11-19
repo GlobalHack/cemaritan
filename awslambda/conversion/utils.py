@@ -61,9 +61,16 @@ def write_csvfile_to_str(csv_file: CsvFile) -> str:
     """
     s = []
     # TODO 2: Can these csvfiles be empty?
-    s.append('\t'.join(csv_file[0].keys()))
-    for csv_row in csv_file:
-        s.append('\t'.join(csv_row.values())) 
+    # Need to put file headers somewhere in the csvfile object.
+    if len(csv_file) > 0:
+        s.append('\t'.join(csv_file[0].keys()))
+        for csv_row in csv_file:
+            try:
+                s.append('\t'.join(map(str, csv_row.values()))) 
+            except Exception as e:
+                print(csv_file)
+                print(csv_row)
+                print(e)
     return '\n'.join(s)
 
 
@@ -86,11 +93,11 @@ def save_string_to_s3(s3, bucket: str, name: str, content: str):
     s3.Object(bucket, name).put(Body=content)
 
 
-def save_files_to_s3(bucket: str, csv_files: Dict[str, CsvFile]):
+def save_files_to_s3(bucket: str, csv_files: Dict[str, CsvFile], prefix=None):
     """Save content of HMIS files to S3."""
     # Get S3 resource object
     s3 = boto3.resource('s3')
     # Save each csv HMIS file to S3.
     for filename, csvfile in csv_files.items():
-        save_string_to_s3(s3=s3, bucket=bucket, name=filename, content=write_csvfile_to_str(csvfile))
+        save_string_to_s3(s3=s3, bucket=bucket, name=prefix + '/' + filename, content=write_csvfile_to_str(csvfile))
 

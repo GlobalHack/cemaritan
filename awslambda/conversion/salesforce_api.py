@@ -25,8 +25,11 @@ objects as the keys, and a single object or array of objects of that object type
 import os
 from typing import Dict
 import configparser
+import datetime
 
 import requests
+
+from customtyping import *
 
 ### Load credentials from file or environmental variables.
 
@@ -61,7 +64,7 @@ def _create_bearer_token_header(bearer_dict: Dict[str, str]) -> Dict[str, str]:
 
 
 def get_auth_header(client_id: str, client_secret: str, security_token: str, username: str, password: str) -> Dict[str, str]:
-    """Use usernmae-password flow to create a header dict with the auth token."""
+    """Use username-password flow to create a header dict with the auth token."""
     return _create_bearer_token_header(_get_bearer_token(client_id=client_id, client_secret=client_secret, security_token=security_token, username=username, password=password))
 
 
@@ -80,10 +83,74 @@ def get_complete_client_record(oli_client__c_id: str, headers: Dict[str, str]) -
     record = {}
     for object_name, url in _sf_object_urls.items():
         try:
-            record[object_name] = requests.get(url=url.format(record_id=oli_client__c_id), headers=headers).json()
+            response_json = requests.get(url=url.format(record_id=oli_client__c_id), headers=headers).json()
+            if object_name != 'OLI_Client__c':
+                response_json = response_json['records']
+            record[object_name] = response_json
         except Exception as e:
             print(f"Error requesting {object_name} from {url}.")
             print(e)
     return record
 
 
+### Get recently updated records
+
+updated_url = 'https://cs3.salesforce.com/services/data/v29.0/sobjects/{object_type}/updated/'
+
+def _format_dt(dt):
+    """Format a datetime to match SF query parameters format."""
+    dt_s = str(dt)
+    return dt_s.replace(' ', 'T')[:-7] + '+00'
+    
+
+def _get_parameters_for_recent_times(minutes: int=None):
+    """Generate parameters dict for retrieving updated SF records.
+    
+    Parameters
+    ----------
+    minutes : int
+        Minutes ago to start retrieving records.
+    """
+    now = datetime.datetime.utcnow()
+    end = now + datetime.timedelta(minutes=5)
+    start = now - datetime.timedelta(minutes=minutes)
+    return {'start': _format_dt(start), 'end': _format_dt(end)}
+
+
+def get_recently_changed_object_ids(headers: Dict, object_type: str='OLI_Client__c', minutes: int=5) -> List[str]:
+    """Get recently changed SF objects.
+    
+    Parameters
+    ----------
+    headers : Dict
+        Headers for request that must include the auth header.
+    object_type : str
+        SF object type requested.
+    minutes : int
+        Number of minutes back to look for updates.
+    """
+    _url = updated_url.format(object_type=object_type)
+    parameters = _get_parameters_for_recent_times(minutes=minutes)
+    response = requests.get(url=_url, params=parameters, headers=headers)
+    if response.status_code != 200:
+        raise ValueError(response.reason)
+    return response.json()['ids']
+    
+
+def get_recent_records(headers: Dict, object_type: str='OLI_Client__c', minutes: int=5) -> List[SfRecord]:
+    """Get a list of SF Objects that have been created/updated in last `minutes` minutes.
+    
+    Parameters
+    ----------
+    headers : Dict
+        Headers for request that must include the auth header.
+    object_type : str
+        SF object type requested.
+    minutes : int
+        Number of minutes back to look for updates.
+    """
+    ids = get_recently_changed_object_ids(minutes=minutes, headers=headers)
+    updated = []
+    for id_ in ids:
+        updated.append(get_complete_client_record(oli_client__c_id=id_, headers=headers))
+    return updated

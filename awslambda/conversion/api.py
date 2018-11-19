@@ -13,6 +13,7 @@ s3_bucket' containing the name of the S3 bucket that the csv files should be sav
 import os
 import json
 from typing import Dict
+import datetime
 
 from utils import *
 from conversion import convert
@@ -28,6 +29,7 @@ def convertsingle(event, context):
     Accept a single JSON object which should be an SF record, convert it to HMIS 
     format, and output.
     """
+    print(context)
     # Get POST body which should be a json object containing high level Salesforce objects.
     single_record = json.loads(event['body'])
     
@@ -35,7 +37,8 @@ def convertsingle(event, context):
     converted_data = convert(single_record)
 
     # Save results to S3
-    save_files_to_s3(bucket=S3_BUCKET_NAME, csv_files=converted_data)
+    prefix = str(datetime.datetime.now()).replace(' ', 'T')
+    save_files_to_s3(bucket=S3_BUCKET_NAME, csv_files=converted_data, prefix=prefix)
 
     # Return results for testing.
     # Eventually remove this and return a status message.

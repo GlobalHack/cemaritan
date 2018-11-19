@@ -8,14 +8,25 @@ provider:
 
 functions:
   convertsingle:
-    handler: conversion.convertsingle
+    handler: api.convertsingle
     events:
       - http:
           path: convertsingle
           method: post
   convertbulk:
-    handler: conversion.convertbulk
+    handler: api.convertbulk
     events:
       - http:
           path: convertbulk
           method: post
+  fetchrecent:
+    handler: fetch_recent.fetch_updated_and_send_to_conversion
+    events:
+      - schedule: cron(* * ? * * *)
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
