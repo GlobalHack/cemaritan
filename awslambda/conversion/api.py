@@ -61,7 +61,8 @@ def convertbulk(event, context):
     # Consolidate into a single set of csv files.
     consolidated_csv_files = combine_csv_files(csv_files=list_of_converted_objects)
     # Pass the converted objects to be combined, written to strings, and saved as files in S3.
-    save_files_to_s3(bucket=S3_BUCKET_NAME, csv_files=consolidated_csv_files)
+    prefix = str(datetime.datetime.now()).replace(' ', 'T')
+    save_files_to_s3(bucket=S3_BUCKET_NAME, csv_files=consolidated_csv_files, prefix=prefix)
     # Send back a confirmation message.
     response = {
         "statusCode": 200,

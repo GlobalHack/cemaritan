@@ -4,6 +4,8 @@ and for interacting with AWS resources.
 """
 
 from typing import Dict, List
+import os
+import smtplib
 
 import boto3
 
@@ -101,3 +103,29 @@ def save_files_to_s3(bucket: str, csv_files: Dict[str, CsvFile], prefix=None):
     for filename, csvfile in csv_files.items():
         save_string_to_s3(s3=s3, bucket=bucket, name=prefix + '/' + filename, content=write_csvfile_to_str(csvfile))
 
+
+# Send email
+# Info for emailing via AWS SES
+def send_mail(msg, 
+                to_add, 
+                from_add, 
+                smts_server, 
+                login,
+                subject=None,
+                header=True):
+    """Function to consolidate sending a single email. to_add can be a list."""
+    if header:
+        msg = "\r\n".join([
+        "From: " + from_add,
+        "To: " + (', '.join(to_add) if isinstance(to_add, list) else to_add),
+        "Subject: " + str(subject),
+        "",
+        msg
+        ])       
+    server = smtplib.SMTP(smts_server[0], smts_server[1])
+    server.ehlo()
+    server.starttls()
+    server.ehlo()
+    server.login(login[0], login[1])
+    server.sendmail(from_add, to_add, msg)
+    server.close()

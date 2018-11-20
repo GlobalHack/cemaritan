@@ -8,9 +8,10 @@ import os
 import requests
 
 import salesforce_api
+import utils
 
 single_convert_url = 'https://adtzjz51x8.execute-api.us-east-1.amazonaws.com/dev/convertsingle'
-
+single_convert_url = 'https://adtzjz51x8.execute-api.us-east-1.amazonaws.com/dev/convertbulk'
 
 def fetch_updated_and_send_to_conversion(event, context):
     """Main function to retrieve recently updated SF objects
@@ -29,7 +30,24 @@ def fetch_updated_and_send_to_conversion(event, context):
     responses = []
     for obj in updated_objects:
         responses.append(requests.post(url=single_convert_url, json=obj, headers=headers))
-    
+
+    # Send email to user.
+    try:
+        if len(updated_objects) > 0:
+            server = 'email-smtp.us-east-1.amazonaws.com', 587
+            un = os.getenv('ses_username')
+            pw = os.getenv('ses_password')
+
+            msg = f"{len(updated_objects)} updates found."
+            utils.send_mail(msg=msg, 
+                to_add=['matt.pitlyk@gmail.com',], 
+                from_add='mattscomp21@gmail.com',
+                smts_server=server,
+                login=(un, pw),
+                subject='Cemaritan: records updated'
+                )
+    except Exception as e:
+        print(e)
 
 
 
