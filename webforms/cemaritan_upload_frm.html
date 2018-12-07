@@ -59,13 +59,13 @@
       <div class="row">
     
         <div class="col-md-9 order-md-1">
-          <h4 class="mb-3">Client Records</h4>
-          <form class="" novalidate="">
+          <!--<h4 class="mb-3">Client Records</h4>-->
+          <form class="" novalidate="" action="https://adtzjz51x8.execute-api.us-east-1.amazonaws.com/dev/fileupload" method="post" encType="multipart/form-data">
             <div class="row">
               <div class="">
-                <label for="firstName">Upload a zip file containing Client Records.</label>
+                <label for="firstName">Upload a txt file containing Client Records.</label>
                 <br/>
-               <input type="file" name="myFile">
+                <input type="file" name="myFile">
 
               </div>
 

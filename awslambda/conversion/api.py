@@ -40,6 +40,9 @@ def convertsingle(event, context):
     prefix = str(datetime.datetime.now()).replace(' ', 'T')
     save_files_to_s3(bucket=S3_BUCKET_NAME, csv_files=converted_data, prefix=prefix)
 
+    # Send success notifcation.
+    send_notification(n=1)
+
     # Return results for testing.
     # Eventually remove this and return a status message.
     response = {
@@ -63,6 +66,8 @@ def convertbulk(event, context):
     # Pass the converted objects to be combined, written to strings, and saved as files in S3.
     prefix = str(datetime.datetime.now()).replace(' ', 'T')
     save_files_to_s3(bucket=S3_BUCKET_NAME, csv_files=consolidated_csv_files, prefix=prefix)
+    # Send success notification.
+    send_notification(len(list_of_converted_objects))
     # Send back a confirmation message.
     response = {
         "statusCode": 200,
@@ -70,3 +75,59 @@ def convertbulk(event, context):
     }
     return response
     
+
+def file_upload(event, context):
+    """Accept a file with either a single or an array of Salesforce objects and convert them."""
+    s = event['body']
+    s_split = s.split('\n')
+    payload = '\n'.join(s_split[3:-2])
+    try:
+        obj = json.loads(payload)
+        if isinstance(obj, list):
+            obj_len = len(obj)
+            list_of_converted_objects = [convert(obj) for obj in obj]
+            # Consolidate into a single set of csv files.
+            consolidated_csv_files = combine_csv_files(csv_files=list_of_converted_objects)
+            # Pass the converted objects to be combined, written to strings, and saved as files in S3.
+            prefix = str(datetime.datetime.now()).replace(' ', 'T')
+            save_files_to_s3(bucket=S3_BUCKET_NAME, csv_files=consolidated_csv_files, prefix=prefix)
+        else:
+            obj_len = 1
+            # Convert record
+            converted_data = convert(obj)
+
+            # Save results to S3
+            prefix = str(datetime.datetime.now()).replace(' ', 'T')
+            save_files_to_s3(bucket=S3_BUCKET_NAME, csv_files=converted_data, prefix=prefix)
+
+        # Send success notification.
+        send_notification(n=obj_len)
+    except Exception as e:
+        return {
+            'statusCode': 400,
+            'body': '400 Bad Request\n\n' + json.dumps(str(e))
+            }
+    
+    return {
+        'statusCode': 200,
+        'body': 'Upload successful.'
+    }
+
+
+def send_notification(n):
+    # Send email to user.
+    try:
+        server = 'email-smtp.us-east-1.amazonaws.com', 587
+        un = os.getenv('ses_username')
+        pw = os.getenv('ses_password')
+
+        msg = f"{n} updates saved to cloud storage."
+        send_mail(msg=msg, 
+            to_add=['cemaritanproject@gmail.com'], 
+            from_add='mattscomp21@gmail.com',
+            smts_server=server,
+            login=(un, pw),
+            subject='Cemaritan: records updated'
+            )
+    except Exception as e:
+        print(e)

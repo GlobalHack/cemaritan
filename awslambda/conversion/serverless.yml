@@ -23,6 +23,12 @@ functions:
     handler: fetch_recent.fetch_updated_and_send_to_conversion
     events:
       - schedule: cron(* * ? * * *)
+  fileupload:
+    handler: api.file_upload
+    events:
+      - http:
+          path: fileupload
+          method: post
 
 plugins:
   - serverless-python-requirements

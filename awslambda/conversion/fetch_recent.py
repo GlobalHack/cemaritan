@@ -11,7 +11,7 @@ import salesforce_api
 import utils
 
 single_convert_url = 'https://adtzjz51x8.execute-api.us-east-1.amazonaws.com/dev/convertsingle'
-single_convert_url = 'https://adtzjz51x8.execute-api.us-east-1.amazonaws.com/dev/convertbulk'
+bulk_convert_url = 'https://adtzjz51x8.execute-api.us-east-1.amazonaws.com/dev/convertbulk'
 
 def fetch_updated_and_send_to_conversion(event, context):
     """Main function to retrieve recently updated SF objects
