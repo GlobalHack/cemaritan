@@ -129,3 +129,18 @@ def send_mail(msg,
     server.login(login[0], login[1])
     server.sendmail(from_add, to_add, msg)
     server.close()
+
+
+# Extract form data from AWS Lambda `event` dict
+def extact_form_data(event: Dict) -> Dict:
+    """Parse the POST payload data from a form into a dict."""
+    # Get the multipart form data boundary string.
+    boundary = event['headers']['content-type'].split(';')[1].strip().split('=')[1]
+    # Split the body several times and build a dict with the form data.
+    vals = {}
+    for d in event['body'].split(boundary)[1:-1]:
+        ar = d.split('\r\n')
+        key = ar[1].split(';')[1].strip().split('=')[1].strip('"')
+        val = ar[3]
+        vals[key] = val
+    return vals

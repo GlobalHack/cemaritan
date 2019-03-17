@@ -29,6 +29,12 @@ functions:
       - http:
           path: fileupload
           method: post
+  postnewclient:
+    handler: api.post_new_client
+    events:
+      - http:
+          path: postnewclient
+          method: post
 
 plugins:
   - serverless-python-requirements

@@ -64,7 +64,11 @@
           <form class="" novalidate="" action="https://adtzjz51x8.execute-api.us-east-1.amazonaws.com/dev/fileupload" method="post" encType="multipart/form-data">
             <div class="row">
               <div class="">
-                <label for="firstName">Upload a json file containing either a single client record or an array of records.</label>
+                <h5>Select Destination</h5>
+                <input type="radio" name="uploadtype" value="hmis" checked> HMIS - ServicePoint<br>
+                <input type="radio" name="uploadtype" value="inhouse"> Salesforce<br>
+                <br/>
+                <label for="firstName">Upload a file containing one or more client records.</label>
                 <br/>
                 <input type="file" name="myFile">
 
