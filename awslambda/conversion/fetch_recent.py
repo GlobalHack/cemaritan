@@ -40,7 +40,7 @@ def fetch_updated_and_send_to_conversion(event, context):
 
             msg = f"{len(updated_objects)} updates found."
             utils.send_mail(msg=msg, 
-                to_add=['matt.pitlyk@gmail.com',], 
+                to_add=['cemaritanproject@gmail.com',], 
                 from_add='mattscomp21@gmail.com',
                 smts_server=server,
                 login=(un, pw),
