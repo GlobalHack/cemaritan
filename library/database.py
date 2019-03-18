@@ -5,7 +5,7 @@ from typing import List, Tuple
 
 # Sample "create" queries
 """
-add new organization
+add new organization: DONE
 INSERT INTO Organizations (Name, CreatedDate) VALUES (_name_, _createddate_)
 
 add new data mapping
@@ -76,6 +76,11 @@ def create_organization(connection, name, created_date):
     connection.query(query)
 
 
+def create_data_mapping(connection, user_id, name, mapping_info):
+    query = f"INSERT INTO DataMappings (Organization, Name, MappingInfo) VALUES ((select Organization from Users where Users.UID = {user_id}), '{name}', '{mapping_info}');"
+    connection.query(query)
+
+
 def update_organization(id):
     pass
 
@@ -121,10 +126,6 @@ def delete_connection(id):
 
 
 def update_data_mapping(id):
-    pass
-
-
-def create_data_mapping(id):
     pass
 
 
