@@ -14,7 +14,7 @@ headers = get_auth_header(**creds)
 # Retrieve complete client record.
 record = get_complete_client_record(oli_client__c_id=record_id, headers=headers)
 
-The compete client record schema, which the conversion code will accept, has OLI Salesforce
+The complete client record schema, which the conversion code will accept, has OLI Salesforce
 objects as the keys, and a single object or array of objects of that object type as the value.
 {"OLI_Client__c" : _OLI_Client__c_object_,
  "Snapshots_Forms__c": [_Snapshots_Forms__c_object_1_, _Snapshots_Forms__c_object_2_]
@@ -154,3 +154,17 @@ def get_recent_records(headers: Dict, object_type: str='OLI_Client__c', minutes:
     for id_ in ids:
         updated.append(get_complete_client_record(oli_client__c_id=id_, headers=headers))
     return updated
+
+
+# Creating new records
+
+def post_new_client(first_name: str, last_name: str, headers: Dict):
+    """Post a new client record to SalesForce."""
+    url = 'https://cs3.salesforce.com/services/data/v43.0/sobjects/OLI_Client__c'
+    payload = {'First_Name__c': first_name,
+               'Last_Name__c': last_name}
+    resp = requests.post(url=url, json=payload, headers=headers)
+    if resp.ok:
+        return resp.json()['id']
+    else:
+        raise valueError(resp.json())
