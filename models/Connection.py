@@ -1,7 +1,8 @@
 import json
+from typing import Dict, Tuple
 
 class Connection:
-    def __init__(self, *args, **kwargs):
+    def __init__(self, data, *args, **kwargs):
         """Class for handling Connections
 
         Example:
@@ -17,26 +18,51 @@ class Connection:
         }
         
         """
-        pass
+        if isinstance(data, dict):
+            self.data = self.from_dict(data)
+        elif isinstance(data, str):
+            self.data = self.from_json(data)
+        elif isinstance(data, tuple):
+            self.data = self.from_tuple(data)
+        else:
+            raise AssertionError(
+                "Parameter 'data' was not a valid input: dict, tuple, or JSON string"
+            )
 
-    def from_dict(self, org_dict: Dict):
-        self._org_dict = org_dict
-        self._org = org_dict.get("Org", None)
-        self._created_by = org_dict.get("CreatedBy", None)
-        self._created_date = org_dict.get("CreatedDate", None)
-        self._modified_date = org_dict.get("ModifiedDate", None)
-        self._type = org_dict.get("Type", None)
-        self._connection_info = org_dict.get("ConnectionInfo", None)
-        self._name = org_dict.get("Name", None)
-        self._uid = org_dict.get("UID", None)
+    def from_dict(self, conn_dict: Dict):
+        try:
+            self._conn_dict = conn_dict
+            self._uid = conn_dict.get("UID", None)
+            self._organization = conn_dict.get("Organization", None)
+            self._name = conn_dict.get("Name", None)
+            self._created_date = conn_dict.get("CreatedDate", None)
+            self._created_by = conn_dict.get("CreatedBy", None)
+            self._type = conn_dict.get("Type", None)
+            self._connection_info = conn_dict.get("ConnectionInfo", None)
+        except Exception as e:
+            print("Parameter 'conn_dict' is not a valid dict: " + e)
 
-    def from_json(self, org_json: str):
-        self.from_dict(json.loads(org_json))
+    def from_json(self, conn_json: str):
+        try:
+            self.from_dict(json.loads(conn_json))
+        except Exception as e:
+            print("Parameter 'conn_json' is not a valid JSON string: " + e)
+
+    def from_tuple(self, conn_tuple: Tuple):
+        (
+            self._conn_dict,
+            self._uid,
+            self._organization,
+            self._name,
+            self._created_date,
+            self._created_by,
+            self._type,
+            self._connection_info,
+        ) = conn_tuple
 
     def to_dict(self):
-        return self._org_dict
+        return self._conn_dict
 
     def to_json(self):
-        return json.dumps(self._org_dict)
+        return json.dumps(self._conn_dict)
 
-    
