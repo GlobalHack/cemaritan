@@ -3,26 +3,6 @@ from typing import List, Tuple
 
 # import models
 
-# Sample "create" queries
-"""
-add new organization: DONE
-INSERT INTO Organizations (Name, CreatedDate) VALUES (_name_, _createddate_)
-
-add new data mapping: DONE
-INSERT INTO DataMappings (Organization, Name, MappingInfo) VALUES ((select Organization from Users where Users.UID = 1), _name_, _mapping_info_);
-
-add a new connection: DONE
-INSERT INTO Connections (Organization, Name, CreatedDate, CreatedBy, Type, ConnectionInfo) 
-                VALUES ((select Organization from Users where Users.UID = 1), _name_, _createddate_, createdby_, _type_, _connecitoninfo_);
-
-for deleting user: DONE
-DELETE from Users where Users.UID=6
-
-#####
-Also have functions return in JSON for front end
-#####
-"""
-
 
 def get_rows_by_organization(
     table_name: str, connection, organization_id: int
@@ -42,7 +22,7 @@ def get_rows_by_organization(
     -------
     List[Tuple]
         List of tuples representing each row of the response of the query
-        
+
     """
     query = f"select * from {table_name} where {table_name}.organization = (select organization from users where users.UID = {organization_id})"
     return connection.query(query).fetchall()
