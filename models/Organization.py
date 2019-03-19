@@ -3,7 +3,7 @@ from typing import Dict, Tuple
 
 
 class Organization:
-    def __init__(self, *args, **kwargs):
+    def __init__(self, data, *args, **kwargs):
         """ Class for handling Organizations
 
         Example:
@@ -28,23 +28,37 @@ class Organization:
                 "Parameter 'data' was not a valid input: dict, tuple, or JSON string"
             )
 
-    def from_dict(self, org_dict: Dict):
-        self._org_dict = org_dict
-        self._uid = org_dict.get("UID", None)
-        self._name = org_dict.get("Name", None)
-        self._created_date = org_dict.get("CreatedDate", None)
+        self._uid = self.data.get("UID", None)
+        self._name = self.data.get("Name", None)
+        self._created_date = self.data.get("CreatedDate", None)
         # might want these later
-        # self._connections = org_dict.get("Connections", None)
-        # self._transfers = org_dict.get("Transfers", None)
-        # self._transfer_history = org_dict.get("TransferHistory", None)
-        # self._download_history = org_dict.get("DownloadHistory", None)
-        # self._upload_history = org_dict.get("UploadHistory", None)
+        # self._connections = self.data.get("Connections", None)
+        # self._transfers = self.data.get("Transfers", None)
+        # self._transfer_history = self.data.get("TransferHistory", None)
+        # self._download_history = self.data.get("DownloadHistory", None)
+        # self._upload_history = self.data.get("UploadHistory", None)
+
+    def from_dict(self, org_dict: Dict):
+        try:
+            return org_dict
+        except Exception as e:
+            print("Parameter 'org_dict' is not a valid dict: " + e)
 
     def from_json(self, org_json: str):
-        self.from_dict(json.loads(org_json))
+        try:
+            return self.from_dict(json.loads(org_json))
+        except Exception as e:
+            print("Parameter 'org_json' is not a valid JSON string: " + e)
 
     def from_tuple(self, org_tuple: Tuple):
-        (self._uid, self._name, self._created_date) = org_tuple
+        try:
+            return {
+                "UID": org_tuple[0],
+                "Name": org_tuple[1],
+                "CreatedDate": org_tuple[2],
+            }
+        except Exception as e:
+            print("Parameter 'org_tuple' is not valid: " + e)
 
     def to_dict(self):
         return self._org_dict

@@ -3,7 +3,7 @@ from typing import Dict, Tuple
 
 
 class DataMapping:
-    def __init__(self, *args, **kwargs):
+    def __init__(self, data, *args, **kwargs):
         """Class for handling DataMapping
         
         Example:
@@ -24,30 +24,40 @@ class DataMapping:
                 "Parameter 'data' was not a valid input: dict, tuple, or JSON string"
             )
 
+        self._uid = self.data.get("UID", None)
+        self._organization = self.data.get("Organization", None)
+        self._name = self.data.get("Name", None)
+        self._mapping = self.data.get("MappingInfo", [])
+        self._created_date = self.data.get("CreatedDate", None)
+        self._created_by = self.data.get("CreatedBy", None)
+
     def from_dict(self, dm_dict: Dict):
-        self._dm_dict = dm_dict
-        self._uid = dm_dict.get("UID", None)
-        self._organization = dm_dict.get("Organization", None)
-        self._name = dm_dict.get("Name", None)
-        self._mapping = dm_dict.get("MappingInfo", [])
-        self._created_date = dm_dict.get("CreatedDate", None)
-        self._created_by = dm_dict.get("CreatedBy", None)
+        try:
+            return dm_dict
+        except Exception as e:
+            print("Parameter 'dm_dict' is not a valid dict: " + e)
 
     def from_json(self, dm_json):
-        self.from_dict(json.loads(dm_json))
+        try:
+            return self.from_dict(json.loads(dm_json))
+        except Exception as e:
+            print("Parameter 'dm_json' is not a valid JSON string: " + e)
 
     def from_tuple(self, dm_tuple: Tuple):
-        (
-            self._uid,
-            self._organization,
-            self._name,
-            self._mapping,
-            self._created_date,
-            self._created_by,
-        ) = dm_tuple
+        try:
+            return {
+                "UID": dm_tuple[0],
+                "Organization": dm_tuple[1],
+                "Name": dm_tuple[2],
+                "MappingInfo": dm_tuple[3],
+                "CreatedDate": dm_tuple[4],
+                "CreatedBy": dm_tuple[5],
+            }
+        except Exception as e:
+            print("Parameter 'dm_tuple' is not valid: " + e)
 
     def to_dict(self):
-        return self._dm_dict
+        return self.data
 
     def to_json(self):
-        return json.dumps(self._dm_dict)
+        return json.dumps(self.data)
