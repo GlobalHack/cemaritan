@@ -15,6 +15,7 @@ import json
 from typing import Dict
 import datetime
 
+import salesforce_api
 from utils import *
 from conversion import convert
 
@@ -41,7 +42,7 @@ def convertsingle(event, context):
     save_files_to_s3(bucket=S3_BUCKET_NAME, csv_files=converted_data, prefix=prefix)
 
     # Send success notifcation.
-    send_notification(n=1)
+    #send_notification(n=1)
 
     # Return results for testing.
     # Eventually remove this and return a status message.
@@ -67,7 +68,7 @@ def convertbulk(event, context):
     prefix = str(datetime.datetime.now()).replace(' ', 'T')
     save_files_to_s3(bucket=S3_BUCKET_NAME, csv_files=consolidated_csv_files, prefix=prefix)
     # Send success notification.
-    send_notification(len(list_of_converted_objects))
+    #send_notification(len(list_of_converted_objects))
     # Send back a confirmation message.
     response = {
         "statusCode": 200,
@@ -131,3 +132,20 @@ def send_notification(n):
             )
     except Exception as e:
         print(e)
+
+
+def post_new_client(event, context):
+    """Post a new client record."""
+    data = extact_form_data(event)
+    first_name = data['firstname']
+    last_name = data['lastname']
+    # Load credentials from local file. If no filename is passed, will try to load from environmental variables.
+    creds = salesforce_api.get_credentials()
+    # Create authentication header by requesting bearer token.
+    headers = salesforce_api.get_auth_header(**creds)
+    id_ = salesforce_api.post_new_client(first_name=first_name, last_name=last_name, headers=headers)
+    print(id_)
+    return {
+        'statusCode': 200,
+        'body': f'Record was synced with SalesForce. Id: {id_}'
+    }
