@@ -57,7 +57,7 @@ class Organization:
             print("Parameter 'org_tuple' is not valid: " + e)
 
     def to_dict(self):
-        return self._org_dict
+        return self.data
 
     def to_json(self):
-        return json.dumps(self._org_dict)
+        return json.dumps(self.data)
