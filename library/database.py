@@ -1,12 +1,35 @@
 # functions for actually making the database calls
-from typing import List, Tuple
+from typing import List, Tuple, Any
 
 # import models
 
 
+def zip_column_names_and_rows(column_names: List[str], rows: List[Tuple]):
+    """Returns list of List of 2-tuples of `column_name`, `row`
+    
+    Parameters
+    ----------
+    column_names : List[str]
+        Column names
+    rows : List[Tuple]
+        List of tuples representing rows
+    
+    Returns
+    -------
+    List[Tuple[str, Any]]
+        List of tuples representing each row of the response of the query
+
+    """
+    labeled_rows = []
+    for row in rows:
+        new_row = tuple(zip(column_names, row))
+        labeled_rows.append(new_row)
+    return labeled_rows
+
+
 def get_rows_by_organization(
     table_name: str, connection, organization_id: int
-) -> List[Tuple]:
+) -> List[Tuple[str, Any]]:
     """Returns list of tuples where each tuple is a row in the database
     
     Parameters
@@ -20,12 +43,16 @@ def get_rows_by_organization(
     
     Returns
     -------
-    List[Tuple]
+    List[Tuple[str, Any]]
         List of tuples representing each row of the response of the query
 
     """
     query = f"select * from {table_name} where {table_name}.organization = (select organization from users where users.UID = {organization_id})"
-    return connection.query(query).fetchall()
+    r = connection.query(query)
+    column_names = [x[0] for x in r.description]
+    rows = r.fetchall()
+    labeled_rows = zip_column_names_and_rows(column_names, rows)
+    return labeled_rows
 
 
 def get_connections(connection, organization_id: int):
@@ -132,7 +159,11 @@ def get_organization(connection, organization_id: int):
 
     """
     query = f"select * from organizations where organizations.uid = '{organization_id}'"
-    return connection.query(query).fetchall()
+    r = connection.query(query)
+    column_names = [x[0] for x in r.description]
+    rows = r.fetchall()
+    labeled_rows = zip_column_names_and_rows(column_names, rows)
+    return labeled_rows
 
 
 def get_organizations(connection, organization_id: int):
@@ -228,4 +259,3 @@ def delete_user(connection, user_id: int):
 
     query = f"DELETE from Users where Users.UID={user_id}"
     connection.query(query)
-
