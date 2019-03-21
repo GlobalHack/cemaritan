@@ -52,11 +52,7 @@ class Organization:
 
     def from_tuple(self, org_tuple: Tuple):
         try:
-            return {
-                "UID": org_tuple[0],
-                "Name": org_tuple[1],
-                "CreatedDate": org_tuple[2],
-            }
+            return {x[0]: x[1] for x in org_tuple}
         except Exception as e:
             print("Parameter 'org_tuple' is not valid: " + e)
 

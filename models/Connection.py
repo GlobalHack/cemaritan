@@ -53,15 +53,7 @@ class Connection:
 
     def from_tuple(self, conn_tuple: Tuple):
         try:
-            return {
-                "UID": conn_tuple[0],
-                "Organization": conn_tuple[1],
-                "Name": conn_tuple[2],
-                "CreatedDate": conn_tuple[3],
-                "CreatedBy": conn_tuple[4],
-                "Type": conn_tuple[5],
-                "ConnectionInfo": conn_tuple[6],
-            }
+            return {x[0]: x[1] for x in conn_tuple}
         except Exception as e:
             print("Parameter 'conn_tuple' is not valid: " + e)
 

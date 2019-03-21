@@ -45,12 +45,7 @@ class User:
 
     def from_tuple(self, user_tuple: Tuple):
         try:
-            return {
-                "UID": user_tuple[0],
-                "Name": user_tuple[1],
-                "CreatedDate": user_tuple[2],
-                "Organization": user_tuple[3],
-            }
+            return {x[0]: x[1] for x in user_tuple}
         except Exception as e:
             print("Parameter 'transfer_tuple' is not valid: " + e)
 

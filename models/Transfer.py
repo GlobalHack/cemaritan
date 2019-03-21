@@ -63,21 +63,7 @@ class Transfer:
 
     def from_tuple(self, transfer_tuple: Tuple):
         try:
-            return {
-                "UID": transfer_tuple[0],
-                "Name": transfer_tuple[1],
-                "CreatedDate": transfer_tuple[2],
-                "CreatedBy": transfer_tuple[3],
-                "Organization": transfer_tuple[4],
-                "Source": transfer_tuple[5],
-                "SourceMapping": transfer_tuple[6],
-                "Destination": transfer_tuple[7],
-                "DestinationMapping": transfer_tuple[8],
-                "StartDateTime": transfer_tuple[9],
-                "Frequency": transfer_tuple[10],
-                "RecordFilter": transfer_tuple[11],
-                "Active": transfer_tuple[12],
-            }
+            return {x[0]: x[1] for x in transfer_tuple}
         except Exception as e:
             print("Parameter 'transfer_tuple' is not valid: " + e)
 

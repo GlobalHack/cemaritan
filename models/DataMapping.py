@@ -45,14 +45,7 @@ class DataMapping:
 
     def from_tuple(self, dm_tuple: Tuple):
         try:
-            return {
-                "UID": dm_tuple[0],
-                "Organization": dm_tuple[1],
-                "Name": dm_tuple[2],
-                "MappingInfo": dm_tuple[3],
-                "CreatedDate": dm_tuple[4],
-                "CreatedBy": dm_tuple[5],
-            }
+            return {x[0]: x[1] for x in dm_tuple}
         except Exception as e:
             print("Parameter 'dm_tuple' is not valid: " + e)
 
