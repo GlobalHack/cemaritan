@@ -12,37 +12,7 @@ functions:
     events:
       - http:
         path: connections
-        method: post
-
-        
-  # convertsingle:
-  #   handler: api.convertsingle
-  #   events:
-  #     - http:
-  #         path: convertsingle
-  #         method: post
-  # convertbulk:
-  #   handler: api.convertbulk
-  #   events:
-  #     - http:
-  #         path: convertbulk
-  #         method: post
-  # fetchrecent:
-  #   handler: fetch_recent.fetch_updated_and_send_to_conversion
-  #   events:
-  #     - schedule: cron(* * ? * * *)
-  # fileupload:
-  #   handler: api.file_upload
-  #   events:
-  #     - http:
-  #         path: fileupload
-  #         method: post
-  # postnewclient:
-  #   handler: api.post_new_client
-  #   events:
-  #     - http:
-  #         path: postnewclient
-  #         method: post
+        method: get
 
 plugins:
   - serverless-python-requirements
