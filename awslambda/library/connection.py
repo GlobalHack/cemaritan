@@ -23,4 +23,3 @@ class SQLite:
             return response
         except Exception as e:
             print(e)
-
