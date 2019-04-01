@@ -3,6 +3,8 @@ import requests
 from library.connection import Aurora
 from library.database import *
 
+# define DB connection here
+
 
 def connections(event, context):
     try:
