@@ -7,7 +7,7 @@ from library.database import *
 # define DB connection here
 
 
-def organizations(event, context):
+def transfers(event, context):
     try:
         s = event["body"]
 
