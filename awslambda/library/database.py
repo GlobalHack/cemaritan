@@ -104,6 +104,29 @@ def get_connections(connection, organization_id: int):
     return [Connection(tup) for tup in orgs]
 
 
+def get_histories(connection, organization_id: int):
+    """Get histories for ``organization_id``
+    
+    Parameters
+    ----------
+    connection
+        Connection to database
+    organization_id : int
+        Organization Id
+    
+    Returns
+    -------
+    List[models.History]
+        List of History objects
+
+    """
+
+    orgs = get_rows_by_organization(
+        table_name="history", connection=connection, organization_id=organization_id
+    )
+    return [Connection(tup) for tup in orgs]
+
+
 def get_transfers(connection, organization_id: int):
     """Get transfers for ``organization_id``
     
