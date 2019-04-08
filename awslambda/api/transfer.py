@@ -1,8 +1,8 @@
 import requests
 import json
 
-from library.connection import Postgres
-from library.database import *
+# from library.connection import Postgres
+# from library.database import *
 
 # define DB connection here
 
