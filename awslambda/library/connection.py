@@ -34,7 +34,6 @@ class Postgres:
         self._database = os.environ["POSTGRES_DATABASE"]
         self._user = os.environ["POSTGRES_USER"]
         self._password = os.environ["POSTGRES_PASSWORD"]
-        # TODO: Update this connection
         self.connection = None
 
         # TODO: bool for whether connection is open or not

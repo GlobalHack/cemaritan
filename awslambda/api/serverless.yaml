@@ -8,7 +8,7 @@ provider:
 
 functions:
   get_connections:
-    handler: get.connections
+    handler: connection.connections
     events:
       - http:
         path: connections
