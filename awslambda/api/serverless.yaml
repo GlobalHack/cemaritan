@@ -13,30 +13,35 @@ functions:
       - http:
           path: connections
           method: get
+          cors: true
   get_mappings:
     handler: mapping.mappings
     events:
       - http:
           path: mappings
           method: get
+          cors: true
   get_organizations:
     handler: organization.organizations
     events:
       - http:
           path: organizations
           method: get
+          cors: true
   get_transfers:
     handler: transfer.transfers
     events:
       - http:
           path: transfers
           method: get
+          cors: true
   get_users:
     handler: user.users
     events:
       - http:
           path: users
           method: get
+          cors: true
 
 plugins:
   - serverless-python-requirements
