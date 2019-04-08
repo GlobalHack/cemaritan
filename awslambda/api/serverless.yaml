@@ -13,6 +13,30 @@ functions:
       - http:
         path: connections
         method: get
+  get_mappings:
+    handler: mapping.mappings
+    events:
+      - http:
+        path: mappings
+        method: get
+  get_organizations:
+    handler: organization.organizations
+    events:
+      - http:
+        path: organizations
+        method: get
+  get_transfers:
+    handler: connection.transfers
+    events:
+      - http:
+        path: transfers
+        method: get
+  get_users:
+    handler: connection.users
+    events:
+      - http:
+        path: users
+        method: get
 
 plugins:
   - serverless-python-requirements
