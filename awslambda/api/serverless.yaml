@@ -50,6 +50,14 @@ functions:
           method: get
           cors: true
 
+  create_transfer:
+    handler: transfer.create_transfers
+    events:
+      - http:
+          path: transfers
+          method: post
+          cors: true
+          
 plugins:
   - serverless-python-requirements
 
