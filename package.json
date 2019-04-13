@@ -18,6 +18,7 @@
     "serverless": "^1.33.1"
   },
   "devDependencies": {
-    "nodemon": "^1.17.4"
+    "nodemon": "^1.17.4",
+    "serverless-package-external": "^1.1.0"
   }
 }
