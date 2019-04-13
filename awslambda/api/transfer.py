@@ -50,3 +50,17 @@ def transfers(event, context):
         # TODO: Rethink what to return...dumping exceptions is scary for data leakage
         return {"statusCode": 400, "body": "400 Bad Request\n\n" + json.dumps(str(e))}
     return {"statusCode": 200, "body": payload}
+
+
+
+def create_transfers(event, context):
+    try:
+        s = event["body"]
+        # Ignore data for now.
+
+        payload = json.dumps('Data not saved yet.')
+
+    except Exception as e:
+        # TODO: Rethink what to return...dumping exceptions is scary for data leakage
+        return {"statusCode": 400, "body": "400 Bad Request\n\n" + json.dumps(str(e))}
+    return {"statusCode": 200, "body": payload}
