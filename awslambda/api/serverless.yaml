@@ -60,7 +60,11 @@ functions:
           
 plugins:
   - serverless-python-requirements
+  - serverless-package-external
 
 custom:
   pythonRequirements:
     dockerizePip: non-linux
+  packageExternal:
+    external:
+      - '../models'

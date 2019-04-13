@@ -34,7 +34,7 @@ class Postgres:
         self._database = os.environ["POSTGRES_DATABASE"]
         self._user = os.environ["POSTGRES_USER"]
         self._password = os.environ["POSTGRES_PASSWORD"]
-        self.connection = None
+        self._connection = None
 
         # TODO: bool for whether connection is open or not
 
@@ -49,17 +49,17 @@ class Postgres:
         """
 
         try:  # test for open connection
-            c = self.connection.cursor()
+            c = self._connection.cursor()
             c.execute("SELECT 1")
-            return self.connection
+            return self._connection
         except:
-            self.connection = psycopg2.connection(
+            self._connection = psycopg2.connection(
                 host=self._host,
                 database=self._database,
                 user=self._user,
                 password=self._password,
             )
-            return self.connection
+            return self._connection
 
     def query(self, query: str):
         """Submit query to database
@@ -71,7 +71,7 @@ class Postgres:
         
         """
         try:
-            c = self.connection.cursor()
+            c = self._connection.cursor()
             response = c.execute(query)
             c.commit()
             c.close()

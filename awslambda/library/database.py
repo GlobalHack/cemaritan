@@ -74,7 +74,7 @@ def delete_row_by_uid(connection, table_name: str, uid: int):
     """
 
     try:
-        query = f"DELETE from {table_name} where {table}.UID={uid}"
+        query = f"DELETE from {table_name} where {table_name}.UID={uid}"
         connection.query(query)
     except:
         return False
@@ -319,7 +319,7 @@ def create_user(connection, organization_id: int, name: str, created_date: str):
     
     """
 
-    query = f"INSERT INTO Users (Organization, Name, CreatedDate) VALUES ((select Organization from Users where Users.UID = {user_id}), '{name}', '{created_date}');"
+    query = f"INSERT INTO Users (Organization, Name, CreatedDate) VALUES ('{organization_id}', '{name}', '{created_date}');"
     connection.query(query)
 
 
@@ -375,24 +375,6 @@ def create_transfer(
     """
 
     query = f"INSERT INTO Transfers (Organization, Name, CreatedDate, CreatedBy, Source, SourceMapping, Destination, DestinationMapping, StartDateTime, Frequency, RecordFilter, Active) VALUES ((select Organization from Users where Users.UID = {user_id}), '{name}', '{created_date}', '{created_by}', '{source}', '{source_mapping}', '{destination}', '{destination_mapping}', '{start_date_time}', '{frequency}', '{record_filter}', '{active}');"
-    connection.query(query)
-
-
-def create_organization(connection, name: str, created_date: str):
-    """Create organization in database
-    
-    Parameters
-    ----------
-    connection
-        Connection to database
-    name : str
-        Name of organization
-    created_date : str
-        Date created
-    
-    """
-
-    query = f"INSERT INTO Organizations (Name, CreatedDate) VALUES ('{name}', '{created_date}');"
     connection.query(query)
 
 
