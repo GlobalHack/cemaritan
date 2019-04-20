@@ -49,7 +49,6 @@ functions:
           path: histories
           method: get
           cors: true
-
   create_transfer:
     handler: transfer.create_transfers
     events:
