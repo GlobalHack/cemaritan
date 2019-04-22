@@ -5,6 +5,14 @@ frameworkVersion: ">=1.2.0 <2.0.0"
 provider:
   name: aws
   runtime: python3.6
+  stage: dev
+  region: us-east-1
+  environment:
+    DB_HOST: ${ssm:host} 
+    PORT: ${ssm:port}
+    DB_NAME: ${ssm:dbname}
+    USER: ${ssm:user}
+    PASSWORD: ${ssm:pw}
 
 functions:
   get_connections:
@@ -56,7 +64,23 @@ functions:
           path: transfers
           method: post
           cors: true
-          
+  test_env:
+    handler: testfunction.test
+    events:
+      - http:
+         path: test
+         method: get
+         cors: true
+    environment:
+      TEST_ENV_VAR: ${ssm:testkey}
+  test_env2:
+    handler: testfunction.test2
+    events:
+      - http:
+         path: test2
+         method: get
+         cors: true
+    
 plugins:
   - serverless-python-requirements
   - serverless-package-external

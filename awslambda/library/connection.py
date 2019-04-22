@@ -29,11 +29,12 @@ class SQLite:
 
 
 class Postgres:
-    def __init__(self, db_path, *args, **kwargs):
-        self._host = os.environ["POSTGRES_HOST"]
-        self._database = os.environ["POSTGRES_DATABASE"]
-        self._user = os.environ["POSTGRES_USER"]
-        self._password = os.environ["POSTGRES_PASSWORD"]
+    def __init__(self, db_path: str=None, *args, **kwargs):
+        self._host = os.environ("host")
+        self._port = os.environ("port")
+        self._database = os.environ("dbname")
+        self._user = os.environ("user")
+        self._password = os.environ("pw")
         self._connection = None
 
         # TODO: bool for whether connection is open or not
@@ -55,6 +56,7 @@ class Postgres:
         except:
             self._connection = psycopg2.connection(
                 host=self._host,
+                port=self._port,
                 database=self._database,
                 user=self._user,
                 password=self._password,

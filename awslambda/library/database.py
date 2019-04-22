@@ -28,8 +28,7 @@ def zip_column_names_and_rows(column_names: List[str], rows: List[Tuple]):
 
 
 def get_rows_by_organization(
-    table_name: str, connection, organization_id: int
-) -> List[Tuple[str, Any]]:
+    table_name: str, connection, organization_id: int) -> List[Tuple[str, Any]]:
     """Returns list of tuples where each tuple is a row in the database
     
     Parameters
@@ -98,9 +97,9 @@ def get_connections(connection, organization_id: int):
 
     """
 
-    orgs = get_rows_by_organization(
-        table_name="connections", connection=connection, organization_id=organization_id
-    )
+    orgs = get_rows_by_organization(table_name="connections", 
+                                    connection=connection,
+                                    organization_id=organization_id)
     return [Connection(tup) for tup in orgs]
 
 
@@ -121,9 +120,9 @@ def get_histories(connection, organization_id: int):
 
     """
 
-    orgs = get_rows_by_organization(
-        table_name="history", connection=connection, organization_id=organization_id
-    )
+    orgs = get_rows_by_organization(table_name="history",
+                                    connection=connection, 
+                                    organization_id=organization_id)
     return [Connection(tup) for tup in orgs]
 
 
@@ -143,9 +142,9 @@ def get_transfers(connection, organization_id: int):
         List of Transfer objects
 
     """
-    transfers = get_rows_by_organization(
-        table_name="transfers", connection=connection, organization_id=organization_id
-    )
+    transfers = get_rows_by_organization(table_name="transfers", 
+                                         connection=connection, 
+                                         organization_id=organization_id)
     return [Transfer(tup) for tup in transfers]
 
 
@@ -165,9 +164,9 @@ def get_users(connection, organization_id: int):
         List of User objects
 
     """
-    users = get_rows_by_organization(
-        table_name="users", connection=connection, organization_id=organization_id
-    )
+    users = get_rows_by_organization(table_name="users", 
+                                     connection=connection, 
+                                     organization_id=organization_id)
     return [User(tup) for tup in users]
 
 
@@ -187,11 +186,9 @@ def get_data_mappings(connection, organization_id: int):
         List of DataMapping objects
 
     """
-    data_mappings = get_rows_by_organization(
-        table_name="datamappings",
-        connection=connection,
-        organization_id=organization_id,
-    )
+    data_mappings = get_rows_by_organization(table_name="datamappings",
+                                                connection=connection,
+                                                organization_id=organization_id)
     return [DataMapping(tup) for tup in data_mappings]
 
 
