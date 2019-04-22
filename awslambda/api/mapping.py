@@ -13,12 +13,13 @@ def mappings(event, context):
 
         # replace mapping_list here with actual database function call
         mapping_list = [
-            {"UID": 1, "Organization": 1, "Name": "SF to HUD", "MappingInfo": "{}"},
-            {"UID": 2, "Organization": 1, "Name": "CW to HUD", "MappingInfo": "{}"},
+            {"UID": 1, "Organization": 1, "Name": "SF to HUD", "StartFormat": "csv", "EndFormat": "json", "NumOfTransfers": 1, "MappingInfo": "{}"},
+            {"UID": 2, "Organization": 1, "Name": "CW to HUD", "StartFormat": "csv", "EndFormat": "json", "NumOfTransfers": 1, "MappingInfo": "{}"},
             {
                 "UID": 6,
                 "Organization": 1,
                 "Name": "new_mapping",
+                "StartFormat": "csv", "EndFormat": "json", "NumOfTransfers": 1, 
                 "MappingInfo": "blahdiblah",
             },
         ]
