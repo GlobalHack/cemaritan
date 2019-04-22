@@ -4,45 +4,18 @@ import json
 from library.connection import Postgres
 from library.database import *
 
+
 # define DB connection here
 
 conn = Postgres()
 
+
 def connections(event, context):
     try:
-        s = event["body"]
+        s = event["body"]["pathParameters"]["organization_id"]
 
         # replace connection_list here with actual database function call
-        connection_list = conn.
-        # connection_list = [
-        #     {
-        #         "UID": 1,
-        #         "Organization": 1,
-        #         "Name": "SF",
-        #         "CreatedDate": "2019-03-09 20:42:03",
-        #         "CreatedBy": 1,
-        #         "Type": "A",
-        #         "ConnectionInfo": "{conn string}",
-        #     },
-        #     {
-        #         "UID": 2,
-        #         "Organization": 1,
-        #         "Name": "CW",
-        #         "CreatedDate": "2019-03-10 04:42:03",
-        #         "CreatedBy": 1,
-        #         "Type": "B",
-        #         "ConnectionInfo": "{conn string}",
-        #     },
-        #     {
-        #         "UID": 6,
-        #         "Organization": 1,
-        #         "Name": "Secure Download",
-        #         "CreatedDate": "2019-03-23 20:42:03",
-        #         "CreatedBy": 0,
-        #         "Type": "F",
-        #         "ConnectionInfo": 0,
-        #     },
-        # ]
+        connection_list = conn.get_connections(conn, organization_id)
         payload = json.dumps(connection_list)
 
     except Exception as e:
