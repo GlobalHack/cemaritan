@@ -12,7 +12,7 @@ conn = Postgres()
 
 def connections(event, context):
     try:
-        s = event["body"]["pathParameters"]["organization_id"]
+        organization_id = event["body"]["pathParameters"]["organization_id"]
 
         # replace connection_list here with actual database function call
         connection_list = conn.get_connections(conn, organization_id)
