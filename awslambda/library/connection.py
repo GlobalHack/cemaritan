@@ -1,9 +1,56 @@
 # functions for converting from sql query results to JSON for API
 # ie: SQL Results <-> JSON conversions
 import os
-
 import sqlite3
+from typing import Any, List, Tuple
+
 import psycopg2
+
+
+def zip_column_names_and_rows(
+    column_names: List[str], rows: List[Tuple]
+) -> List[List[Tuple[str, Any]]]:
+    """Returns list of List of 2-tuples of `column_name`, `row`
+    
+    Parameters
+    ----------
+    column_names : List[str]
+        Column names
+    rows : List[Tuple]
+        List of tuples representing rows
+    
+    Returns
+    -------
+    List[List[Tuple[str, Any]]]
+        List of List of 2-tuples representing each row of the response of the query
+        Example: 
+        [
+            (
+                ("uid", 1),
+                ("organization", 1),
+                ("name", "SF"),
+                ("createddate", "2019-03-09 20:42:03"),
+                ("createdby", 1),
+                ("type", "A"),
+                ("connectioninfo", "{conn string}")
+            ),
+            (
+                ("uid", 2),
+                ("organization", 1),
+                ("name", "CW"),
+                ("createddate", "2019-03-10 04:42:03"),
+                ("createdby", 1),
+                ("type", "B"),
+                ("connectioninfo", "{conn string}")
+            )
+        ]
+
+    """
+    labeled_rows = []
+    for row in rows:
+        new_row = tuple(zip(column_names, row))
+        labeled_rows.append(new_row)
+    return labeled_rows
 
 
 class SQLite:
@@ -77,8 +124,13 @@ class Postgres:
         """
         try:
             c = self._connection.cursor()
-            response = c.execute(query)
-            c.close()
-            return response
+            c.execute(query)
+            column_names = [x.name for x in c.description]
+            rows = list(c.fetchall())  # limit to 100 results in the future?
+            to_return = zip_column_names_and_rows(column_names, rows)
+            return to_return
         except Exception as e:
             print(e)
+            self._connection.rollback()
+        finally:
+            c.close()

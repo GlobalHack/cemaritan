@@ -1,34 +1,12 @@
 # functions for actually making the database calls
-from typing import List, Tuple, Any
+from typing import Any, List, Tuple
 
-from models import Organization, DataMapping, User, Connection, Transfer
-
-
-def zip_column_names_and_rows(column_names: List[str], rows: List[Tuple]):
-    """Returns list of List of 2-tuples of `column_name`, `row`
-    
-    Parameters
-    ----------
-    column_names : List[str]
-        Column names
-    rows : List[Tuple]
-        List of tuples representing rows
-    
-    Returns
-    -------
-    List[Tuple[str, Any]]
-        List of tuples representing each row of the response of the query
-
-    """
-    labeled_rows = []
-    for row in rows:
-        new_row = tuple(zip(column_names, row))
-        labeled_rows.append(new_row)
-    return labeled_rows
+from models import Connection, DataMapping, Organization, Transfer, User
 
 
 def get_rows_by_organization(
-    table_name: str, connection, organization_id: int) -> List[Tuple[str, Any]]:
+    table_name: str, connection, organization_id: int
+) -> List[List[Tuple[str, Any]]]:
     """Returns list of tuples where each tuple is a row in the database
     
     Parameters
@@ -43,15 +21,33 @@ def get_rows_by_organization(
     Returns
     -------
     List[Tuple[str, Any]]
-        List of tuples representing each row of the response of the query
+        List of 2-tuples representing each row of the response of the query
+        Example: 
+        [
+            [
+                ("uid", 1),
+                ("organization", 1),
+                ("name", "SF"),
+                ("createddate", "2019-03-09 20:42:03"),
+                ("createdby", 1),
+                ("type", "A"),
+                ("connectioninfo", "{conn string}")
+            ],
+            [
+                ("uid", 2),
+                ("organization", 1),
+                ("name", "CW"),
+                ("createddate", "2019-03-10 04:42:03"),
+                ("createdby", 1),
+                ("type", "B"),
+                ("connectioninfo", "{conn string}")
+            ]
+        ]
 
     """
     query = f"select * from {table_name} where {table_name}.organization = (select organization from users where users.UID = {organization_id})"
     r = connection.query(query)
-    column_names = [x[0] for x in r.description]
-    rows = r.fetchall()
-    labeled_rows = zip_column_names_and_rows(column_names, rows)
-    return labeled_rows
+    return r
 
 
 def delete_row_by_uid(connection, table_name: str, uid: int):
@@ -97,9 +93,9 @@ def get_connections(connection, organization_id: int):
 
     """
 
-    orgs = get_rows_by_organization(table_name="connections", 
-                                    connection=connection,
-                                    organization_id=organization_id)
+    orgs = get_rows_by_organization(
+        table_name="connections", connection=connection, organization_id=organization_id
+    )
     return [Connection(tup) for tup in orgs]
 
 
@@ -120,9 +116,9 @@ def get_histories(connection, organization_id: int):
 
     """
 
-    orgs = get_rows_by_organization(table_name="history",
-                                    connection=connection, 
-                                    organization_id=organization_id)
+    orgs = get_rows_by_organization(
+        table_name="history", connection=connection, organization_id=organization_id
+    )
     return [Connection(tup) for tup in orgs]
 
 
@@ -142,9 +138,9 @@ def get_transfers(connection, organization_id: int):
         List of Transfer objects
 
     """
-    transfers = get_rows_by_organization(table_name="transfers", 
-                                         connection=connection, 
-                                         organization_id=organization_id)
+    transfers = get_rows_by_organization(
+        table_name="transfers", connection=connection, organization_id=organization_id
+    )
     return [Transfer(tup) for tup in transfers]
 
 
@@ -164,9 +160,9 @@ def get_users(connection, organization_id: int):
         List of User objects
 
     """
-    users = get_rows_by_organization(table_name="users", 
-                                     connection=connection, 
-                                     organization_id=organization_id)
+    users = get_rows_by_organization(
+        table_name="users", connection=connection, organization_id=organization_id
+    )
     return [User(tup) for tup in users]
 
 
@@ -186,9 +182,11 @@ def get_data_mappings(connection, organization_id: int):
         List of DataMapping objects
 
     """
-    data_mappings = get_rows_by_organization(table_name="datamappings",
-                                                connection=connection,
-                                                organization_id=organization_id)
+    data_mappings = get_rows_by_organization(
+        table_name="datamappings",
+        connection=connection,
+        organization_id=organization_id,
+    )
     return [DataMapping(tup) for tup in data_mappings]
 
 
@@ -209,11 +207,8 @@ def get_organization(connection, organization_id: int):
 
     """
     query = f"select * from organizations where organizations.uid = '{organization_id}'"
-    r = connection.query(query)
-    column_names = [x[0] for x in r.description]
-    rows = r.fetchall()
-    labeled_rows = zip_column_names_and_rows(column_names, rows)
-    org = labeled_rows[0]  # should be only one org
+    rows = connection.query(query)
+    org = rows[0]  # should be only one org
     return Organization(org)
 
 
@@ -234,11 +229,8 @@ def get_organizations(connection):
 
     """
     query = f"select * from organizations"
-    r = connection.query(query)
-    column_names = [x[0] for x in r.description]
-    rows = r.fetchall()
-    labeled_rows = zip_column_names_and_rows(column_names, rows)
-    return [Organization(tup) for tup in labeled_rows]
+    rows = connection.query(query)
+    return [Organization(tup) for tup in rows]
 
 
 def create_organization(connection, name: str, created_date: str):
