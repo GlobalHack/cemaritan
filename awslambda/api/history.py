@@ -1,30 +1,16 @@
 import requests
 import json
 
-# from library.connection import Postgres
-# from library.database import *
+from library.connection import Postgres
+from library.database import get_histories
 
-# define DB connection here
+conn = Postgres()
 
 
 def histories(event, context):
     try:
-        s = event["body"]
-
-        # replace history_list here with actual database function call
-        history_list = [
-            {
-                "Type": "sampleType",
-                "Action": "sampleAction",
-                "Date": "2019-03-10 12:34:56",
-                "CreatedByUser": 1,
-                "Name": "Joe Dirt",
-                "UID": 1,
-                "Details": "someDetails",
-                "SourceUID": 1,
-                "Organization": 1,
-            }
-        ]
+        organization_id = event["body"]["pathParameters"]["organization_id"]
+        history_list = get_histories(conn, organization_id)
         payload = json.dumps(history_list)
 
     except Exception as e:

@@ -1,27 +1,16 @@
 import requests
 import json
 
-# from library.connection import Postgres
-# from library.database import *
+from library.connection import Postgres
+from library.database import get_mappings
 
-# define DB connection here
+conn = Postgres()
 
 
 def mappings(event, context):
     try:
-        s = event["body"]
-
-        # replace mapping_list here with actual database function call
-        mapping_list = [
-            {"UID": 1, "Organization": 1, "Name": "SF to HUD", "MappingInfo": "{}"},
-            {"UID": 2, "Organization": 1, "Name": "CW to HUD", "MappingInfo": "{}"},
-            {
-                "UID": 6,
-                "Organization": 1,
-                "Name": "new_mapping",
-                "MappingInfo": "blahdiblah",
-            },
-        ]
+        organization_id = event["body"]["pathParameters"]["organization_id"]
+        mapping_list = get_mappings(conn, organization_id)
         payload = json.dumps(mapping_list)
 
     except Exception as e:

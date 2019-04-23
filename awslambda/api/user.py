@@ -1,25 +1,16 @@
 import requests
 import json
 
-# from library.connection import Postgres
-# from library.database import *
+from library.connection import Postgres
+from library.database import get_users
 
-# define DB connection here
+conn = Postgres()
 
 
 def users(event, context):
     try:
-        s = event["body"]
-
-        # replace user_list here with actual database function call
-        user_list = [
-            {
-                "UID": 1,
-                "Name": "Matt",
-                "CreatedDate": "2019-03-10 10:42:03",
-                "Organization": 1,
-            }
-        ]
+        organization_id = event["body"]["pathParameters"]["organization_id"]
+        user_list = get_users(conn, organization_id)
         payload = json.dumps(user_list)
 
     except Exception as e:

@@ -2,10 +2,7 @@ import requests
 import json
 
 from library.connection import Postgres
-from library.database import *
-
-
-# define DB connection here
+from library.database import get_connections
 
 conn = Postgres()
 
@@ -13,9 +10,7 @@ conn = Postgres()
 def connections(event, context):
     try:
         organization_id = event["body"]["pathParameters"]["organization_id"]
-
-        # replace connection_list here with actual database function call
-        connection_list = conn.get_connections(conn, organization_id)
+        connection_list = get_connections(conn, organization_id)
         payload = json.dumps(connection_list)
 
     except Exception as e:

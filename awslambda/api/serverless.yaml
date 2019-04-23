@@ -19,14 +19,14 @@ functions:
     handler: connection.connections
     events:
       - http:
-          path: connections
+          path: connections/{organization_id}
           method: get
           cors: true
   get_mappings:
     handler: mapping.mappings
     events:
       - http:
-          path: mappings
+          path: mappings/{organization_id}
           method: get
           cors: true
   get_organizations:
@@ -40,21 +40,21 @@ functions:
     handler: transfer.transfers
     events:
       - http:
-          path: transfers
+          path: transfers/{organization_id}
           method: get
           cors: true
   get_users:
     handler: user.users
     events:
       - http:
-          path: users
+          path: users/{organization_id}
           method: get
           cors: true
   get_histories:
     handler: history.histories
     events:
       - http:
-          path: histories
+          path: histories/{organization_id}
           method: get
           cors: true
   create_transfer:
