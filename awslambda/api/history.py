@@ -1,8 +1,8 @@
 import requests
 import json
 
-from library.connection import Postgres
-from library.database import get_histories
+from library.db_connections import Postgres
+from library.db_queries import get_histories
 from library.utils import awshandler
 
 conn = Postgres()
@@ -11,4 +11,4 @@ conn = Postgres()
 def histories(event, context):
     organization_id = event["pathParameters"]["organization_id"]
     history_list = get_histories(conn, organization_id)
-    return json.dumps(history_list)
+    return json.dumps([hist.to_dict() for hist in history_list])
