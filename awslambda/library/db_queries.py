@@ -117,7 +117,7 @@ def get_histories(connection, organization_id: int):
     """
 
     orgs = get_rows_by_organization(
-        table_name="history", connection=connection, organization_id=organization_id
+        table_name="histories", connection=connection, organization_id=organization_id
     )
     return [Connection(tup) for tup in orgs]
 
@@ -166,7 +166,7 @@ def get_users(connection, organization_id: int):
     return [User(tup) for tup in users]
 
 
-def get_data_mappings(connection, organization_id: int):
+def get_mappings(connection, organization_id: int):
     """Get data mappings for ``organization_id``
     
     Parameters

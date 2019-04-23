@@ -1,8 +1,8 @@
 import requests
 import json
 
-from library.connection import Postgres
-from library.database import get_users
+from library.db_connections import Postgres
+from library.db_queries import get_users
 from library.utils import awshandler
 
 conn = Postgres()
