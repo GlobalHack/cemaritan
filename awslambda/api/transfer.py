@@ -49,7 +49,10 @@ def transfers(event, context):
     except Exception as e:
         # TODO: Rethink what to return...dumping exceptions is scary for data leakage
         return {"statusCode": 400, "body": "400 Bad Request\n\n" + json.dumps(str(e))}
-    return {"statusCode": 200, "body": payload}
+    return {"statusCode": 200,  
+            "headers":
+                {"Access-Control-Allow-Origin": "*"}, 
+                "body": payload}
 
 
 
