@@ -22,6 +22,10 @@ functions:
           path: connections/{organization_id}
           method: get
           cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
   get_mappings:
     handler: mapping.mappings
     events:
@@ -29,6 +33,10 @@ functions:
           path: mappings/{organization_id}
           method: get
           cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
   get_organizations:
     handler: organization.organizations
     events:
@@ -43,6 +51,10 @@ functions:
           path: transfers/{organization_id}
           method: get
           cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
   get_users:
     handler: user.users
     events:
@@ -50,6 +62,10 @@ functions:
           path: users/{organization_id}
           method: get
           cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
   get_histories:
     handler: history.histories
     events:
@@ -57,6 +73,10 @@ functions:
           path: histories/{organization_id}
           method: get
           cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
   create_transfer:
     handler: transfer.create_transfers
     events:
