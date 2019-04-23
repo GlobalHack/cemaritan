@@ -39,6 +39,23 @@ CREATE TABLE IF NOT EXISTS `Organizations` (
 INSERT INTO `Organizations` (UID,Name,CreatedDate) VALUES (1,'OLI','2019-03-13 20:42:03'),
  (2,'SPC','2019-03-15 01:03:03'),
  (3,'OLI 2','2019-03-18 20:42:03');
+DROP TABLE IF EXISTS `Histories`;
+CREATE TABLE IF NOT EXISTS `Histories` (
+	`UID`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+	`Type`	TEXT NOT NULL,
+	`Action`	TEXT,
+	`Date`	TEXT NOT NULL,
+	`CreatedByUser`	INTEGER NOT NULL,
+	`Name`	TEXT,
+	`Details`	INTEGER,
+	`SourceUID`	INTEGER NOT NULL,
+	`Organization`	INTEGER NOT NULL
+);
+INSERT INTO `Histories` (UID,Type,Action,Date,CreatedByUser,Name,Details,SourceUID,Organization) VALUES (2,'Transfer',NULL,'2019-03-20 20:42:03',1,NULL,NULL,0,1),
+ (3,'Transfer',NULL,'2019-03-20 20:42:03',1,NULL,NULL,0,1),
+ (4,'Transfer','Action B','2019-03-20 20:42:03',1,NULL,NULL,0,1),
+ (5,'Transfer','Action B','2019-03-20 20:42:03',2,NULL,NULL,1,2),
+ (6,'Transfer','Action C','2019-03-20 20:42:03',3,NULL,NULL,2,3);
 DROP TABLE IF EXISTS `DataMappings`;
 CREATE TABLE IF NOT EXISTS `DataMappings` (
 	`UID`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
