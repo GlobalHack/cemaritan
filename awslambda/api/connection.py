@@ -4,7 +4,7 @@ import json
 from library.connection import Postgres
 from library.database import get_connections
 
-# conn = Postgres()
+conn = Postgres()
 
 
 def connections(event, context):

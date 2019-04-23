@@ -1,11 +1,16 @@
 # functions for converting from sql query results to JSON for API
 # ie: SQL Results <-> JSON conversions
 import os
-import sqlite3
 from typing import Any, List, Tuple
 
 import psycopg2
 
+# Only need sqlite3 for local testing
+try:
+    import sqlite3
+except:
+    pass
+    
 
 def zip_column_names_and_rows(
     column_names: List[str], rows: List[Tuple]
@@ -77,11 +82,11 @@ class SQLite:
 
 class Postgres:
     def __init__(self, db_path: str = None, *args, **kwargs):
-        self._host = os.environ["host"]
-        self._port = os.environ["port"]
-        self._database = os.environ["dbname"]
-        self._user = os.environ["user"]
-        self._password = os.environ["pw"]
+        self._host = os.environ["DB_HOST"]
+        self._port = os.environ["PORT"]
+        self._database = os.environ["DB_NAME"]
+        self._user = os.environ["USER"]
+        self._password = os.environ["PASSWORD"]
         self._connection = self.create_new_connection()
 
         # TODO: bool for whether connection is open or not

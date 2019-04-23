@@ -19,7 +19,7 @@ functions:
     handler: connection.connections
     events:
       - http:
-          path: connections/{organization_id}
+          path: organizations/{organization_id}/connections
           method: get
           cors: true
           request:
@@ -30,7 +30,7 @@ functions:
     handler: mapping.mappings
     events:
       - http:
-          path: mappings/{organization_id}
+          path: organizations/{organization_id}/mappings
           method: get
           cors: true
           request:
@@ -48,7 +48,7 @@ functions:
     handler: transfer.transfers
     events:
       - http:
-          path: transfers/{organization_id}
+          path: organizations/{organization_id}/transfers
           method: get
           cors: true
           request:
@@ -59,7 +59,7 @@ functions:
     handler: user.users
     events:
       - http:
-          path: users/{organization_id}
+          path: organizations/{organization_id}/users
           method: get
           cors: true
           request:
@@ -70,7 +70,7 @@ functions:
     handler: history.histories
     events:
       - http:
-          path: histories/{organization_id}
+          path: organizations/{organization_id}/histories
           method: get
           cors: true
           request:
@@ -81,7 +81,7 @@ functions:
     handler: transfer.create_transfers
     events:
       - http:
-          path: transfers
+          path: organizations/{organization_id}/transfers
           method: post
           cors: true
     
@@ -95,4 +95,4 @@ custom:
   packageExternal:
     external:
       - '../models'
-     
+      - '../library'
