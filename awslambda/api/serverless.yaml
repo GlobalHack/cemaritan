@@ -84,22 +84,6 @@ functions:
           path: transfers
           method: post
           cors: true
-  test_env:
-    handler: testfunction.test
-    events:
-      - http:
-         path: test
-         method: get
-         cors: true
-    environment:
-      TEST_ENV_VAR: ${ssm:testkey}
-  test_env2:
-    handler: testfunction.test2
-    events:
-      - http:
-         path: test2
-         method: get
-         cors: true
     
 plugins:
   - serverless-python-requirements
@@ -111,3 +95,4 @@ custom:
   packageExternal:
     external:
       - '../models'
+     
