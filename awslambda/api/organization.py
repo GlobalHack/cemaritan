@@ -3,16 +3,13 @@ import json
 
 from library.connection import Postgres
 from library.database import get_organizations
+from library.utils import awshandler
 
 conn = Postgres()
 
 
+@awshandler
 def organizations(event, context):
-    try:
-        organization_list = get_organizations(conn)
-        payload = json.dumps(organization_list)
+    organization_list = get_organizations(conn)
+    return json.dumps([org.to_dict() for org in organization_list])
 
-    except Exception as e:
-        # TODO: Rethink what to return...dumping exceptions is scary for data leakage
-        return {"statusCode": 400, "body": "400 Bad Request\n\n" + json.dumps(str(e))}
-    return {"statusCode": 200, "body": payload}

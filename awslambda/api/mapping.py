@@ -9,7 +9,7 @@ conn = Postgres()
 
 def mappings(event, context):
     try:
-        organization_id = event["body"]["pathParameters"]["organization_id"]
+        organization_id = event["pathParameters"]["organization_id"]
         mapping_list = get_mappings(conn, organization_id)
         payload = json.dumps(mapping_list)
 
