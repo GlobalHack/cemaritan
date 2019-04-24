@@ -61,13 +61,16 @@ CREATE TABLE IF NOT EXISTS DataMappings (
 	UID	INTEGER NOT NULL PRIMARY KEY  UNIQUE,
 	Organization	INTEGER NOT NULL,
 	Name	TEXT NOT NULL,
-	MappingInfo	TEXT NOT NULL
+	MappingInfo	TEXT NOT NULL,
+	StartFormat	TEXT,
+	EndFormat	TEXT,
+	NumOfTransfers	INTEGER
 );
-INSERT INTO DataMappings (UID,Organization,Name,MappingInfo) VALUES (1,1,'SF to HUD','{}'),
- (2,1,'CW to HUD','{}'),
- (3,2,'SP Validation','{}'),
- (4,2,'CW Validation','{}'),
- (5,3,'CW to HUD','{}');
+INSERT INTO DataMappings (UID,Organization,Name,MappingInfo,StartFormat,EndFormat,NumOfTransfers) VALUES (1,1,'SF to HUD','{}','csv','json',1),
+ (2,1,'CW to HUD','{}','csv','json',2),
+ (3,2,'SP Validation','{}','csv','json',1),
+ (4,2,'CW Validation','{}','json','csv',0),
+ (5,3,'CW to HUD','{}','csv','json',2);
 DROP TABLE IF EXISTS Connections;
 CREATE TABLE IF NOT EXISTS Connections (
 	UID	INTEGER NOT NULL PRIMARY KEY  UNIQUE,
