@@ -5,7 +5,7 @@ from models import Connection, DataMapping, Organization, Transfer, User
 
 
 def get_rows_by_organization(
-    table_name: str, connection, organization_id: int
+    table_name: str, connection, organization_id: int, query: str=None
 ) -> List[List[Tuple[str, Any]]]:
     """Returns list of tuples where each tuple is a row in the database
     
@@ -45,7 +45,8 @@ def get_rows_by_organization(
         ]
 
     """
-    query = f"select * from {table_name} where {table_name}.organization = (select organization from users where users.UID = {organization_id})"
+    if query is None:
+        query = f"select * from {table_name} where {table_name}.organization = (select organization from users where users.UID = {organization_id})"
     r = connection.query(query)
     return r
 
@@ -138,8 +139,42 @@ def get_transfers(connection, organization_id: int):
         List of Transfer objects
 
     """
+    QUERY  = """select 
+                    t6.UID,
+                    t6.Name,
+                    t6.Organization2 as Organization,
+                    t6.CreatedDate as CreatedDate,
+                    t6.Source2 as Source,
+                    t6.SourceMapping2 as SourceMapping,
+                    t6.Destination2 as Destination,
+                    t6.DestinationMapping2 as DestinationMapping,
+                    CASE WHEN t6.Active = 1 THEN 'TRUE' ELSE 'FALSE' END Active,
+                    t6.StartDateTime as StartTime,
+                    t6.frequency as Frequency
+                    from 
+                    (select t5.*, d2.Name as DestinationMapping2 from
+                    (select t4.*, d.Name as SourceMapping2 from 
+                    (Select t3.*, c2.Name as Destination2 from
+                    (select t2.*, c.Name as Source2 from
+                    (select t.*, o.Name as Organization2 from
+                    (select * from Transfers where Transfers.organization = (select organization from users where users.UID = 1)) as t
+                    LEFT JOIN 
+                    Organizations as o
+                    on o.UID = t.Organization) as t2
+                    LEFT join
+                    Connections as c
+                    on t2.Source=c.UID) as t3
+                    left join
+                    Connections as c2
+                    on t3.Destination=c2.UID) as t4
+                    left join
+                    DataMappings as d
+                    on t4.SourceMapping=d.UID) as t5
+                    left join
+                    DataMappings as d2
+                    on t5.DestinationMapping=d2.UID) as t6"""
     transfers = get_rows_by_organization(
-        table_name="transfers", connection=connection, organization_id=organization_id
+        table_name="transfers", connection=connection, organization_id=organization_id, query=QUERY
     )
     return [Transfer(tup) for tup in transfers]
 
