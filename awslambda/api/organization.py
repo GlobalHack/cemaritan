@@ -11,14 +11,12 @@ conn = Postgres()
 
 @awshandler
 def organizations(event, context):
-    organization_list = get_organizations(conn)
+    organization_list = db_queries.get_organizations(conn)
     return json.dumps([org.to_dict() for org in organization_list])
 
 
 @awshandler
 def get_organization(event, context):
     organization_id = aws_get_path_parameter(event, "organization_id")
-    organization_id = aws_get_path_parameter(event, "organization_id")
-    return json.dumps({'org':organization_id, 'organization':organization_id})
-    organization = db_queries.get_organization(organization_id=organization_id, organization_id=organization_id)
+    organization = db_queries.get_organization(connection=conn, organization_id=organization_id)
     return json.dumps(organization.to_dict())

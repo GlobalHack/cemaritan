@@ -19,6 +19,5 @@ def connections(event, context):
 def get_connection(event, context):
     organization_id = aws_get_path_parameter(event, "organization_id")
     connection_id = aws_get_path_parameter(event, "connection_id")
-    return json.dumps({'org':organization_id, 'connection':connection_id})
-    connection = db_queries.get_connection(organization_id=organization_id, connection_id=connection_id)
+    connection = db_queries.get_connection(connection=conn, organization_id=organization_id, connection_id=connection_id)
     return json.dumps(connection.to_dict())

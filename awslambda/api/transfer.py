@@ -4,7 +4,6 @@ import json
 import library.db_queries as db_queries
 
 from library.db_connections import Postgres
-
 from library.utils import awshandler, aws_get_path_parameter
 
 conn = Postgres()
@@ -25,6 +24,5 @@ def create_transfer(event, context):
 def get_transfer(event, context):
     organization_id = aws_get_path_parameter(event, "organization_id")
     transfer_id = aws_get_path_parameter(event, "transfer_id")
-    return json.dumps({'org':organization_id, 'transfer':transfer_id})
-    transfer = db_queries.get_transfer(organization_id=organization_id, transfer_id=transfer_id)
+    transfer = db_queries.get_transfer(connection=conn, organization_id=organization_id, transfer_id=transfer_id)
     return json.dumps(transfer.to_dict())
