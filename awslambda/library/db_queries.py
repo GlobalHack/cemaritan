@@ -3,7 +3,7 @@ from typing import Any, List, Tuple
 
 from models import Connection, Mapping, Organization, Transfer, User, History
 
-
+### Generic functions
 def get_rows_by_organization(
     table_name: str, connection, organization_id: int, query: str = None
 ) -> List[Tuple[Tuple[str, Any]]]:
@@ -119,7 +119,7 @@ def delete_row_by_uid(connection, table_name: str, uid: int):
         return False
     return True
 
-
+### Collections
 def get_connections(connection, organization_id: int):
     """Get connections for ``organization_id``
     
@@ -187,7 +187,7 @@ def get_connection(connection, organization_id: int, connection_id: int):
     )
     return Connection(row)
 
-
+# Histories
 def get_histories(connection, organization_id: int):
     """Get histories for ``organization_id``
     
@@ -251,7 +251,7 @@ def get_history(connection, organization_id: int, history_id: int):
     )
     return History(row)
 
-
+# Transfers
 def get_transfers(connection, organization_id: int):
     """Get transfers for ``organization_id``
     
@@ -355,7 +355,7 @@ def get_transfer(connection, organization_id: int, transfer_id: int):
     )
     return Transfer(row)
 
-
+# Users
 def get_users(connection, organization_id: int):
     """Get users for ``organization_id``
     
@@ -413,7 +413,7 @@ def get_user(connection, organization_id: int, user_id: int):
     )
     return User(row)
 
-
+# Mappings
 def get_mappings(connection, organization_id: int):
     """Get data mappings for ``organization_id``
     
@@ -474,7 +474,7 @@ def get_mapping(connection, organization_id: int, mapping_id: int):
     )
     return Mapping(row)
 
-
+# Organizations
 def get_organization(connection, organization_id: int):
     """Get organization with ``organization_id``
     
