@@ -426,14 +426,14 @@ def get_mappings(connection, organization_id: int):
     
     Returns
     -------
-    List[models.DataMapping]
-        List of DataMapping objects
+    List[models.Mapping]
+        List of Mapping objects
 
     """
     data_mappings = get_rows_by_organization(
         table_name="mappings", connection=connection, organization_id=organization_id
     )
-    return [DataMapping(tup) for tup in data_mappings]
+    return [Mapping(tup) for tup in data_mappings]
 
 
 def get_mapping(connection, organization_id: int, mapping_id: int):
