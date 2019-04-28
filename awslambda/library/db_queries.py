@@ -1,12 +1,12 @@
 # functions for actually making the database calls
 from typing import Any, List, Tuple
 
-from models import Connection, DataMapping, Organization, Transfer, User
+from models import Connection, Mapping, Organization, Transfer, User, History
 
 
 def get_rows_by_organization(
-    table_name: str, connection, organization_id: int, query: str=None
-) -> List[List[Tuple[str, Any]]]:
+    table_name: str, connection, organization_id: int, query: str = None
+) -> List[Tuple[Tuple[str, Any]]]:
     """Returns list of tuples where each tuple is a row in the database
     
     Parameters
@@ -20,11 +20,11 @@ def get_rows_by_organization(
     
     Returns
     -------
-    List[Tuple[str, Any]]
-        List of 2-tuples representing each row of the response of the query
+    List[Tuple[Tuple[str, Any]]]
+        List of Tuples of 2-tuples representing each row of the response of the query
         Example: 
         [
-            [
+            (
                 ("uid", 1),
                 ("organization", 1),
                 ("name", "SF"),
@@ -32,8 +32,8 @@ def get_rows_by_organization(
                 ("createdby", 1),
                 ("type", "A"),
                 ("connectioninfo", "{conn string}")
-            ],
-            [
+            ),
+            (
                 ("uid", 2),
                 ("organization", 1),
                 ("name", "CW"),
@@ -41,7 +41,7 @@ def get_rows_by_organization(
                 ("createdby", 1),
                 ("type", "B"),
                 ("connectioninfo", "{conn string}")
-            ]
+            )
         ]
 
     """
@@ -49,6 +49,49 @@ def get_rows_by_organization(
         query = f"select * from {table_name} where {table_name}.organization = (select organization from users where users.UID = {organization_id})"
     r = connection.query(query)
     return r
+
+
+def get_row_by_object_id(
+    table_name: str, connection, organization_id: int, object_id: int, query: str = None
+) -> Tuple[Tuple[str, Any]]:
+    """Returns a tuple of tuples representing a single row in the database
+    corresponding to ``organization_id`` and ``object_id``.
+    
+    Parameters
+    ----------
+    table_name : 
+        Name of table in DB
+    connection
+        Connection to DB
+    organization_id
+        Id of Organization
+    object_id
+        UID of object to return, if exists
+    
+    Returns
+    -------
+    Tuple[Tuple[str, Any]]
+        Tuple of 2-tuples representing a row of ``table_name`` matching ``organization_id``
+        and ``object_id``
+        Example: 
+        (
+            ("uid", 1),
+            ("organization", 1),
+            ("name", "SF"),
+            ("createddate", "2019-03-09 20:42:03"),
+            ("createdby", 1),
+            ("type", "A"),
+            ("connectioninfo", "{conn string}")
+        )
+
+    """
+    try:
+        if query is None:
+            query = f"select * from {table_name} where {table_name}.organization = (select organization from users where users.UID = {organization_id}) and {table_name}.UID = {object_id}"
+        r = connection.query(query)
+        return r[0]  # return only first element if possible
+    except IndexError:
+        return None
 
 
 def delete_row_by_uid(connection, table_name: str, uid: int):
@@ -94,10 +137,55 @@ def get_connections(connection, organization_id: int):
 
     """
 
-    orgs = get_rows_by_organization(
+    connections = get_rows_by_organization(
         table_name="connections", connection=connection, organization_id=organization_id
     )
-    return [Connection(tup) for tup in orgs]
+    return [Connection(tup) for tup in connections]
+
+
+def get_connection(connection, organization_id: int, connection_id: int):
+    """Get connection matching ``organization_id`` and ``connection_id``
+    
+    Parameters
+    ----------
+    connection : 
+        Connection to database
+    organization_id : int
+        Organization Id
+    connection_id : int
+        Connection Id
+    
+    Returns
+    -------
+    Tuple[Tuple[str, Any]]
+        Tuple of 2-tuples representing a row of `connections` table matching ``organization_id``
+        and ``connection_id``
+        Example: 
+        (
+            ("uid", 1),
+            ("name", "CW to SF"),
+            ("createddate", "2019-03-20 20:42:03"),
+            ("createdby", 1),
+            ("organization", 1),
+            ("source", 2),
+            ("sourcemapping", 2),
+            ("destination", 1),
+            ("destinationmapping", 1),
+            ("startdatetime", "2019-03-13 20:42:03"),
+            ("frequency", "1 day"),
+            ("recordfilter", "filter a"),
+            ("active", 1)
+        )
+        
+    """
+
+    row = get_row_by_object_id(
+        table_name="connections",
+        connection=connection,
+        organization_id=organization_id,
+        object_id=connection_id,
+    )
+    return Connection(row)
 
 
 def get_histories(connection, organization_id: int):
@@ -120,7 +208,48 @@ def get_histories(connection, organization_id: int):
     orgs = get_rows_by_organization(
         table_name="histories", connection=connection, organization_id=organization_id
     )
-    return [Connection(tup) for tup in orgs]
+    return [History(tup) for tup in orgs]
+
+
+def get_history(connection, organization_id: int, history_id: int):
+    """Get history matching ``organization_id`` and ``history_id``
+    
+    Parameters
+    ----------
+    connection : 
+        Connection to database
+    organization_id : int
+        Organization Id
+    history_id : int
+        history Id
+    
+    Returns
+    -------
+    Tuple[Tuple[str, Any]]
+        Tuple of 2-tuples representing a row of `histories` table matching ``organization_id``
+        and ``history_id``
+        Example: 
+        (
+            ("uid", 2),
+            ("type", "Transfer"),
+            ("action", None),
+            ("date", "2019-03-20 20:42:03"),
+            ("createdbyuser", 1),
+            ("name", None),
+            ("details", None),
+            ("sourceuid", 0),
+            ("organization", 1)
+        )
+        
+    """
+
+    row = get_row_by_object_id(
+        table_name="histories",
+        connection=connection,
+        organization_id=organization_id,
+        object_id=history_id,
+    )
+    return History(row)
 
 
 def get_transfers(connection, organization_id: int):
@@ -139,7 +268,7 @@ def get_transfers(connection, organization_id: int):
         List of Transfer objects
 
     """
-    QUERY  = """select 
+    QUERY = """select 
                     t6.UID,
                     t6.Name,
                     t6.Organization2 as Organization,
@@ -168,15 +297,63 @@ def get_transfers(connection, organization_id: int):
                     Connections as c2
                     on t3.Destination=c2.UID) as t4
                     left join
-                    DataMappings as d
+                    Mappings as d
                     on t4.SourceMapping=d.UID) as t5
                     left join
-                    DataMappings as d2
+                    Mappings as d2
                     on t5.DestinationMapping=d2.UID) as t6"""
     transfers = get_rows_by_organization(
-        table_name="transfers", connection=connection, organization_id=organization_id, query=QUERY
+        table_name="transfers",
+        connection=connection,
+        organization_id=organization_id,
+        query=QUERY,
     )
     return [Transfer(tup) for tup in transfers]
+
+
+def get_transfer(connection, organization_id: int, transfer_id: int):
+    """Get transfer matching ``organization_id`` and ``transfer_id``
+    
+    Parameters
+    ----------
+    connection : 
+        Connection to database
+    organization_id : int
+        Organization Id
+    transfer_id : int
+        transfer Id
+    
+    Returns
+    -------
+    Tuple[Tuple[str, Any]]
+        Tuple of 2-tuples representing a row of `transfers` table matching ``organization_id``
+        and ``transfer_id``
+        Example: 
+        (
+            ("uid", 1),
+            ("name", "CW to SF"),
+            ("createddate", "2019-03-20 20:42:03"),
+            ("createdby", 1),
+            ("organization", 1),
+            ("source", 2),
+            ("sourcemapping", 2),
+            ("destination", 1),
+            ("destinationmapping", 1),
+            ("startdatetime", "2019-03-13 20:42:03"),
+            ("frequency", "1 day"),
+            ("recordfilter", "filter a"),
+            ("active", 1)
+        )
+        
+    """
+
+    row = get_row_by_object_id(
+        table_name="transfers",
+        connection=connection,
+        organization_id=organization_id,
+        object_id=transfer_id,
+    )
+    return Transfer(row)
 
 
 def get_users(connection, organization_id: int):
@@ -201,6 +378,42 @@ def get_users(connection, organization_id: int):
     return [User(tup) for tup in users]
 
 
+def get_user(connection, organization_id: int, user_id: int):
+    """Get user matching ``organization_id`` and ``user_id``
+    
+    Parameters
+    ----------
+    connection : 
+        Connection to database
+    organization_id : int
+        Organization Id
+    user_id : int
+        user Id
+    
+    Returns
+    -------
+    Tuple[Tuple[str, Any]]
+        Tuple of 2-tuples representing a row of `users` table matching ``organization_id``
+        and ``user_id``
+        Example: 
+        (
+            ("uid", 1),
+            ("name", "Matt"),
+            ("createddate", "2019-03-10 10:42:03"),
+            ("organization", 1)
+        )
+        
+    """
+
+    row = get_row_by_object_id(
+        table_name="users",
+        connection=connection,
+        organization_id=organization_id,
+        object_id=user_id,
+    )
+    return User(row)
+
+
 def get_mappings(connection, organization_id: int):
     """Get data mappings for ``organization_id``
     
@@ -218,11 +431,48 @@ def get_mappings(connection, organization_id: int):
 
     """
     data_mappings = get_rows_by_organization(
-        table_name="datamappings",
-        connection=connection,
-        organization_id=organization_id,
+        table_name="mappings", connection=connection, organization_id=organization_id
     )
     return [DataMapping(tup) for tup in data_mappings]
+
+
+def get_mapping(connection, organization_id: int, mapping_id: int):
+    """Get mapping matching ``organization_id`` and ``mapping_id``
+    
+    Parameters
+    ----------
+    connection : 
+        Connection to database
+    organization_id : int
+        Organization Id
+    mapping_id : int
+        mapping Id
+    
+    Returns
+    -------
+    Tuple[Tuple[str, Any]]
+        Tuple of 2-tuples representing a row of `mappings` table matching ``organization_id``
+        and ``mapping_id``
+        Example: 
+        (
+            ("uid", 1),
+            ("organization", 1),
+            ("name", "SF to HUD"),
+            ("mappinginfo", "{}"),
+            ("startformat", "csv"),
+            ("endformat", "json"),
+            ("numoftransfers", 1)
+        )
+        
+    """
+
+    row = get_row_by_object_id(
+        table_name="mappings",
+        connection=connection,
+        organization_id=organization_id,
+        object_id=mapping_id,
+    )
+    return Mapping(row)
 
 
 def get_organization(connection, organization_id: int):
@@ -249,14 +499,14 @@ def get_organization(connection, organization_id: int):
 
 # def get_organizations(connection):
 #     """Get all organizations
-    
+
 #     Parameters
 #     ----------
 #     connection
 #         Connection to database
 #     organization_id : int
 #         Organization Id
-    
+
 #     Returns
 #     -------
 #     List[models.Organization]
@@ -270,7 +520,7 @@ def get_organization(connection, organization_id: int):
 
 # def create_organization(connection, name: str, created_date: str):
 #     """Create organization in database
-    
+
 #     Parameters
 #     ----------
 #     connection
@@ -287,7 +537,7 @@ def get_organization(connection, organization_id: int):
 
 # def create_data_mapping(connection, user_id: int, name: str, mapping_info: str):
 #     """Create data mapping in database
-    
+
 #     Parameters
 #     ----------
 #     connection
@@ -298,7 +548,7 @@ def get_organization(connection, organization_id: int):
 #         Date created
 
 #     """
-#     query = f"INSERT INTO DataMappings (Organization, Name, MappingInfo) VALUES ((select Organization from Users where Users.UID = {user_id}), '{name}', '{mapping_info}');"
+#     query = f"INSERT INTO Mappings (Organization, Name, MappingInfo) VALUES ((select Organization from Users where Users.UID = {user_id}), '{name}', '{mapping_info}');"
 #     connection.query(query)
 
 
@@ -312,7 +562,7 @@ def get_organization(connection, organization_id: int):
 #     connection_info: str,
 # ):
 #     """Create connection in database
-        
+
 #         Parameters
 #         ----------
 #         connection
@@ -329,7 +579,7 @@ def get_organization(connection, organization_id: int):
 
 # def create_user(connection, organization_id: int, name: str, created_date: str):
 #     """Create user in database
-    
+
 #     Parameters
 #     ----------
 #     connection
@@ -340,7 +590,7 @@ def get_organization(connection, organization_id: int):
 #         Name of user
 #     created_date : str
 #         Date Created
-    
+
 #     """
 
 #     query = f"INSERT INTO Users (Organization, Name, CreatedDate) VALUES ('{organization_id}', '{name}', '{created_date}');"
@@ -441,7 +691,7 @@ def delete_data_mapping(connection, data_mapping_id: int):
         Id of data_mapping
     
     """
-    return delete_row_by_uid(connection, "DataMappings", data_mapping_id)
+    return delete_row_by_uid(connection, "Mappings", data_mapping_id)
 
 
 def delete_connection(connection, connection_id: int):
