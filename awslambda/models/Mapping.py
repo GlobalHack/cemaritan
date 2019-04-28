@@ -2,9 +2,9 @@ import json
 from typing import Dict, Tuple
 
 
-class DataMapping:
+class Mapping:
     def __init__(self, data, *args, **kwargs):
-        """Class for handling DataMapping
+        """Class for handling Mapping
         
         Example:
             {

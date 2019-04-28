@@ -1,5 +1,6 @@
 from models.Connection import Connection
-from models.DataMapping import DataMapping
+from models.Mapping import Mapping
 from models.Organization import Organization
 from models.Transfer import Transfer
 from models.User import User
+from models.History import History
