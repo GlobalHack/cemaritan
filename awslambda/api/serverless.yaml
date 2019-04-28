@@ -16,6 +16,16 @@ provider:
     PASSWORD: ${ssm:pw}
 
 functions:
+  # This will only be used by some Cemaritan level admin
+  get_organizations:
+    handler: organization.organizations
+    events:
+      - http:
+          path: organizations
+          method: get
+          cors: true
+
+  # Collections functions
   get_connections:
     handler: connection.connections
     events:
@@ -38,13 +48,7 @@ functions:
             parameters:
               paths:
                 organization_id: true
-  get_organizations:
-    handler: organization.organizations
-    events:
-      - http:
-          path: organizations
-          method: get
-          cors: true
+
   get_transfers:
     handler: transfer.transfers
     events:
@@ -78,13 +82,30 @@ functions:
             parameters:
               paths:
                 organization_id: true
-  create_transfer:
-    handler: transfer.create_transfers
+                
+  # Single object functions
+  transfer:
+    handler: transfer.transfer
     events:
       - http:
-          path: organizations/{organization_id}/transfers
+          path: organizations/{organization_id}/transfers/{transfer_id}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
+                transfer_id: true
+      - http:
+          path: organizations/{organization_id}/transfers/{transfer_id}
           method: post
           cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
+                transfer_id: true
+
     
 plugins:
   - serverless-python-requirements

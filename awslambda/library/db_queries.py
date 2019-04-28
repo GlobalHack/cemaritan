@@ -247,104 +247,104 @@ def get_organization(connection, organization_id: int):
     return Organization(org)
 
 
-def get_organizations(connection):
-    """Get all organizations
+# def get_organizations(connection):
+#     """Get all organizations
     
-    Parameters
-    ----------
-    connection
-        Connection to database
-    organization_id : int
-        Organization Id
+#     Parameters
+#     ----------
+#     connection
+#         Connection to database
+#     organization_id : int
+#         Organization Id
     
-    Returns
-    -------
-    List[models.Organization]
-        List of Organization objects
+#     Returns
+#     -------
+#     List[models.Organization]
+#         List of Organization objects
 
-    """
-    query = f"select * from organizations"
-    rows = connection.query(query)
-    return [Organization(tup) for tup in rows]
+#     """
+#     query = f"select * from organizations"
+#     rows = connection.query(query)
+#     return [Organization(tup) for tup in rows]
 
 
-def create_organization(connection, name: str, created_date: str):
-    """Create organization in database
+# def create_organization(connection, name: str, created_date: str):
+#     """Create organization in database
     
-    Parameters
-    ----------
-    connection
-        Connection to database
-    name : str
-        Name of database
-    created_date : str
-        Date created
+#     Parameters
+#     ----------
+#     connection
+#         Connection to database
+#     name : str
+#         Name of database
+#     created_date : str
+#         Date created
 
-    """
-    query = f"INSERT INTO Organizations (Name, CreatedDate) VALUES ('{name}', '{created_date}')"
-    connection.query(query)
+#     """
+#     query = f"INSERT INTO Organizations (Name, CreatedDate) VALUES ('{name}', '{created_date}')"
+#     connection.query(query)
 
 
-def create_data_mapping(connection, user_id: int, name: str, mapping_info: str):
-    """Create data mapping in database
+# def create_data_mapping(connection, user_id: int, name: str, mapping_info: str):
+#     """Create data mapping in database
     
-    Parameters
-    ----------
-    connection
-        Connection to database
-    name : str
-        Name of database
-    created_date : str
-        Date created
+#     Parameters
+#     ----------
+#     connection
+#         Connection to database
+#     name : str
+#         Name of database
+#     created_date : str
+#         Date created
 
-    """
-    query = f"INSERT INTO DataMappings (Organization, Name, MappingInfo) VALUES ((select Organization from Users where Users.UID = {user_id}), '{name}', '{mapping_info}');"
-    connection.query(query)
+#     """
+#     query = f"INSERT INTO DataMappings (Organization, Name, MappingInfo) VALUES ((select Organization from Users where Users.UID = {user_id}), '{name}', '{mapping_info}');"
+#     connection.query(query)
 
 
-def create_connection(
-    connection,
-    user_id: int,
-    name: str,
-    created_date: str,
-    created_by: int,
-    connection_type: str,
-    connection_info: str,
-):
-    """Create connection in database
+# def create_connection(
+#     connection,
+#     user_id: int,
+#     name: str,
+#     created_date: str,
+#     created_by: int,
+#     connection_type: str,
+#     connection_info: str,
+# ):
+#     """Create connection in database
         
-        Parameters
-        ----------
-        connection
-            Connection to database
-        name : str
-            Name of database
-        created_date : str
-            Date created
+#         Parameters
+#         ----------
+#         connection
+#             Connection to database
+#         name : str
+#             Name of database
+#         created_date : str
+#             Date created
 
-        """
-    query = f"INSERT INTO Connections (Organization, Name, CreatedDate, CreatedBy, Type, ConnectionInfo) VALUES ((select Organization from Users where Users.UID = {user_id}), '{name}', '{created_date}', '{created_by}', '{connection_type}', '{connection_info}');"
-    connection.query(query)
+#         """
+#     query = f"INSERT INTO Connections (Organization, Name, CreatedDate, CreatedBy, Type, ConnectionInfo) VALUES ((select Organization from Users where Users.UID = {user_id}), '{name}', '{created_date}', '{created_by}', '{connection_type}', '{connection_info}');"
+#     connection.query(query)
 
 
-def create_user(connection, organization_id: int, name: str, created_date: str):
-    """Create user in database
+# def create_user(connection, organization_id: int, name: str, created_date: str):
+#     """Create user in database
     
-    Parameters
-    ----------
-    connection
-        Connection to database
-    organization_id : int
-        Organization to crete user in
-    name : str
-        Name of user
-    created_date : str
-        Date Created
+#     Parameters
+#     ----------
+#     connection
+#         Connection to database
+#     organization_id : int
+#         Organization to crete user in
+#     name : str
+#         Name of user
+#     created_date : str
+#         Date Created
     
-    """
+#     """
 
-    query = f"INSERT INTO Users (Organization, Name, CreatedDate) VALUES ('{organization_id}', '{name}', '{created_date}');"
-    connection.query(query)
+#     query = f"INSERT INTO Users (Organization, Name, CreatedDate) VALUES ('{organization_id}', '{name}', '{created_date}');"
+#     connection.query(query)
 
 
 def create_transfer(

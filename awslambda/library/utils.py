@@ -17,3 +17,7 @@ def awshandler(function):
         return {"statusCode": 200, "headers": {"Access-Control-Allow-Origin": "*"},  "body": payload}
     return wrapper
         
+
+def aws_get_http_method(event):
+    """Return the http method from the AWS Lambda event object."""
+    return event['requestContext']['httpMethod']
