@@ -56,8 +56,8 @@ INSERT INTO Histories (UID,Type,Action,Date,CreatedByUser,Name,Details,SourceUID
  (4,'Transfer','Action B','2019-03-20 20:42:03',1,NULL,NULL,0,1),
  (5,'Transfer','Action B','2019-03-20 20:42:03',2,NULL,NULL,1,2),
  (6,'Transfer','Action C','2019-03-20 20:42:03',3,NULL,NULL,2,3);
-DROP TABLE IF EXISTS DataMappings;
-CREATE TABLE IF NOT EXISTS DataMappings (
+DROP TABLE IF EXISTS Mappings;
+CREATE TABLE IF NOT EXISTS Mappings (
 	UID	INTEGER NOT NULL PRIMARY KEY  UNIQUE,
 	Organization	INTEGER NOT NULL,
 	Name	TEXT NOT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS DataMappings (
 	EndFormat	TEXT,
 	NumOfTransfers	INTEGER
 );
-INSERT INTO DataMappings (UID,Organization,Name,MappingInfo,StartFormat,EndFormat,NumOfTransfers) VALUES (1,1,'SF to HUD','{}','csv','json',1),
+INSERT INTO Mappings (UID,Organization,Name,MappingInfo,StartFormat,EndFormat,NumOfTransfers) VALUES (1,1,'SF to HUD','{}','csv','json',1),
  (2,1,'CW to HUD','{}','csv','json',2),
  (3,2,'SP Validation','{}','csv','json',1),
  (4,2,'CW Validation','{}','json','csv',0),

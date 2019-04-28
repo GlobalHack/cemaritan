@@ -1,9 +1,10 @@
 import requests
 import json
 
+import library.db_queries as db_queries
+
 from library.db_connections import Postgres
-from library.db_queries import get_organizations
-from library.utils import awshandler
+from library.utils import awshandler, aws_get_path_parameter
 
 conn = Postgres()
 
@@ -13,3 +14,11 @@ def organizations(event, context):
     organization_list = get_organizations(conn)
     return json.dumps([org.to_dict() for org in organization_list])
 
+
+@awshandler
+def get_organization(event, context):
+    organization_id = aws_get_path_parameter(event, "organization_id")
+    organization_id = aws_get_path_parameter(event, "organization_id")
+    return json.dumps({'org':organization_id, 'organization':organization_id})
+    organization = db_queries.get_organization(organization_id=organization_id, organization_id=organization_id)
+    return json.dumps(organization.to_dict())

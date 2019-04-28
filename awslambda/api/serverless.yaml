@@ -16,7 +16,7 @@ provider:
     PASSWORD: ${ssm:pw}
 
 functions:
-  # This will only be used by some Cemaritan level admin
+  ### This will only be used by some Cemaritan level admin
   get_organizations:
     handler: organization.organizations
     events:
@@ -25,7 +25,7 @@ functions:
           method: get
           cors: true
 
-  # Collections functions
+  ### Collections functions
   get_connections:
     handler: connection.connections
     events:
@@ -82,10 +82,35 @@ functions:
             parameters:
               paths:
                 organization_id: true
-                
-  # Single object functions
-  transfer:
-    handler: transfer.transfer
+
+  ### Single object functions
+  # Organization
+  get_organization:
+    handler: organization.get_organization
+    events:
+      - http:
+          path: organizations/{organization_id}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
+
+  # Transfer
+  create_transfer:
+    handler: transfer.create_transfer
+    events:
+      - http:
+          path: organizations/{organization_id}/transfers
+          method: post
+          cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
+  get_transfer:
+    handler: transfer.get_transfer
     events:
       - http:
           path: organizations/{organization_id}/transfers/{transfer_id}
@@ -96,17 +121,62 @@ functions:
               paths:
                 organization_id: true
                 transfer_id: true
+  # Connection
+  get_connection:
+    handler: connection.get_connection
+    events:
       - http:
-          path: organizations/{organization_id}/transfers/{transfer_id}
-          method: post
+          path: organizations/{organization_id}/connections/{connection_id}
+          method: get
           cors: true
           request:
             parameters:
               paths:
                 organization_id: true
-                transfer_id: true
+                connection_id: true
 
+  # Mapping
+  get_mapping:
+    handler: mapping.get_mapping
+    events:
+      - http:
+          path: organizations/{organization_id}/mappings/{mapping_id}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
+                mapping_id: true
     
+  # User
+  get_user:
+    handler: user.get_user
+    events:
+      - http:
+          path: organizations/{organization_id}/users/{user_id}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
+                user_id: true
+
+  # History
+  get_history:
+    handler: history.get_history
+    events:
+      - http:
+          path: organizations/{organization_id}/histories/{history_id}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
+                history_id: true
+
 plugins:
   - serverless-python-requirements
   - serverless-package-external

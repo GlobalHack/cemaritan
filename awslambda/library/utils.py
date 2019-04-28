@@ -21,3 +21,13 @@ def awshandler(function):
 def aws_get_http_method(event):
     """Return the http method from the AWS Lambda event object."""
     return event['requestContext']['httpMethod']
+
+
+def aws_get_path_parameters(event):
+    """Extract path parameters from AWS Lambda event object."""
+    return event['pathParameters']
+
+
+def aws_get_path_parameter(event, parameter):
+    """Extract specific path parameter from AWS Lambda event object."""
+    return aws_get_path_parameters(event)[parameter]
