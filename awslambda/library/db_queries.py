@@ -3,6 +3,7 @@ from typing import Any, List, Tuple
 
 from models import Connection, Mapping, Organization, Transfer, User, History
 
+
 ### Generic functions
 def get_rows_by_organization(
     table_name: str, connection, organization_id: int, query: str = None
@@ -119,7 +120,8 @@ def delete_row_by_uid(connection, table_name: str, uid: int):
         return False
     return True
 
-### Collections
+
+# Collections
 def get_connections(connection, organization_id: int):
     """Get connections for ``organization_id``
     
@@ -185,7 +187,11 @@ def get_connection(connection, organization_id: int, connection_id: int):
         organization_id=organization_id,
         object_id=connection_id,
     )
-    return Connection(row)
+    if row is not None:
+        return Connection(row)
+    else:
+        return None # Unnecessary but good to be explicit
+
 
 # Histories
 def get_histories(connection, organization_id: int):
@@ -249,7 +255,10 @@ def get_history(connection, organization_id: int, history_id: int):
         organization_id=organization_id,
         object_id=history_id,
     )
-    return History(row)
+    if row is not None:
+        return History(row)
+    else:
+        return None # Unnecessary but good to be explicit
 
 # Transfers
 def get_transfers(connection, organization_id: int):
@@ -353,7 +362,11 @@ def get_transfer(connection, organization_id: int, transfer_id: int):
         organization_id=organization_id,
         object_id=transfer_id,
     )
-    return Transfer(row)
+    if row is not None:
+        return Transfer(row)
+    else:
+        return None # Unnecessary but good to be explicit
+
 
 # Users
 def get_users(connection, organization_id: int):
@@ -411,7 +424,11 @@ def get_user(connection, organization_id: int, user_id: int):
         organization_id=organization_id,
         object_id=user_id,
     )
-    return User(row)
+      if row is not None:
+        return User(row)
+    else:
+        return None # Unnecessary but good to be explicit
+
 
 # Mappings
 def get_mappings(connection, organization_id: int):
@@ -472,7 +489,11 @@ def get_mapping(connection, organization_id: int, mapping_id: int):
         organization_id=organization_id,
         object_id=mapping_id,
     )
-    return Mapping(row)
+    if row is not None:
+        return Mapping(row)
+    else:
+        return None # Unnecessary but good to be explicit
+
 
 # Organizations
 def get_organization(connection, organization_id: int):
