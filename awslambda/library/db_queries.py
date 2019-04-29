@@ -47,7 +47,7 @@ def get_rows_by_organization(
 
     """
     if query is None:
-        query = f"select * from {table_name} where {table_name}.organization = (select organization from users where users.UID = {organization_id})"
+        query = f"select * from {table_name} where {table_name}.organization = {organization_id}"
     r = connection.query(query)
     return r
 
@@ -88,7 +88,7 @@ def get_row_by_object_id(
     """
     try:
         if query is None:
-            query = f"select * from {table_name} where {table_name}.organization = (select organization from users where users.UID = {organization_id}) and {table_name}.UID = {object_id}"
+            query = f"select * from {table_name} where {table_name}.organization = {organization_id} and {table_name}.UID = {object_id}"
         r = connection.query(query)
         return r[0]  # return only first element if possible
     except IndexError:
@@ -277,7 +277,7 @@ def get_transfers(connection, organization_id: int):
         List of Transfer objects
 
     """
-    QUERY = """select 
+    QUERY = f"""select 
                     t6.UID,
                     t6.Name,
                     t6.Organization2 as Organization,
@@ -295,7 +295,7 @@ def get_transfers(connection, organization_id: int):
                     (Select t3.*, c2.Name as Destination2 from
                     (select t2.*, c.Name as Source2 from
                     (select t.*, o.Name as Organization2 from
-                    (select * from Transfers where Transfers.organization = (select organization from users where users.UID = 1)) as t
+                    (select * from Transfers where Transfers.organization = {organization_id}) as t
                     LEFT JOIN 
                     Organizations as o
                     on o.UID = t.Organization) as t2
