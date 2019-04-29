@@ -1,0 +1,4 @@
+
+
+class DatabaseReturnedNone(Exception):
+    pass

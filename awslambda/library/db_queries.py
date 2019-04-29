@@ -424,7 +424,7 @@ def get_user(connection, organization_id: int, user_id: int):
         organization_id=organization_id,
         object_id=user_id,
     )
-      if row is not None:
+    if row is not None:
         return User(row)
     else:
         return None # Unnecessary but good to be explicit
@@ -518,25 +518,25 @@ def get_organization(connection, organization_id: int):
     return Organization(org)
 
 
-# def get_organizations(connection):
-#     """Get all organizations
+def get_organizations(connection):
+    """Get all organizations
 
-#     Parameters
-#     ----------
-#     connection
-#         Connection to database
-#     organization_id : int
-#         Organization Id
+    Parameters
+    ----------
+    connection
+        Connection to database
+    organization_id : int
+        Organization Id
 
-#     Returns
-#     -------
-#     List[models.Organization]
-#         List of Organization objects
+    Returns
+    -------
+    List[models.Organization]
+        List of Organization objects
 
-#     """
-#     query = f"select * from organizations"
-#     rows = connection.query(query)
-#     return [Organization(tup) for tup in rows]
+    """
+    query = f"select * from organizations"
+    rows = connection.query(query)
+    return [Organization(tup) for tup in rows]
 
 
 # def create_organization(connection, name: str, created_date: str):
