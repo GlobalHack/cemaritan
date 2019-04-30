@@ -315,7 +315,7 @@ def get_transfers(connection, organization_id: int):
         table_name="transfers",
         connection=connection,
         organization_id=organization_id,
-        query=QUERY,
+        query=QUERY
     )
     return [Transfer(tup) for tup in transfers]
 
@@ -355,12 +355,46 @@ def get_transfer(connection, organization_id: int, transfer_id: int):
         )
         
     """
-
+    QUERY = f"""select 
+                    t6.UID,
+                    t6.Name,
+                    t6.Organization2 as Organization,
+                    t6.CreatedDate as CreatedDate,
+                    t6.Source2 as Source,
+                    t6.SourceMapping2 as SourceMapping,
+                    t6.Destination2 as Destination,
+                    t6.DestinationMapping2 as DestinationMapping,
+                    CASE WHEN t6.Active = 1 THEN 'TRUE' ELSE 'FALSE' END Active,
+                    t6.StartDateTime as StartTime,
+                    t6.frequency as Frequency
+                    from 
+                    (select t5.*, d2.Name as DestinationMapping2 from
+                    (select t4.*, d.Name as SourceMapping2 from 
+                    (Select t3.*, c2.Name as Destination2 from
+                    (select t2.*, c.Name as Source2 from
+                    (select t.*, o.Name as Organization2 from
+                    (select * from Transfers where Transfers.organization = {organization_id} and Transfers.UID = {transfer_id}) as t
+                    LEFT JOIN 
+                    Organizations as o
+                    on o.UID = t.Organization) as t2
+                    LEFT join
+                    Connections as c
+                    on t2.Source=c.UID) as t3
+                    left join
+                    Connections as c2
+                    on t3.Destination=c2.UID) as t4
+                    left join
+                    Mappings as d
+                    on t4.SourceMapping=d.UID) as t5
+                    left join
+                    Mappings as d2
+                    on t5.DestinationMapping=d2.UID) as t6"""
     row = get_row_by_object_id(
         table_name="transfers",
         connection=connection,
         organization_id=organization_id,
         object_id=transfer_id,
+        query=QUERY
     )
     if row is not None:
         return Transfer(row)
