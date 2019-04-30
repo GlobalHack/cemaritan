@@ -3,6 +3,7 @@ from typing import Any, List, Tuple
 
 from models import Connection, Mapping, Organization, Transfer, User, History
 
+
 ### Generic functions
 def get_rows_by_organization(
     table_name: str, connection, organization_id: int, query: str = None
@@ -119,7 +120,8 @@ def delete_row_by_uid(connection, table_name: str, uid: int):
         return False
     return True
 
-### Collections
+
+# Collections
 def get_connections(connection, organization_id: int):
     """Get connections for ``organization_id``
     
@@ -185,7 +187,11 @@ def get_connection(connection, organization_id: int, connection_id: int):
         organization_id=organization_id,
         object_id=connection_id,
     )
-    return Connection(row)
+    if row is not None:
+        return Connection(row)
+    else:
+        return None # Unnecessary but good to be explicit
+
 
 # Histories
 def get_histories(connection, organization_id: int):
@@ -249,7 +255,10 @@ def get_history(connection, organization_id: int, history_id: int):
         organization_id=organization_id,
         object_id=history_id,
     )
-    return History(row)
+    if row is not None:
+        return History(row)
+    else:
+        return None # Unnecessary but good to be explicit
 
 # Transfers
 def get_transfers(connection, organization_id: int):
@@ -306,7 +315,7 @@ def get_transfers(connection, organization_id: int):
         table_name="transfers",
         connection=connection,
         organization_id=organization_id,
-        query=QUERY,
+        query=QUERY
     )
     return [Transfer(tup) for tup in transfers]
 
@@ -346,14 +355,52 @@ def get_transfer(connection, organization_id: int, transfer_id: int):
         )
         
     """
-
+    QUERY = f"""select 
+                    t6.UID,
+                    t6.Name,
+                    t6.Organization2 as Organization,
+                    t6.CreatedDate as CreatedDate,
+                    t6.Source2 as Source,
+                    t6.SourceMapping2 as SourceMapping,
+                    t6.Destination2 as Destination,
+                    t6.DestinationMapping2 as DestinationMapping,
+                    CASE WHEN t6.Active = 1 THEN 'TRUE' ELSE 'FALSE' END Active,
+                    t6.StartDateTime as StartTime,
+                    t6.frequency as Frequency
+                    from 
+                    (select t5.*, d2.Name as DestinationMapping2 from
+                    (select t4.*, d.Name as SourceMapping2 from 
+                    (Select t3.*, c2.Name as Destination2 from
+                    (select t2.*, c.Name as Source2 from
+                    (select t.*, o.Name as Organization2 from
+                    (select * from Transfers where Transfers.organization = {organization_id} and Transfers.UID = {transfer_id}) as t
+                    LEFT JOIN 
+                    Organizations as o
+                    on o.UID = t.Organization) as t2
+                    LEFT join
+                    Connections as c
+                    on t2.Source=c.UID) as t3
+                    left join
+                    Connections as c2
+                    on t3.Destination=c2.UID) as t4
+                    left join
+                    Mappings as d
+                    on t4.SourceMapping=d.UID) as t5
+                    left join
+                    Mappings as d2
+                    on t5.DestinationMapping=d2.UID) as t6"""
     row = get_row_by_object_id(
         table_name="transfers",
         connection=connection,
         organization_id=organization_id,
         object_id=transfer_id,
+        query=QUERY
     )
-    return Transfer(row)
+    if row is not None:
+        return Transfer(row)
+    else:
+        return None # Unnecessary but good to be explicit
+
 
 # Users
 def get_users(connection, organization_id: int):
@@ -411,7 +458,11 @@ def get_user(connection, organization_id: int, user_id: int):
         organization_id=organization_id,
         object_id=user_id,
     )
-    return User(row)
+    if row is not None:
+        return User(row)
+    else:
+        return None # Unnecessary but good to be explicit
+
 
 # Mappings
 def get_mappings(connection, organization_id: int):
@@ -472,7 +523,11 @@ def get_mapping(connection, organization_id: int, mapping_id: int):
         organization_id=organization_id,
         object_id=mapping_id,
     )
-    return Mapping(row)
+    if row is not None:
+        return Mapping(row)
+    else:
+        return None # Unnecessary but good to be explicit
+
 
 # Organizations
 def get_organization(connection, organization_id: int):
@@ -497,25 +552,25 @@ def get_organization(connection, organization_id: int):
     return Organization(org)
 
 
-# def get_organizations(connection):
-#     """Get all organizations
+def get_organizations(connection):
+    """Get all organizations
 
-#     Parameters
-#     ----------
-#     connection
-#         Connection to database
-#     organization_id : int
-#         Organization Id
+    Parameters
+    ----------
+    connection
+        Connection to database
+    organization_id : int
+        Organization Id
 
-#     Returns
-#     -------
-#     List[models.Organization]
-#         List of Organization objects
+    Returns
+    -------
+    List[models.Organization]
+        List of Organization objects
 
-#     """
-#     query = f"select * from organizations"
-#     rows = connection.query(query)
-#     return [Organization(tup) for tup in rows]
+    """
+    query = f"select * from organizations"
+    rows = connection.query(query)
+    return [Organization(tup) for tup in rows]
 
 
 # def create_organization(connection, name: str, created_date: str):
