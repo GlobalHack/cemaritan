@@ -31,3 +31,5 @@ tmp
 *.serverless/
 
 .DS_Store
+
+*.set_envvars
