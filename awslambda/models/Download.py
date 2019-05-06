@@ -12,7 +12,7 @@ class Download:
                 "TransferName": str,
                 "UID": int,
                 "HistoryUID": int,
-                "ExpirationDateTime": int,
+                "ExpirationDateTime": str,
                 "Organization": int
             }
 

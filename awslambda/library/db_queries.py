@@ -505,12 +505,13 @@ def get_download(connection, organization_id: int, download_id: int):
     Tuple[Tuple[str, Any]]
         Tuple of 2-tuples representing a row of `users` table matching ``organization_id``
         and ``user_id``
-        TODO: Update this with actual Download tuple representation
         Example: 
         (
             ("uid", 1),
-            ("name", "Matt"),
-            ("createddate", "2019-03-10 10:42:03"),
+            ("name", "Some download"),
+            ("expirationdatetime", "2019-03-10 10:42:03"),
+            ("transfername", "some transfer name"),
+            ("historyuid", 1),
             ("organization", 1)
         )
         
