@@ -654,19 +654,7 @@ def get_organizations(connection):
 
 def create_transfer(
     connection,
-    user_id: int,
-    name: str,
-    created_date: str,
-    created_by: int,
-    organization_id: int,
-    source: int,
-    source_mapping: int,
-    destination: int,
-    destination_mapping: int,
-    start_date_time: str,
-    frequency: str,
-    record_filter: str,
-    active: bool,
+    transfer: models.Transfer
 ):
     """Create transfer in database
     
@@ -674,36 +662,22 @@ def create_transfer(
     ----------
     connection
         Connection to database
-    user_id : int
-        User creating transfer
-    name : str
-        Name of transfer
-    created_date : str
-        Date transfer was created 
-    created_by : int
-        User creating transfer
-    organization_id : int
-        Organization user belongs to
-    source : int
-        Id of Connection source
-    source_mapping : int
-        Mapping of source system
-    destination : int
-        Id of destination Connection
-    destination_mapping : int
-        Mapping of destination system
-    start_date_time : str
-        Date to start transfer
-    frequency : str
-        Frequency of transfer
-    record_filter : str
-        Filter records parameters
-    active : bool
-        Is connection currently active
-    
+    transfer
+        models.Transfer
     """
-
-    query = f"INSERT INTO Transfers (Organization, Name, CreatedDate, CreatedBy, Source, SourceMapping, Destination, DestinationMapping, StartDateTime, Frequency, RecordFilter, Active) VALUES ((select Organization from Users where Users.UID = {user_id}), '{name}', '{created_date}', '{created_by}', '{source}', '{source_mapping}', '{destination}', '{destination_mapping}', '{start_date_time}', '{frequency}', '{record_filter}', '{active}');"
+    model_as_dict = transfer.to_dict()
+    organization_id = model_as_dict['organization_id']
+    organization_id = model_as_dict['name']
+    organization_id = model_as_dict['created_by']
+    organization_id = model_as_dict['source']
+    organization_id = model_as_dict['source_mapping']
+    organization_id = model_as_dict['destination']
+    organization_id = model_as_dict['destination_mapping']
+    organization_id = model_as_dict['start_date_time']
+    organization_id = model_as_dict['frequency']
+    organization_id = model_as_dict['record_filter']
+    organization_id = model_as_dict['active']
+    query = f"INSERT INTO Transfers (Organization, Name, CreatedDate, CreatedBy, Source, SourceMapping, Destination, DestinationMapping, StartDateTime, Frequency, RecordFilter, Active) VALUES ('{organization_id}', '{name}', '{created_date}', '{created_by}', '{source}', '{source_mapping}', '{destination}', '{destination_mapping}', '{start_date_time}', '{frequency}', '{record_filter}', '{active}');"
     connection.query(query)
 
 

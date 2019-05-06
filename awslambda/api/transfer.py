@@ -18,7 +18,8 @@ def transfers(event, context):
 
 @awshandler
 def create_transfer(event, context):
-    return "Data not saved yet."
+    organization_id = aws_get_path_parameter(event, "organization_id")
+    response = db_queries.create_transfer()
 
 
 @awshandler

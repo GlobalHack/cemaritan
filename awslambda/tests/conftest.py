@@ -77,6 +77,12 @@ def sample_transfer_single_response():
     }
 
 
+@pytest.fixture()
+def sample_transfer_single_create_payload():
+    return {"uid": 9999, "name": "CW to SF", "organization": 1, "source": 2, "sourcemapping": 2, "destination": 1, "destinationmapping": 1, "active": "TRUE", "starttime": "2019-03-13 20:42:03", "frequency": "1 day"}
+
+
+
 ### Histories
 @pytest.fixture()
 def histories_event():
