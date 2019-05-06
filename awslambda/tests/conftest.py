@@ -48,6 +48,7 @@ def sample_connection_single_response():
         "body": '{"uid": 1, "organization": 1, "name": "SF", "createddate": "2019-03-09 20:42:03", "createdby": 1, "type": "A", "connectioninfo": "{conn string}"}',
     }
 
+
 ### Transfers
 @pytest.fixture()
 def transfers_event():
@@ -73,7 +74,7 @@ def sample_transfer_single_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"uid": 1, "name": "CW to SF", "organization": "OLI", "createddate": "2019-03-20 20:42:03", "source": "CW", "sourcemapping": "CW to HUD", "destination": "SF", "destinationmapping": "SF to HUD", "active": "TRUE", "starttime": "2019-03-13 20:42:03", "frequency": "1 day"}'
+        "body": '{"uid": 1, "name": "CW to SF", "organization": "OLI", "createddate": "2019-03-20 20:42:03", "source": "CW", "sourcemapping": "CW to HUD", "destination": "SF", "destinationmapping": "SF to HUD", "active": "TRUE", "starttime": "2019-03-13 20:42:03", "frequency": "1 day"}',
     }
 
 
@@ -102,9 +103,8 @@ def sample_history_single_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"uid": 2, "type": "Transfer", "action": null, "date": "2019-03-20 20:42:03", "createdbyuser": 1, "name": null, "details": null, "sourceuid": 0, "organization": 1}'
+        "body": '{"uid": 2, "type": "Transfer", "action": null, "date": "2019-03-20 20:42:03", "createdbyuser": 1, "name": null, "details": null, "sourceuid": 0, "organization": 1}',
     }
-
 
 
 ### Mappings
@@ -132,7 +132,7 @@ def sample_mapping_single_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"uid": 1, "organization": 1, "name": "SF to HUD", "mappinginfo": "{}", "startformat": "csv", "endformat": "json", "numoftransfers": 1}'
+        "body": '{"uid": 1, "organization": 1, "name": "SF to HUD", "mappinginfo": "{}", "startformat": "csv", "endformat": "json", "numoftransfers": 1}',
     }
 
 
@@ -161,7 +161,7 @@ def sample_user_single_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"uid": 1, "name": "Matt", "createddate": "2019-03-10 10:42:03", "organization": 1}'
+        "body": '{"uid": 1, "name": "Matt", "createddate": "2019-03-10 10:42:03", "organization": 1}',
     }
 
 
@@ -190,12 +190,37 @@ def sample_organization_single_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"uid": 1, "name": "OLI", "createddate": "2019-03-13 20:42:03"}'
+        "body": '{"uid": 1, "name": "OLI", "createddate": "2019-03-13 20:42:03"}',
     }
 
 
+### Downloads
+@pytest.fixture()
+def downloads_event():
+    return {"pathParameters": {"organization_id": "1"}}
 
 
+@pytest.fixture()
+def download_single_event():
+    return {"pathParameters": {"organization_id": "1", "download_id": "1"}}
+
+
+@pytest.fixture()
+def sample_downloads_response():
+    return {
+        "statusCode": 200,
+        "headers": {"Access-Control-Allow-Origin": "*"},
+        "body": '[{"uid": 1, "name": "OLI", "createddate": "2019-03-13 20:42:03"}, {"uid": 2, "name": "SPC", "createddate": "2019-03-15 01:03:03"}, {"uid": 3, "name": "OLI 2", "createddate": "2019-03-18 20:42:03"}]',
+    }
+
+
+@pytest.fixture()
+def sample_download_single_response():
+    return {
+        "statusCode": 200,
+        "headers": {"Access-Control-Allow-Origin": "*"},
+        "body": '{"uid": 1, "name": "OLI", "createddate": "2019-03-13 20:42:03"}',
+    }
 
 
 try:

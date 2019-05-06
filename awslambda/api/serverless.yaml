@@ -82,6 +82,17 @@ functions:
             parameters:
               paths:
                 organization_id: true
+  get_downloads:
+    handler: download.downloads
+    events:
+      - http:
+          path: organizations/{organization_id}/downloads
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
 
   ### Single object functions
   # Organization
@@ -176,6 +187,19 @@ functions:
               paths:
                 organization_id: true
                 history_id: true
+  # Download
+  get_download:
+    handler: download.get_download
+    events:
+      - http:
+          path: organizations/{organization_id}/histories/{download_id}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
+                download_id: true
 
 plugins:
   - serverless-python-requirements
