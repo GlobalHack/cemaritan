@@ -210,7 +210,9 @@ def sample_downloads_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '[{"uid": 1, "name": "OLI", "createddate": "2019-03-13 20:42:03"}, {"uid": 2, "name": "SPC", "createddate": "2019-03-15 01:03:03"}, {"uid": 3, "name": "OLI 2", "createddate": "2019-03-18 20:42:03"}]',
+        # TODO: Matt, add valid data from table here, then uncomment above and make it happen
+        # Potential sample: {"uid": 1, "name": "some name here", "transfername": "some transfer name", "historyuid": 1, "expirationdatetime": "2019-05-31 11:59:59", "organization": 1}
+        "body": '[{"uid": 1, "name": "some name here", "transfername": "some transfer name", "historyuid": 1, "expirationdatetime": "2019-05-31 11:59:59", "organization": 1}, {"uid": 2, "name": "SPC", "createddate": "2019-03-15 01:03:03"}, {"uid": 3, "name": "OLI 2", "createddate": "2019-03-18 20:42:03"}]',
     }
 
 
@@ -219,6 +221,8 @@ def sample_download_single_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
+        # TODO: Update below to match response
+        # Potential sample: {"uid": 1, "name": "some name here", "transfername": "some transfer name", "historyuid": 1, "expirationdatetime": "2019-05-31 11:59:59", "organization": 1}
         "body": '{"uid": 1, "name": "OLI", "createddate": "2019-03-13 20:42:03"}',
     }
 
