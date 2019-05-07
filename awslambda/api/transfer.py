@@ -4,7 +4,7 @@ import json
 import library.db_queries as db_queries
 
 from library.exceptions import DatabaseReturnedNone
-from library.db_connections import Postgres
+from library.db_connections import Postgres, get_conn
 from library.utils import awshandler, aws_get_path_parameter
 
 from models import Transfer
@@ -19,15 +19,6 @@ def transfers(event, context):
 
 
 @awshandler
-def create_transfer(event, context):
-    organization_id = aws_get_path_parameter(event, "organization_id")
-    body = json.loads(event['body'])
-    transfer_obj = Transfer(body)
-    response = db_queries.create_transfer(connection=conn, transfer=transfer_obj)
-    return {'message': 'test'}
-
-
-@awshandler
 def get_transfer(event, context):
     organization_id = aws_get_path_parameter(event, "organization_id")
     transfer_id = aws_get_path_parameter(event, "transfer_id")
@@ -35,3 +26,19 @@ def get_transfer(event, context):
     if transfer is None:
         raise DatabaseReturnedNone(f"Check object id: {transfer_id}")
     return transfer.to_dict()
+
+
+@awshandler
+def create_transfer(event, context):
+    organization_id = aws_get_path_parameter(event, "organization_id")
+    body = json.loads(event['body'])
+    transfer_obj = Transfer(body)
+    response = db_queries.create_transfer(connection=conn, transfer=transfer_obj)
+    tup = response[0][0]
+    return {tup[0]: tup[1]}
+
+
+def delete_transfer(transfer_id):
+    """Temporary function for testing. Eventually this 
+    will be built out into a full handler."""
+    db_queries.delete_transfer(conn, transfer_id)

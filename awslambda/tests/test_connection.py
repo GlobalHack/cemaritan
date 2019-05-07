@@ -1,7 +1,7 @@
 import pytest
 
 from api.connection import connections, get_connection
-from api.transfer import transfers, get_transfer, create_transfer
+from api.transfer import transfers, get_transfer, create_transfer, delete_transfer
 from api.history import histories, get_history
 from api.mapping import mappings, get_mapping
 from api.user import users, get_user
@@ -38,10 +38,12 @@ def test_transfer_single_function(
 def test_transfer_single_create_function(
     sample_transfer_single_create_event, sample_transfer_single_create_response
 ):
+    # delete_transfer(9999)
     assert (
         create_transfer(sample_transfer_single_create_event, None)
         == sample_transfer_single_create_response
     )
+    delete_transfer(9999)
 
 
 # need pytest -s flag to see print statements

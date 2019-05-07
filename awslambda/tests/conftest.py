@@ -90,7 +90,7 @@ def sample_transfer_single_create_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"message": "test"}'
+        "body": '{"uid": 9999}'
     }
 
 

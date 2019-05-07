@@ -115,7 +115,7 @@ def delete_row_by_uid(connection, table_name: str, uid: int):
 
     try:
         query = f"DELETE from {table_name} where {table_name}.UID={uid}"
-        connection.query(query)
+        connection.query(query, null_return=True)
     except:
         return False
     return True
@@ -666,8 +666,8 @@ def create_transfer(
         models.Transfer
     """
     model_as_dict = transfer.to_dict()
-    uid = 9999
-    createddate = "2019-03-20 20:42:03"
+    uid = 9999  # temporary
+    createddate = "2019-03-20 20:42:03"  # temporary
     organization = model_as_dict['organization']
     name = model_as_dict['name']
     createdby = model_as_dict['createdby']
@@ -678,8 +678,8 @@ def create_transfer(
     startdatetime = model_as_dict['startdatetime']
     frequency = model_as_dict['frequency']
     active = model_as_dict['active']
-    query = f"INSERT INTO Transfers (uid, Organization, Name, CreatedDate, CreatedBy, Source, SourceMapping, Destination, DestinationMapping, StartDateTime, Frequency, Active) VALUES ('{uid}', '{organization}', '{name}', '{createddate}', '{createdby}', '{source}', '{sourcemapping}', '{destination}', '{destinationmapping}', '{startdatetime}', '{frequency}', '{active}');"
-    connection.query(query, create=True)
+    query = f"INSERT INTO Transfers (uid, Organization, Name, CreatedDate, CreatedBy, Source, SourceMapping, Destination, DestinationMapping, StartDateTime, Frequency, Active) VALUES ('{uid}', '{organization}', '{name}', '{createddate}', '{createdby}', '{source}', '{sourcemapping}', '{destination}', '{destinationmapping}', '{startdatetime}', '{frequency}', '{active}') \n RETURNING uid;"
+    return connection.query(query)
 
 
 def delete_user(connection, user_id: int):
