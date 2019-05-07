@@ -7,6 +7,8 @@ from library.exceptions import DatabaseReturnedNone
 from library.db_connections import Postgres
 from library.utils import awshandler, aws_get_path_parameter
 
+from models import Transfer
+
 conn = Postgres()
 
 @awshandler
@@ -16,10 +18,13 @@ def transfers(event, context):
     return [trans.to_dict() for trans in transfer_list]
 
 
-@awshandler
+#@awshandler
 def create_transfer(event, context):
     organization_id = aws_get_path_parameter(event, "organization_id")
-    response = db_queries.create_transfer()
+    body = json.loads(event['body'])
+    transfer_obj = Transfer(body)
+    response = db_queries.create_transfer(connection=conn, transfer=transfer_obj)
+    return {'message': 'test'}
 
 
 @awshandler

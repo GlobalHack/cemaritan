@@ -666,18 +666,19 @@ def create_transfer(
         models.Transfer
     """
     model_as_dict = transfer.to_dict()
-    organization_id = model_as_dict['organization_id']
-    organization_id = model_as_dict['name']
-    organization_id = model_as_dict['created_by']
-    organization_id = model_as_dict['source']
-    organization_id = model_as_dict['source_mapping']
-    organization_id = model_as_dict['destination']
-    organization_id = model_as_dict['destination_mapping']
-    organization_id = model_as_dict['start_date_time']
-    organization_id = model_as_dict['frequency']
-    organization_id = model_as_dict['record_filter']
-    organization_id = model_as_dict['active']
-    query = f"INSERT INTO Transfers (Organization, Name, CreatedDate, CreatedBy, Source, SourceMapping, Destination, DestinationMapping, StartDateTime, Frequency, RecordFilter, Active) VALUES ('{organization_id}', '{name}', '{created_date}', '{created_by}', '{source}', '{source_mapping}', '{destination}', '{destination_mapping}', '{start_date_time}', '{frequency}', '{record_filter}', '{active}');"
+    uid = 9999
+    createddate = "2019-03-20 20:42:03"
+    organization = model_as_dict['organization']
+    name = model_as_dict['name']
+    createdby = model_as_dict['createdby']
+    source = model_as_dict['source']
+    sourcemapping = model_as_dict['sourcemapping']
+    destination = model_as_dict['destination']
+    destinationmapping = model_as_dict['destinationmapping']
+    startdatetime = model_as_dict['startdatetime']
+    frequency = model_as_dict['frequency']
+    active = model_as_dict['active']
+    query = f"INSERT INTO Transfers (uid, Organization, Name, CreatedDate, CreatedBy, Source, SourceMapping, Destination, DestinationMapping, StartDateTime, Frequency, Active) VALUES ('{uid}', '{organization}', '{name}', '{createddate}', '{createdby}', '{source}', '{sourcemapping}', '{destination}', '{destinationmapping}', '{startdatetime}', '{frequency}', '{active}');"
     connection.query(query)
 
 

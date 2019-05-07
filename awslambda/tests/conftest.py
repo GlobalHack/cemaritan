@@ -1,5 +1,5 @@
 # cd /awslambda
-# python -m pytest
+# python -m pytest [-vv -s]
 
 import json
 import os
@@ -78,9 +78,20 @@ def sample_transfer_single_response():
 
 
 @pytest.fixture()
-def sample_transfer_single_create_payload():
-    return {"uid": 9999, "name": "CW to SF", "organization": 1, "source": 2, "sourcemapping": 2, "destination": 1, "destinationmapping": 1, "active": "TRUE", "starttime": "2019-03-13 20:42:03", "frequency": "1 day"}
+def sample_transfer_single_create_event():
+    return {
+                "pathParameters": {"organization_id": "1"},
+                "body": '{"name": "CW to SF", "organization": 1, "createdby": 1, "source": 2, "sourcemapping": 2, "destination": 1, "destinationmapping": 1, "active": 1, "startdatetime": "2019-03-13 20:42:03", "frequency": "1 day"}'
+            }
 
+
+@pytest.fixture()
+def sample_transfer_single_create_response():
+    return {
+        "statusCode": 200,
+        "headers": {"Access-Control-Allow-Origin": "*"},
+        "body": '{"message": "test"}'
+    }
 
 
 ### Histories

@@ -135,7 +135,7 @@ class Postgres:
             to_return = zip_column_names_and_rows(column_names, rows)
             return to_return
         except Exception as e:
-            print(e)
+            print(str(type(e)) + str(e))
             self._connection.rollback()
         finally:
             c.close()
