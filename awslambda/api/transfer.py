@@ -18,7 +18,7 @@ def transfers(event, context):
     return [trans.to_dict() for trans in transfer_list]
 
 
-#@awshandler
+@awshandler
 def create_transfer(event, context):
     organization_id = aws_get_path_parameter(event, "organization_id")
     body = json.loads(event['body'])

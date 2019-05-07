@@ -679,7 +679,7 @@ def create_transfer(
     frequency = model_as_dict['frequency']
     active = model_as_dict['active']
     query = f"INSERT INTO Transfers (uid, Organization, Name, CreatedDate, CreatedBy, Source, SourceMapping, Destination, DestinationMapping, StartDateTime, Frequency, Active) VALUES ('{uid}', '{organization}', '{name}', '{createddate}', '{createdby}', '{source}', '{sourcemapping}', '{destination}', '{destinationmapping}', '{startdatetime}', '{frequency}', '{active}');"
-    connection.query(query)
+    connection.query(query, create=True)
 
 
 def delete_user(connection, user_id: int):

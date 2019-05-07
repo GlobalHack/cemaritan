@@ -118,7 +118,7 @@ class Postgres:
             self._connection = self.create_new_connection()
             return self._connection
 
-    def query(self, query: str):
+    def query(self, query: str, create: bool=False):
         """Submit query to database
         
         Parameters
@@ -130,6 +130,8 @@ class Postgres:
         try:
             c = self._connection.cursor()
             c.execute(query)
+            if create:
+                return
             column_names = [x.name for x in c.description]
             rows = list(c.fetchall())  # limit to 100 results in the future?
             to_return = zip_column_names_and_rows(column_names, rows)

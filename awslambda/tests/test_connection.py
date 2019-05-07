@@ -34,20 +34,22 @@ def test_transfer_single_function(
         == sample_transfer_single_response
     )
 
-# def test_transfer_single_create_function(
-#     sample_transfer_single_create_event, sample_transfer_single_create_response
-# ):
-#     assert (
-#         create_transfer(sample_transfer_single_create_event, None)
-#         == sample_transfer_single_create_response
-#     )
+
+def test_transfer_single_create_function(
+    sample_transfer_single_create_event, sample_transfer_single_create_response
+):
+    assert (
+        create_transfer(sample_transfer_single_create_event, None)
+        == sample_transfer_single_create_response
+    )
+
 
 # need pytest -s flag to see print statements
-def test_print(
-    sample_transfer_single_create_event, sample_transfer_single_create_response):
-    # print(create_transfer(sample_transfer_single_create_event, None))
+# def test_print(
+#     sample_transfer_single_create_event, sample_transfer_single_create_response):
+#     # print(create_transfer(sample_transfer_single_create_event, None))
     
-    print(create_transfer(sample_transfer_single_create_event, None))
+#     print(create_transfer(sample_transfer_single_create_event, None))
 
 
 ### Histories
