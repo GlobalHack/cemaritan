@@ -654,7 +654,7 @@ def get_organizations(connection):
 
 def create_transfer(
     connection,
-    transfer: models.Transfer
+    transfer
 ):
     """Create transfer in database
     
