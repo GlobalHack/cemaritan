@@ -1,7 +1,7 @@
 # functions for actually making the database calls
 from typing import Any, List, Tuple
 
-from models import Connection, Mapping, Organization, Transfer, User, History
+from models import Connection, Mapping, Organization, Transfer, User, History, Download
 
 
 ### Generic functions
@@ -190,7 +190,7 @@ def get_connection(connection, organization_id: int, connection_id: int):
     if row is not None:
         return Connection(row)
     else:
-        return None # Unnecessary but good to be explicit
+        return None  # Unnecessary but good to be explicit
 
 
 # Histories
@@ -258,7 +258,8 @@ def get_history(connection, organization_id: int, history_id: int):
     if row is not None:
         return History(row)
     else:
-        return None # Unnecessary but good to be explicit
+        return None  # Unnecessary but good to be explicit
+
 
 # Transfers
 def get_transfers(connection, organization_id: int):
@@ -315,7 +316,7 @@ def get_transfers(connection, organization_id: int):
         table_name="transfers",
         connection=connection,
         organization_id=organization_id,
-        query=QUERY
+        query=QUERY,
     )
     return [Transfer(tup) for tup in transfers]
 
@@ -394,12 +395,12 @@ def get_transfer(connection, organization_id: int, transfer_id: int):
         connection=connection,
         organization_id=organization_id,
         object_id=transfer_id,
-        query=QUERY
+        query=QUERY,
     )
     if row is not None:
         return Transfer(row)
     else:
-        return None # Unnecessary but good to be explicit
+        return None  # Unnecessary but good to be explicit
 
 
 # Users
@@ -461,7 +462,71 @@ def get_user(connection, organization_id: int, user_id: int):
     if row is not None:
         return User(row)
     else:
-        return None # Unnecessary but good to be explicit
+        return None  # Unnecessary but good to be explicit
+
+
+# Downloads
+def get_downloads(connection, organization_id: int):
+    """Get downloads for ``organization_id``
+    
+    Parameters
+    ----------
+    connection
+        Connection to database
+    organization_id : int
+        Organization Id
+    
+    Returns
+    -------
+    List[models.Download]
+        List of Download objects
+
+    """
+    downloads = get_rows_by_organization(
+        table_name="downloads", connection=connection, organization_id=organization_id
+    )
+    return [Download(tup) for tup in downloads]
+
+
+def get_download(connection, organization_id: int, download_id: int):
+    """Get download matching ``organization_id`` and ``download_id``
+    
+    Parameters
+    ----------
+    connection : 
+        Connection to database
+    organization_id : int
+        Organization Id
+    download_id : int
+        Download Id
+    
+    Returns
+    -------
+    Tuple[Tuple[str, Any]]
+        Tuple of 2-tuples representing a row of `users` table matching ``organization_id``
+        and ``user_id``
+        Example: 
+        (
+            ("uid", 1),
+            ("name", "Some download"),
+            ("expirationdatetime", "2019-03-10 10:42:03"),
+            ("transfername", "some transfer name"),
+            ("historyuid", 1),
+            ("organization", 1)
+        )
+        
+    """
+
+    row = get_row_by_object_id(
+        table_name="downloads",
+        connection=connection,
+        organization_id=organization_id,
+        object_id=download_id,
+    )
+    if row is not None:
+        return Download(row)
+    else:
+        return None  # Unnecessary but good to be explicit
 
 
 # Mappings
@@ -526,7 +591,7 @@ def get_mapping(connection, organization_id: int, mapping_id: int):
     if row is not None:
         return Mapping(row)
     else:
-        return None # Unnecessary but good to be explicit
+        return None  # Unnecessary but good to be explicit
 
 
 # Organizations
