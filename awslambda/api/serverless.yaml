@@ -192,7 +192,7 @@ functions:
     handler: download.get_download
     events:
       - http:
-          path: organizations/{organization_id}/histories/{download_id}
+          path: organizations/{organization_id}/download/{download_id}
           method: get
           cors: true
           request:
