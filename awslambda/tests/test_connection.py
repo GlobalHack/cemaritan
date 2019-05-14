@@ -1,7 +1,7 @@
 import pytest
 
 from api.connection import connections, get_connection
-from api.transfer import transfers, get_transfer
+from api.transfer import transfers, get_transfer, create_transfer, delete_transfer
 from api.history import histories, get_history
 from api.mapping import mappings, get_mapping
 from api.user import users, get_user
@@ -35,9 +35,32 @@ def test_transfer_single_function(
     )
 
 
+# def test_transfer_single_create_function(
+#     sample_transfer_single_create_event, sample_transfer_single_create_response
+# ):
+#     # delete_transfer(9999)
+#     _id = create_transfer(sample_transfer_single_create_event, None)['body']['uid']
+#     sample_transfer_single_create_response['body']['uid'] = _id
+#     transfer_single_event['pathParameters']['transfer_id] = _id']
+
+#     assert (
+#         get_transfer(transfer_single_event)
+#         == sample_transfer_single_create_response
+#     )
+#     delete_transfer(_id)
+
+
+# need pytest -s flag to see print statements
+# def test_print(
+#     sample_transfer_single_create_event, sample_transfer_single_create_response):
+#     # print(create_transfer(sample_transfer_single_create_event, None))
+    
+#     print(create_transfer(sample_transfer_single_create_event, None))
+
+
 ### Histories
-def test_histories_function(histories_event, sample_histories_response):
-    assert histories(histories_event, None) == sample_histories_response
+# def test_histories_function(histories_event, sample_histories_response):
+#     assert histories(histories_event, None) == sample_histories_response
 
 
 def test_history_single_function(

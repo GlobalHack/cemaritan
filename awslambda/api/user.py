@@ -4,7 +4,7 @@ import json
 import library.db_queries as db_queries
 
 from library.exceptions import DatabaseReturnedNone
-from library.db_connections import Postgres
+from library.db_connections import Postgres, get_conn
 from library.utils import awshandler, aws_get_path_parameter
 
 conn = Postgres()
