@@ -23,9 +23,9 @@ def test_connection_single_function(
     )
 
 
-### Transfers
-def test_transfers_function(transfers_event, sample_transfers_response):
-    assert transfers(transfers_event, None) == sample_transfers_response
+# ### Transfers
+# def test_transfers_function(transfers_event, sample_transfers_response):
+#     assert transfers(transfers_event, None) == sample_transfers_response
 
 
 def test_transfer_single_function(
