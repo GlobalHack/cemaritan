@@ -678,7 +678,7 @@ def create_transfer(
     startdatetime = model_as_dict['startdatetime']
     frequency = model_as_dict['frequency']
     active = model_as_dict['active']
-    query = f"INSERT INTO Transfers (uid, Organization, Name, CreatedDate, CreatedBy, Source, SourceMapping, Destination, DestinationMapping, StartDateTime, Frequency, Active) VALUES ('{uid}', '{organization}', '{name}', '{createddate}', '{createdby}', '{source}', '{sourcemapping}', '{destination}', '{destinationmapping}', '{startdatetime}', '{frequency}', '{active}') \n RETURNING uid;"
+    query = f"INSERT INTO Transfers (Organization, Name, CreatedDate, CreatedBy, Source, SourceMapping, Destination, DestinationMapping, StartDateTime, Frequency, Active) VALUES ('{organization}', '{name}', '{createddate}', '{createdby}', '{source}', '{sourcemapping}', '{destination}', '{destinationmapping}', '{startdatetime}', '{frequency}', '{active}') \n RETURNING uid;"
     return connection.query(query)
 
 

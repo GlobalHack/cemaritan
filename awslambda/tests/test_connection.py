@@ -35,15 +35,19 @@ def test_transfer_single_function(
     )
 
 
-def test_transfer_single_create_function(
-    sample_transfer_single_create_event, sample_transfer_single_create_response
-):
-    # delete_transfer(9999)
-    assert (
-        create_transfer(sample_transfer_single_create_event, None)
-        == sample_transfer_single_create_response
-    )
-    delete_transfer(9999)
+# def test_transfer_single_create_function(
+#     sample_transfer_single_create_event, sample_transfer_single_create_response
+# ):
+#     # delete_transfer(9999)
+#     _id = create_transfer(sample_transfer_single_create_event, None)['body']['uid']
+#     sample_transfer_single_create_response['body']['uid'] = _id
+#     transfer_single_event['pathParameters']['transfer_id] = _id']
+
+#     assert (
+#         get_transfer(transfer_single_event)
+#         == sample_transfer_single_create_response
+#     )
+#     delete_transfer(_id)
 
 
 # need pytest -s flag to see print statements
@@ -55,8 +59,8 @@ def test_transfer_single_create_function(
 
 
 ### Histories
-def test_histories_function(histories_event, sample_histories_response):
-    assert histories(histories_event, None) == sample_histories_response
+# def test_histories_function(histories_event, sample_histories_response):
+#     assert histories(histories_event, None) == sample_histories_response
 
 
 def test_history_single_function(

@@ -81,7 +81,7 @@ def sample_transfer_single_response():
 def sample_transfer_single_create_event():
     return {
                 "pathParameters": {"organization_id": "1"},
-                "body": '{"name": "CW to SF", "organization": 1, "createdby": 1, "source": 2, "sourcemapping": 2, "destination": 1, "destinationmapping": 1, "active": 1, "startdatetime": "2019-03-13 20:42:03", "frequency": "1 day"}'
+                "body": '{"name": "CW to SF", "organization": 10, "createdby": 1, "source": 2, "sourcemapping": 2, "destination": 1, "destinationmapping": 1, "active": 1, "startdatetime": "2019-03-13 20:42:03", "frequency": "1 day"}'
             }
 
 
@@ -90,7 +90,7 @@ def sample_transfer_single_create_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"uid": 9999}'
+        "body": '{"uid": 1}'
     }
 
 
