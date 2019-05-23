@@ -240,7 +240,6 @@ def get_history(connection, organization_id: int, history_id: int):
             ("type", "Transfer"),
             ("action", None),
             ("date", "2019-03-20 20:42:03"),
-            ("createdbyuser", 1),
             ("name", None),
             ("details", None),
             ("sourceuid", 0),

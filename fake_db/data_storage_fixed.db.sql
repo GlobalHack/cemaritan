@@ -45,17 +45,16 @@ CREATE TABLE IF NOT EXISTS Histories (
 	Type	TEXT NOT NULL,
 	Action	TEXT,
 	Date	TEXT NOT NULL,
-	CreatedByUser	INTEGER NOT NULL,
 	Name	TEXT,
 	Details	INTEGER,
 	SourceUID	INTEGER NOT NULL,
 	Organization	INTEGER NOT NULL
 );
-INSERT INTO Histories (Type,Action,Date,CreatedByUser,Name,Details,SourceUID,Organization) VALUES ('Transfer',NULL,'2019-03-20 20:42:03',1,NULL,NULL,0,1),
- ('Transfer',NULL,'2019-03-20 20:42:03',1,NULL,NULL,0,1),
- ('Transfer','Action B','2019-03-20 20:42:03',1,NULL,NULL,0,1),
- ('Transfer','Action B','2019-03-20 20:42:03',2,NULL,NULL,1,2),
- ('Transfer','Action C','2019-03-20 20:42:03',3,NULL,NULL,2,3);
+INSERT INTO Histories (Type,Action,Date,Name,Details,SourceUID,Organization) VALUES ('Transfer',NULL,'2019-03-20 20:42:03',NULL,NULL,0,1),
+ ('Transfer',NULL,'2019-03-20 20:42:03',NULL,NULL,0,1),
+ ('Transfer','Action B','2019-03-20 20:42:03',NULL,NULL,0,1),
+ ('Transfer','Action B','2019-03-20 20:42:03',NULL,NULL,1,2),
+ ('Transfer','Action C','2019-03-20 20:42:03',NULL,NULL,2,3);
 DROP TABLE IF EXISTS Mappings;
 CREATE TABLE IF NOT EXISTS Mappings (
 	UID	SERIAL PRIMARY KEY,
@@ -96,8 +95,9 @@ CREATE TABLE IF NOT EXISTS downloads (
 	name text NULL,
 	transfer_name text NULL,
 	history_uid int4 NOT NULL,
-	expiration_datetime timestamp NULL,
-	organization int4 NOT NULL
+	expiration_datetime text NULL,
+	organization int4 NOT NULL,
+	file_location_info text NOT NULL
 );
-INSERT INTO downloads (name, transfer_name, history_uid, expiration_datetime, organization) VALUES ('Download 1', 'CW to SF', 1, '2019-03-09 20:42:03', 1);
+INSERT INTO downloads (name, transfer_name, history_uid, expiration_datetime, organization, file_location_info) VALUES ('Download 1', 'CW to SF', 1, '2019-03-09 20:42:03', 1, 'file_location_info_1');
 COMMIT;
