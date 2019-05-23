@@ -3,6 +3,7 @@ import json
 
 import library.db_queries as db_queries
 
+from models import History
 from library.exceptions import DatabaseReturnedNone
 from library.db_connections import Postgres, get_conn
 from library.utils import awshandler, aws_get_path_parameter, aws_get_json_body
@@ -39,43 +40,35 @@ def create_transfer(event, context):
     transfer_obj = Transfer(body)
     response = db_queries.create_transfer(connection=conn, transfer=transfer_obj)
     tup = response[0][0]
-    return {tup[0]: tup[1]}
 
-    #     # parse transfer content
-    # body = aws_get_json_body(event)
-    # user_id = body["user_id"]
-    # name = body["name"]
-    # created_date = body["created_date"]
-    # created_by = body["created_by"]
-    # organization_id = body["organization_id"]
-    # source = body["source"]
-    # source_mapping = body["source_mapping"]
-    # destination = body["destination"]
-    # destination_mapping = body["destination_mapping"]
-    # start_date_time = body["start_date_time"]
-    # frequency = body["frequency"]
-    # record_filter = body["record_filter"]
-    # active = body["active"]
-    # # create transfer object
-    # db_queries.create_transfer(
-    #     connection=conn,
-    #     user_id=user_id,
-    #     name=name,
-    #     created_date=created_date,
-    #     created_by=created_by,
-    #     organization_id=organization_id,
-    #     source=source,
-    #     source_mapping=source_mapping,
-    #     destination=destination,
-    #     destination_mapping=destination_mapping,
-    #     start_date_time=start_date_time,
-    #     frequency=frequency,
-    #     record_filter=record_filter,
-    #     active=active,
-    # )
-    # # create corresponding history object
-    # db_queries.create_history()
-    # return "Data not saved yet."
+    # parse transfer content
+    uid = transfer_obj._uid
+    name = transfer_obj._name
+    created_date = transfer_obj._created_date
+    created_by = transfer_obj._created_by
+    organization_id = transfer_obj._organization
+    source = transfer_obj._source
+    source_mapping = transfer_obj._source_mapping
+    destination = transfer_obj._destination
+    destination_mapping = transfer_obj._destination_mapping
+    start_datetime = transfer_obj._start_datetime
+    frequency = transfer_obj._frequency
+    record_filter = transfer_obj._record_filter
+    active = transfer_obj._active
+    history_dict = {
+        "type": "Transfer",
+        "action": "Transfer Action",  # TODO: temporary, maybe change?
+        "date": created_date,
+        "name": name,
+        "details": "Some Details",
+        "source_uid": uid,
+        "organization": organization_id,
+    }
+    history_obj = History(history_dict)
+    db_queries.create_history(conn, history_obj)
+    # TODO: Replace the above with a boto3 call
+
+    return {tup[0]: tup[1]}
 
 
 def delete_transfer(transfer_id):

@@ -36,7 +36,7 @@ class History:
         self._name = self.data.get("name", None)
         self._date = self.data.get("date", [])
         self._details = self.data.get("details", None)
-        self._source_uid = self.data.get("sourceuid", None)
+        self._source_uid = self.data.get("source_uid", None)
         self._organization = self.data.get("organization", None)
 
     def from_dict(self, dm_dict: Dict):

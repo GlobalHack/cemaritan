@@ -34,8 +34,7 @@ def get_history(event, context):
 def create_history(event, context):
     organization_id = aws_get_path_parameter(event, "organization_id")
     body = json.loads(event["body"])
-    transfer_obj = History(body)
-    response = db_queries.create_transfer(connection=conn, transfer=transfer_obj)
+    history_obj = History(body)
+    response = db_queries.create_history(connection=conn, history=history_obj)
     tup = response[0][0]
     return {tup[0]: tup[1]}
-    db_queries.create_history()

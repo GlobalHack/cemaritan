@@ -649,18 +649,16 @@ def create_history(connection, history: History):
             History object to create
 
         """
-    model_as_dict = transfer.to_dict()
+    model_as_dict = history.to_dict()
     history_type = model_as_dict["type"]
-    uid = 9999  # temporary
-    # uid = model_as_dict["uid"]
     action = model_as_dict["action"]
     name = model_as_dict["name"]
     created_date = "2019-03-20 20:42:03"  # temporary
-    # createddate = model_as_dict["date"]
+    # createddate = model_as_dict["date"] #not needed if Postgres auto adds timestamp?
     details = model_as_dict["details"]
-    source_id = model_as_dict["sourceuid"]
+    source_id = model_as_dict["source_uid"]
     organization_id = model_as_dict["organization"]
-    query = f"INSERT INTO Histories (Type, Action, Date, Name, Details, SourceUID, Organization) VALUES ('{history_type}', '{action}', '{created_date}', '{name}', '{details}', '{source_id}', '{organization_id}');"
+    query = f"INSERT INTO Histories (Type, Action, Date, Name, Details, SourceUID, Organization) VALUES ('{history_type}', '{action}', '{created_date}', '{name}', '{details}', '{source_id}', '{organization_id}') \n RETURNING uid;"
     connection.query(query)
 
 
@@ -754,7 +752,6 @@ def create_transfer(connection, transfer):
         models.Transfer
     """
     model_as_dict = transfer.to_dict()
-    uid = 9999  # temporary
     createddate = "2019-03-20 20:42:03"  # temporary
     organization = model_as_dict["organization"]
     name = model_as_dict["name"]
