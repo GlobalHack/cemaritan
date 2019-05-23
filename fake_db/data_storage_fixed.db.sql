@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS Histories (
 	Action	TEXT,
 	Date	TEXT NOT NULL,
 	Name	TEXT,
-	Details	INTEGER,
+	Details	TEXT,
 	SourceUID	INTEGER NOT NULL,
 	Organization	INTEGER NOT NULL
 );
