@@ -2,19 +2,17 @@ import json
 from typing import Dict, Tuple
 
 
-class History:
+class Download:
     def __init__(self, data, *args, **kwargs):
-        """Class for handling History
+        """Class for handling Download objects
         
         Example:
             {
-                "Type":	string,
-                "Action": string,
-                "Date": string,
-                "Name": string,
+                "Name": str,
+                "TransferName": str,
                 "UID": int,
-                "Details": string,
-                "SourceUID": int,
+                "HistoryUID": int,
+                "ExpirationDateTime": str,
                 "Organization": int
             }
 
@@ -30,14 +28,12 @@ class History:
                 "Parameter 'data' was not a valid input: dict, tuple, or JSON string"
             )
 
-        self._type = self.data.get("type", None)
-        self._uid = self.data.get("uid", None)
-        self._action = self.data.get("action", None)
-        self._name = self.data.get("name", None)
-        self._date = self.data.get("date", [])
-        self._details = self.data.get("details", None)
-        self._source_uid = self.data.get("sourceuid", None)
-        self._organization = self.data.get("organization", None)
+        self._name = self.data.get("Name", None)
+        self._transfer_name = self.data.get("TransferName", None)
+        self._uid = self.data.get("UID", None)
+        self._history_uid = self.data.get("HistoryUID", None)
+        self._expiration_date_time = self.data.get("ExpirationDateTime", None)
+        self._organization = self.data.get("Organization", None)
 
     def from_dict(self, dm_dict: Dict):
         try:

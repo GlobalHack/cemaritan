@@ -1,7 +1,7 @@
 # functions for actually making the database calls
 from typing import Any, List, Tuple
 
-from models import Connection, Mapping, Organization, Transfer, User, History
+from models import Connection, Mapping, Organization, Transfer, User, History, Download
 
 
 ### Generic functions
@@ -115,7 +115,7 @@ def delete_row_by_uid(connection, table_name: str, uid: int):
 
     try:
         query = f"DELETE from {table_name} where {table_name}.UID={uid}"
-        connection.query(query)
+        connection.query(query, null_return=True)
     except:
         return False
     return True
@@ -190,7 +190,7 @@ def get_connection(connection, organization_id: int, connection_id: int):
     if row is not None:
         return Connection(row)
     else:
-        return None # Unnecessary but good to be explicit
+        return None  # Unnecessary but good to be explicit
 
 
 # Histories
@@ -258,7 +258,8 @@ def get_history(connection, organization_id: int, history_id: int):
     if row is not None:
         return History(row)
     else:
-        return None # Unnecessary but good to be explicit
+        return None  # Unnecessary but good to be explicit
+
 
 # Transfers
 def get_transfers(connection, organization_id: int):
@@ -315,7 +316,7 @@ def get_transfers(connection, organization_id: int):
         table_name="transfers",
         connection=connection,
         organization_id=organization_id,
-        query=QUERY
+        query=QUERY,
     )
     return [Transfer(tup) for tup in transfers]
 
@@ -394,12 +395,12 @@ def get_transfer(connection, organization_id: int, transfer_id: int):
         connection=connection,
         organization_id=organization_id,
         object_id=transfer_id,
-        query=QUERY
+        query=QUERY,
     )
     if row is not None:
         return Transfer(row)
     else:
-        return None # Unnecessary but good to be explicit
+        return None  # Unnecessary but good to be explicit
 
 
 # Users
@@ -461,7 +462,71 @@ def get_user(connection, organization_id: int, user_id: int):
     if row is not None:
         return User(row)
     else:
-        return None # Unnecessary but good to be explicit
+        return None  # Unnecessary but good to be explicit
+
+
+# Downloads
+def get_downloads(connection, organization_id: int):
+    """Get downloads for ``organization_id``
+    
+    Parameters
+    ----------
+    connection
+        Connection to database
+    organization_id : int
+        Organization Id
+    
+    Returns
+    -------
+    List[models.Download]
+        List of Download objects
+
+    """
+    downloads = get_rows_by_organization(
+        table_name="downloads", connection=connection, organization_id=organization_id
+    )
+    return [Download(tup) for tup in downloads]
+
+
+def get_download(connection, organization_id: int, download_id: int):
+    """Get download matching ``organization_id`` and ``download_id``
+    
+    Parameters
+    ----------
+    connection : 
+        Connection to database
+    organization_id : int
+        Organization Id
+    download_id : int
+        Download Id
+    
+    Returns
+    -------
+    Tuple[Tuple[str, Any]]
+        Tuple of 2-tuples representing a row of `users` table matching ``organization_id``
+        and ``user_id``
+        Example: 
+        (
+            ("uid", 1),
+            ("name", "Some download"),
+            ("expirationdatetime", "2019-03-10 10:42:03"),
+            ("transfername", "some transfer name"),
+            ("historyuid", 1),
+            ("organization", 1)
+        )
+        
+    """
+
+    row = get_row_by_object_id(
+        table_name="downloads",
+        connection=connection,
+        organization_id=organization_id,
+        object_id=download_id,
+    )
+    if row is not None:
+        return Download(row)
+    else:
+        return None  # Unnecessary but good to be explicit
 
 
 # Mappings
@@ -526,7 +591,7 @@ def get_mapping(connection, organization_id: int, mapping_id: int):
     if row is not None:
         return Mapping(row)
     else:
-        return None # Unnecessary but good to be explicit
+        return None  # Unnecessary but good to be explicit
 
 
 # Organizations
@@ -571,6 +636,32 @@ def get_organizations(connection):
     query = f"select * from organizations"
     rows = connection.query(query)
     return [Organization(tup) for tup in rows]
+
+
+def create_history(connection, history: History):
+    """Create history in database
+
+        Parameters
+        ----------
+        connection
+            Connection to database
+        history: History
+            History object to create
+
+        """
+    model_as_dict = transfer.to_dict()
+    history_type = model_as_dict["type"]
+    uid = 9999  # temporary
+    # uid = model_as_dict["uid"]
+    action = model_as_dict["action"]
+    name = model_as_dict["name"]
+    created_date = "2019-03-20 20:42:03"  # temporary
+    # createddate = model_as_dict["date"]
+    details = model_as_dict["details"]
+    source_id = model_as_dict["sourceuid"]
+    organization_id = model_as_dict["organization"]
+    query = f"INSERT INTO Histories (Type, Action, Date, Name, Details, SourceUID, Organization) VALUES ('{history_type}', '{action}', '{created_date}', '{name}', '{details}', '{source_id}', '{organization_id}');"
+    connection.query(query)
 
 
 # def create_organization(connection, name: str, created_date: str):
@@ -652,59 +743,31 @@ def get_organizations(connection):
 #     connection.query(query)
 
 
-def create_transfer(
-    connection,
-    user_id: int,
-    name: str,
-    created_date: str,
-    created_by: int,
-    organization_id: int,
-    source: int,
-    source_mapping: int,
-    destination: int,
-    destination_mapping: int,
-    start_date_time: str,
-    frequency: str,
-    record_filter: str,
-    active: bool,
-):
+def create_transfer(connection, transfer):
     """Create transfer in database
     
     Parameters
     ----------
     connection
         Connection to database
-    user_id : int
-        User creating transfer
-    name : str
-        Name of transfer
-    created_date : str
-        Date transfer was created 
-    created_by : int
-        User creating transfer
-    organization_id : int
-        Organization user belongs to
-    source : int
-        Id of Connection source
-    source_mapping : int
-        Mapping of source system
-    destination : int
-        Id of destination Connection
-    destination_mapping : int
-        Mapping of destination system
-    start_date_time : str
-        Date to start transfer
-    frequency : str
-        Frequency of transfer
-    record_filter : str
-        Filter records parameters
-    active : bool
-        Is connection currently active
-    
+    transfer
+        models.Transfer
     """
-
-    query = f"INSERT INTO Transfers (Organization, Name, CreatedDate, CreatedBy, Source, SourceMapping, Destination, DestinationMapping, StartDateTime, Frequency, RecordFilter, Active) VALUES ((select Organization from Users where Users.UID = {user_id}), '{name}', '{created_date}', '{created_by}', '{source}', '{source_mapping}', '{destination}', '{destination_mapping}', '{start_date_time}', '{frequency}', '{record_filter}', '{active}');"
-    connection.query(query)
+    model_as_dict = transfer.to_dict()
+    uid = 9999  # temporary
+    createddate = "2019-03-20 20:42:03"  # temporary
+    organization = model_as_dict["organization"]
+    name = model_as_dict["name"]
+    createdby = model_as_dict["createdby"]
+    source = model_as_dict["source"]
+    sourcemapping = model_as_dict["sourcemapping"]
+    destination = model_as_dict["destination"]
+    destinationmapping = model_as_dict["destinationmapping"]
+    startdatetime = model_as_dict["startdatetime"]
+    frequency = model_as_dict["frequency"]
+    active = model_as_dict["active"]
+    query = f"INSERT INTO Transfers (Organization, Name, CreatedDate, CreatedBy, Source, SourceMapping, Destination, DestinationMapping, StartDateTime, Frequency, Active) VALUES ('{organization}', '{name}', '{createddate}', '{createdby}', '{source}', '{sourcemapping}', '{destination}', '{destinationmapping}', '{startdatetime}', '{frequency}', '{active}') \n RETURNING uid;"
+    return connection.query(query)
 
 
 def delete_user(connection, user_id: int):

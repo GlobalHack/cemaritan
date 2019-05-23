@@ -2,12 +2,14 @@ import requests
 import json
 
 import library.db_queries as db_queries
+from models import History
 
 from library.exceptions import DatabaseReturnedNone
-from library.db_connections import Postgres
+from library.db_connections import Postgres, get_conn
 from library.utils import awshandler, aws_get_path_parameter
 
 conn = Postgres()
+
 
 @awshandler
 def histories(event, context):
@@ -20,7 +22,20 @@ def histories(event, context):
 def get_history(event, context):
     organization_id = aws_get_path_parameter(event, "organization_id")
     history_id = aws_get_path_parameter(event, "history_id")
-    history = db_queries.get_history(connection=conn, organization_id=organization_id, history_id=history_id)
+    history = db_queries.get_history(
+        connection=conn, organization_id=organization_id, history_id=history_id
+    )
     if history is None:
         raise DatabaseReturnedNone(f"Check object id: {history_id}")
     return history.to_dict()
+
+
+@awshandler
+def create_history(event, context):
+    organization_id = aws_get_path_parameter(event, "organization_id")
+    body = json.loads(event["body"])
+    transfer_obj = History(body)
+    response = db_queries.create_transfer(connection=conn, transfer=transfer_obj)
+    tup = response[0][0]
+    return {tup[0]: tup[1]}
+    db_queries.create_history()

@@ -92,13 +92,15 @@ class Postgres:
         # TODO: bool for whether connection is open or not
 
     def create_new_connection(self):
-        return psycopg2.connect(
+        conn = psycopg2.connect(
             host=self._host,
             port=self._port,
             database=self._database,
             user=self._user,
             password=self._password,
         )
+        conn.autocommit = True
+        return conn
 
     def connection(self):
         """Returns connection if still open, else opens a new 
@@ -118,7 +120,7 @@ class Postgres:
             self._connection = self.create_new_connection()
             return self._connection
 
-    def query(self, query: str):
+    def query(self, query: str, null_return: bool=False):
         """Submit query to database
         
         Parameters
@@ -128,14 +130,21 @@ class Postgres:
         
         """
         try:
-            c = self._connection.cursor()
+            c = self.connection().cursor()  # was self._connection.cursor()
             c.execute(query)
+            if null_return:
+                return
             column_names = [x.name for x in c.description]
             rows = list(c.fetchall())  # limit to 100 results in the future?
             to_return = zip_column_names_and_rows(column_names, rows)
             return to_return
         except Exception as e:
-            print(e)
+            print(str(type(e)) + str(e))
             self._connection.rollback()
         finally:
             c.close()
+
+
+def get_conn(name: str='postgres'):
+    if name=='postgres':
+        return Postgres()
