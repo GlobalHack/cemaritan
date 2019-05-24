@@ -212,6 +212,19 @@ functions:
               paths:
                 organization_id: true
                 download_id: true
+  # Upload
+  create_upload:
+    handler: upload.create_upload
+    events:
+      - http:
+          path: organizations/{organization_id}/upload
+          method: post
+          cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
+        
 
 plugins:
   - serverless-python-requirements

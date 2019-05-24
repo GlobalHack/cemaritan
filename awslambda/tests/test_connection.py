@@ -7,6 +7,7 @@ from api.mapping import mappings, get_mapping
 from api.user import users, get_user
 from api.organization import organizations, get_organization
 from api.download import downloads, get_download, get_download_link
+from api.upload import create_upload
 
 
 ### Connections
@@ -111,3 +112,8 @@ def test_download_single_function(
 
 def test_download_link_function(download_single_event, sample_download_link_response):
     assert get_download_link(download_single_event, None) == sample_download_link_response
+
+
+# Upload
+def test_upload_function(upload_event, sample_upload_response):
+    assert create_upload(upload_event, None) == sample_upload_response

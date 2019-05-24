@@ -249,6 +249,19 @@ def sample_download_link_response():
     }
 
 
+# Upload
+@pytest.fixture()
+def upload_event():
+    return {"pathParameters": {"organization_id": "1"}}
+
+@pytest.fixture()
+def sample_upload_response():
+    return {
+        "statusCode": 200,
+        "headers": {"Access-Control-Allow-Origin": "*"},
+        "body": '{"message": "File uploaded"}'
+    }
+
 try:
     os.unlink(test_path.joinpath("api/models"))
 except:
