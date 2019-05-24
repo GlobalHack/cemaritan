@@ -1,5 +1,3 @@
-import requests
-import json
 
 import library.db_queries as db_queries
 
