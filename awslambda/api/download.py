@@ -45,4 +45,4 @@ def get_download_link(event, context):
 
 
 def _generate_download_link(file_locatinon_info: str) -> str:
-    return f'fake_link_for{file_locatinon_info}'
+    return f'fake_link_for_{file_locatinon_info}'
