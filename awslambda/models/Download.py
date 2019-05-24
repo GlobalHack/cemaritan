@@ -13,7 +13,8 @@ class Download:
                 "UID": int,
                 "HistoryUID": int,
                 "ExpirationDateTime": str,
-                "Organization": int
+                "Organization": int,
+                "file_location_info": str
             }
 
         """
@@ -34,6 +35,7 @@ class Download:
         self._history_uid = self.data.get("HistoryUID", None)
         self._expiration_date_time = self.data.get("ExpirationDateTime", None)
         self._organization = self.data.get("Organization", None)
+        self._file_location_info = self.data.get("file_location_info", None)
 
     def from_dict(self, dm_dict: Dict):
         try:

@@ -111,7 +111,7 @@ def sample_histories_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '[{"uid": 2, "type": "Transfer", "action": null, "date": "2019-03-20 20:42:03", "createdbyuser": 1, "name": null, "details": null, "sourceuid": 0, "organization": 1}, {"uid": 3, "type": "Transfer", "action": null, "date": "2019-03-20 20:42:03", "createdbyuser": 1, "name": null, "details": null, "sourceuid": 0, "organization": 1}, {"uid": 4, "type": "Transfer", "action": "Action B", "date": "2019-03-20 20:42:03", "createdbyuser": 1, "name": null, "details": null, "sourceuid": 0, "organization": 1}]',
+        "body": '[{"uid": 2, "type": "Transfer", "action": null, "date": "2019-03-20 20:42:03", "name": null, "details": null, "sourceuid": 0, "organization": 1}, {"uid": 3, "type": "Transfer", "action": null, "date": "2019-03-20 20:42:03", "createdbyuser": 1, "name": null, "details": null, "sourceuid": 0, "organization": 1}, {"uid": 4, "type": "Transfer", "action": "Action B", "date": "2019-03-20 20:42:03", "createdbyuser": 1, "name": null, "details": null, "sourceuid": 0, "organization": 1}]',
     }
 
 
@@ -120,7 +120,7 @@ def sample_history_single_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"uid": 2, "type": "Transfer", "action": null, "date": "2019-03-20 20:42:03", "createdbyuser": 1, "name": null, "details": null, "sourceuid": 0, "organization": 1}',
+        "body": '{"uid": 2, "type": "Transfer", "action": null, "date": "2019-03-20 20:42:03", "name": null, "details": null, "sourceuid": 0, "organization": 1}',
     }
 
 
@@ -227,9 +227,7 @@ def sample_downloads_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        # TODO: Matt, add valid data from table here, then uncomment above and make it happen
-        # Potential sample: {"uid": 1, "name": "some name here", "transfername": "some transfer name", "historyuid": 1, "expirationdatetime": "2019-05-31 11:59:59", "organization": 1}
-        "body": '[{"uid": 1, "name": "Download 1", "transfer_name": "CW to SF", "history_uid": 1, "expiration_datetime": "2019-03-09 20:42:03", "organization": 1}]',
+        "body": '[{"uid": 1, "name": "Download 1", "transfer_name": "CW to SF", "history_uid": 1, "expiration_datetime": "2019-03-09 20:42:03", "organization": 1, "file_location_info": "file_location_info_1"}]',
     }
 
 
@@ -238,9 +236,16 @@ def sample_download_single_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        # TODO: Update below to match response
-        # Potential sample: {"uid": 1, "name": "some name here", "transfername": "some transfer name", "historyuid": 1, "expirationdatetime": "2019-05-31 11:59:59", "organization": 1}
-        "body": '{"uid": 1, "name": "Download 1", "transfer_name": "CW to SF", "history_uid": 1, "expiration_datetime": "2019-03-09 20:42:03", "organization": 1}'
+        "body": '{"uid": 1, "name": "Download 1", "transfer_name": "CW to SF", "history_uid": 1, "expiration_datetime": "2019-03-09 20:42:03", "organization": 1, "file_location_info": "file_location_info_1"}'
+    }
+
+
+@pytest.fixture()
+def sample_download_link_response():
+    return {
+        "statusCode": 200,
+        "headers": {"Access-Control-Allow-Origin": "*"},
+        "body": '{"download_link": "fake_link_for_file_location_info_1"}'
     }
 
 

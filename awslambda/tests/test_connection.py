@@ -6,7 +6,7 @@ from api.history import histories, get_history
 from api.mapping import mappings, get_mapping
 from api.user import users, get_user
 from api.organization import organizations, get_organization
-from api.download import downloads, get_download
+from api.download import downloads, get_download, get_download_link
 
 
 ### Connections
@@ -107,3 +107,7 @@ def test_download_single_function(
     download_single_event, sample_download_single_response
 ):
     assert get_download(download_single_event, None) == sample_download_single_response
+
+
+def test_download_link_function(download_single_event, sample_download_link_response):
+    assert get_download_link(download_single_event, None) == sample_download_link_response

@@ -200,6 +200,18 @@ functions:
               paths:
                 organization_id: true
                 download_id: true
+  get_download_link:
+    handler: download.get_download_link
+    events:
+      - http:
+          path: organizations/{organization_id}/download/{download_id}/link
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
+                download_id: true
 
 plugins:
   - serverless-python-requirements
