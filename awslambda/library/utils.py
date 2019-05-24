@@ -23,6 +23,7 @@ def awshandler(function):
         except Exception as e:
             # TODO: Rethink what to return...dumping exceptions is scary for data leakage
             return {"statusCode": 400, "headers": {"Access-Control-Allow-Origin": "*"},  "body": json.dumps({'message': "400 Bad Request\n\n" + format_exception(e)})} 
+        # No errors, so convert payload to JSON and return http response.
         return {"statusCode": 200, "headers": {"Access-Control-Allow-Origin": "*"},  "body": json.dumps(payload)}
     return wrapper
         

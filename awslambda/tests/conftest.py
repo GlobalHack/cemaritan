@@ -245,7 +245,7 @@ def sample_download_link_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"download_link":"fake_link_for_file_location_info_1"}'
+        "body": '{"download_link": "fake_link_for_file_location_info_1"}'
     }
 
 

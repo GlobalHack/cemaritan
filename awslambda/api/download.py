@@ -38,11 +38,11 @@ def get_download_link(event, context):
     )
     file_location_info = download._file_location_info
     if file_location_info is not None:
-        link = _generate_download_link(file_locatinon_info)
+        link = _generate_download_link(file_location_info)
     else:
         link = 'No link created'
-    return json.dumps({'download_link': link})
+    return {'download_link': link}
 
 
-def _generate_download_link(file_locatinon_info: str) -> str:
-    return f'fake_link_for_{file_locatinon_info}'
+def _generate_download_link(file_location_info: str) -> str:
+    return f'fake_link_for_{file_location_info}'
