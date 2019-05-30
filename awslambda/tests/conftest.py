@@ -49,6 +49,15 @@ def sample_connection_single_response():
     }
 
 
+@pytest.fixture()
+def sample_connection_list():
+    return {
+        "statusCode": 200,
+        "headers": {"Access-Control-Allow-Origin": "*"},
+        "body": '[{"uid": 1, "name": "SF"}, {"uid": 2, "name": "CW"}, {"uid": 6, "name": "Secure Download"}]'
+    }
+
+
 ### Transfers
 @pytest.fixture()
 def transfers_event():
@@ -271,3 +280,5 @@ try:
     os.unlink(test_path.joinpath("api/library"))
 except:
     pass
+
+

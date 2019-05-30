@@ -28,6 +28,11 @@ def awshandler(function):
     return wrapper
         
 
+def de_handler(response):
+    """Undoes the effects of @awshandler so those functions can be used internally."""
+    return json.loads(response['body'])
+
+
 def aws_get_http_method(event):
     """Return the http method from the AWS Lambda event object."""
     return event['requestContext']['httpMethod']
