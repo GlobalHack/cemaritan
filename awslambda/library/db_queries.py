@@ -1,7 +1,7 @@
 # functions for actually making the database calls
 from typing import Any, List, Tuple
 
-from models import Connection, Mapping, Organization, Transfer, User, History, Download
+from models import Connection, Mapping, Organization, Transfer, User, History, Download, Frequency
 
 
 ### Generic functions
@@ -400,6 +400,13 @@ def get_transfer(connection, organization_id: int, transfer_id: int):
         return Transfer(row)
     else:
         return None  # Unnecessary but good to be explicit
+
+
+def get_frequencies_list(connection):
+    """Get static list of frequencies."""
+    query = "Select name, value from list_frequencies"
+    frequencies = connection.query(query)
+    return [Frequency(tup) for tup in frequencies]
 
 
 # Users
@@ -814,3 +821,4 @@ def delete_transfer(connection, transfer_id: int):
     
     """
     return delete_row_by_uid(connection, "Transfers", transfer_id)
+

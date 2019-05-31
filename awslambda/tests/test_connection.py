@@ -1,7 +1,7 @@
 import pytest
 
 from api.connection import connections, get_connection, get_connections_list
-from api.transfer import transfers, get_transfer, create_transfer, delete_transfer
+from api.transfer import transfers, get_transfer, create_transfer, delete_transfer, get_frequencies_list
 from api.history import histories, get_history
 from api.mapping import mappings, get_mapping
 from api.user import users, get_user
@@ -65,6 +65,10 @@ def test_transfer_single_function(
 # def test_histories_function(histories_event, sample_histories_response):
 #     assert histories(histories_event, None) == sample_histories_response
 
+
+def test_frequencies_list(sample_frequencies_list_response):
+    assert get_frequencies_list(None, None) == sample_frequencies_list_response
+    
 
 def test_history_single_function(history_single_event, sample_history_single_response):
     assert get_history(history_single_event, None) == sample_history_single_response

@@ -40,3 +40,10 @@ def delete_transfer(transfer_id):
     """Temporary function for testing. Eventually this 
     will be built out into a full handler."""
     db_queries.delete_transfer(conn, transfer_id)
+
+
+@awshandler
+def get_frequencies_list(event, context):
+    """Return list of acceptable frequencies."""
+    results = db_queries.get_frequencies_list(conn)
+    return [fr.to_dict() for fr in results]

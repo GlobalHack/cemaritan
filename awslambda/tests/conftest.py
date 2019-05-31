@@ -103,6 +103,14 @@ def sample_transfer_single_create_response():
         "body": '{"uid": 1}'
     }
 
+@pytest.fixture()
+def sample_frequencies_list_response():
+    return {
+        'statusCode': 200, 
+        'headers': {'Access-Control-Allow-Origin': '*'}, 
+        'body': '[{"name": "1 hour", "value": 1}, {"name": "1 day", "value": 2}]'
+    }
+
 
 ### Histories
 @pytest.fixture()

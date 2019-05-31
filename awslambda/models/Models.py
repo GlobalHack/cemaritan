@@ -64,3 +64,14 @@ class Upload(Model):
     def _set_data(self):
         self._organization = self.data.get("organization")
         self._transfer = self.data.get("transfer")
+
+
+class Frequency(Model):
+    
+    def __init__(self, data, *args, **kwargs):
+        super(Frequency, self).__init__(data, *args, **kwargs)
+    
+    def _set_data(self):
+        self._uid = self.data.get("uid")
+        self._name = self.data.get("name")
+        self._value = self.data.get("value")
