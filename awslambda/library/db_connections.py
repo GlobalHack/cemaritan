@@ -34,19 +34,19 @@ def zip_column_names_and_rows(
                 ("uid", 1),
                 ("organization", 1),
                 ("name", "SF"),
-                ("createddate", "2019-03-09 20:42:03"),
-                ("createdby", 1),
+                ("created_datetime", "2019-03-09 20:42:03"),
+                ("created_by", 1),
                 ("type", "A"),
-                ("connectioninfo", "{conn string}")
+                ("connection_info", "{conn string}")
             ),
             (
                 ("uid", 2),
                 ("organization", 1),
                 ("name", "CW"),
-                ("createddate", "2019-03-10 04:42:03"),
-                ("createdby", 1),
+                ("created_datetime", "2019-03-10 04:42:03"),
+                ("created_by", 1),
                 ("type", "B"),
-                ("connectioninfo", "{conn string}")
+                ("connection_info", "{conn string}")
             )
         ]
 

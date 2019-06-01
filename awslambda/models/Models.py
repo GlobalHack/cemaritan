@@ -7,9 +7,9 @@ class Model:
 
     Example:
     {	
-        "UID": UID
-        "Org": UID
-        "CreatedDate": Timestamp
+        "uid": uid
+        "org": uid
+        "created_datetime": Timestamp
         "Roles": Array[string]
     }
 
