@@ -40,7 +40,8 @@ def create_transfer(event, context):
 def update_transfer(event, context):
     organization_id = aws_get_path_parameter(event, "organization_id")
     transfer_id = aws_get_path_parameter(event, "transfer_id")
-    body = json.loads(event['body'])  
+    body = json.loads(event['body']) 
+    transfer_obj = Transfer(body) 
 
 
 def delete_transfer(transfer_id):
