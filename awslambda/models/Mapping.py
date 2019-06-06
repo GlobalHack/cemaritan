@@ -9,7 +9,7 @@ class Mapping:
         Example:
             {
                 "Name":	string,
-                "UID": string,
+                "uid": string,
                 "MappingInfo": []
             }
         """
@@ -24,12 +24,12 @@ class Mapping:
                 "Parameter 'data' was not a valid input: dict, tuple, or JSON string"
             )
 
-        self._uid = self.data.get("UID", None)
-        self._organization = self.data.get("Organization", None)
+        self._uid = self.data.get("uid", None)
+        self._organization = self.data.get("organization", None)
         self._name = self.data.get("Name", None)
         self._mapping = self.data.get("MappingInfo", [])
-        self._created_date = self.data.get("CreatedDate", None)
-        self._created_by = self.data.get("CreatedBy", None)
+        self._created_date = self.data.get("created_datetime", None)
+        self._created_by = self.data.get("created_by", None)
 
     def from_dict(self, dm_dict: Dict):
         try:

@@ -8,14 +8,14 @@ class Connection:
 
         Example:
         {
-            "Org": UID,
-            "CreatedBy": UID,
-            "CreatedDate": Timestamp,
+            "org": uid,
+            "created_by": uid,
+            "created_datetime": Timestamp,
             "ModifiedDate": Timestamp,
             "Type": string (Salesforce, CW..),
             "ConnectionInfo": {"connectionstring": ..},
             "Name": string,
-            "UID": UID,
+            "uid": uid,
         }
         
         """
@@ -30,11 +30,11 @@ class Connection:
                 "Parameter 'data' was not a valid input: dict, tuple, or JSON string"
             )
 
-        self._uid = self.data.get("UID", None)
-        self._organization = self.data.get("Organization", None)
+        self._uid = self.data.get("uid", None)
+        self._organization = self.data.get("organization", None)
         self._name = self.data.get("Name", None)
-        self._created_date = self.data.get("CreatedDate", None)
-        self._created_by = self.data.get("CreatedBy", None)
+        self._created_date = self.data.get("created_datetime", None)
+        self._created_by = self.data.get("created_by", None)
         self._type = self.data.get("Type", None)
         self._connection_info = self.data.get("ConnectionInfo", None)
 

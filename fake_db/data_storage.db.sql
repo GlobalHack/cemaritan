@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
 	`CreatedDate`	TEXT NOT NULL,
 	`Organization`	INTEGER NOT NULL
 );
-INSERT INTO `Users` (UID,Name,CreatedDate,Organization) VALUES (1,'Matt','2019-03-10 10:42:03',1),
+INSERT INTO `Users` (UID,Name,CreatedDate,organization) VALUES (1,'Matt','2019-03-10 10:42:03',1),
  (2,'Kyle','2019-02-11 12:42:03',2),
  (3,'Kelly','2019-02-16 12:42:03',3);
 DROP TABLE IF EXISTS `Transfers`;

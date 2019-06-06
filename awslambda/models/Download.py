@@ -10,7 +10,7 @@ class Download:
             {
                 "Name": str,
                 "TransferName": str,
-                "UID": int,
+                "uid": int,
                 "HistoryUID": int,
                 "ExpirationDateTime": str,
                 "Organization": int,
@@ -31,10 +31,10 @@ class Download:
 
         self._name = self.data.get("Name", None)
         self._transfer_name = self.data.get("TransferName", None)
-        self._uid = self.data.get("UID", None)
+        self._uid = self.data.get("uid", None)
         self._history_uid = self.data.get("HistoryUID", None)
         self._expiration_date_time = self.data.get("ExpirationDateTime", None)
-        self._organization = self.data.get("Organization", None)
+        self._organization = self.data.get("organization", None)
         self._file_location_info = self.data.get("file_location_info", None)
 
     def from_dict(self, dm_dict: Dict):
