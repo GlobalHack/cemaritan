@@ -36,6 +36,14 @@ def create_transfer(event, context):
     return {tup[0]: tup[1]}
 
 
+@awshandler
+def update_transfer(event, context):
+    organization_id = aws_get_path_parameter(event, "organization_id")
+    transfer_id = aws_get_path_parameter(event, "transfer_id")
+    body = json.loads(event['body']) 
+    transfer_obj = Transfer(body) 
+
+
 def delete_transfer(transfer_id):
     """Temporary function for testing. Eventually this 
     will be built out into a full handler."""

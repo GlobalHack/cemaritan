@@ -81,9 +81,6 @@ class Frequency(Model):
     def _set_data(self):
         self._uid = self.data.get("uid")
         self._name = self.data.get("name")
-<<<<<<< HEAD
-        self._value = self.data.get("value")
-=======
         self._value = self.data.get("value")
 
 
@@ -190,4 +187,14 @@ class User(Model):
         self._name = self.data.get("name")
         self._created_date = self.data.get("created_datetime")
         self._organization = self.data.get("organization")
->>>>>>> develop
+
+
+class Organization(Model):
+
+    def __init__(self, data, *args, **kwargs):
+        super(Organization, self).__init__(data, *args, **kwargs)
+
+    def _set_data(self):     
+        self._uid = self.data.get("uid", None)
+        self._name = self.data.get("Name", None)
+        self._created_date = self.data.get("created_datetime", None)

@@ -820,9 +820,4 @@ def delete_transfer(connection, transfer_id: int):
         Id of transfer
     
     """
-<<<<<<< HEAD
-    return delete_row_by_uid(connection, "Transfers", transfer_id)
-
-=======
     return delete_row_by_uid(connection, "transfers", transfer_id)
->>>>>>> develop
