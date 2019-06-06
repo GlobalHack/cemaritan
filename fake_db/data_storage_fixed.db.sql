@@ -101,3 +101,11 @@ CREATE TABLE IF NOT EXISTS downloads (
 );
 INSERT INTO downloads (name, transfer_name, history_uid, expiration_datetime, organization, file_location_info) VALUES ('Download 1', 'CW to SF', 1, '2019-03-09 20:42:03', 1, 'file_location_info_1');
 COMMIT;
+
+DROP TABLE IF EXISTS list_frequencies;
+CREATE TABLE IF NOT EXISTS list_frequencies (
+	uid SERIAL PRIMARY KEY,
+	name text NOT NULL,
+	value int NOT NULL
+);
+INSERT INTO list_frequencies (name, value) VALUES ('1 hour', 1), ('1 day', 2);

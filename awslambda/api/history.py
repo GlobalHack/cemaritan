@@ -1,4 +1,3 @@
-
 import library.db_queries as db_queries
 
 from library.exceptions import DatabaseReturnedNone

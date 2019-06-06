@@ -49,6 +49,15 @@ def sample_connection_single_response():
     }
 
 
+@pytest.fixture()
+def sample_connection_list():
+    return {
+        "statusCode": 200,
+        "headers": {"Access-Control-Allow-Origin": "*"},
+        "body": '[{"uid": 1, "name": "SF"}, {"uid": 2, "name": "CW"}, {"uid": 6, "name": "Secure Download"}]'
+    }
+
+
 ### Transfers
 @pytest.fixture()
 def transfers_event():
@@ -92,6 +101,14 @@ def sample_transfer_single_create_response():
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
         "body": '{"uid": 1}'
+    }
+
+@pytest.fixture()
+def sample_frequencies_list_response():
+    return {
+        'statusCode': 200, 
+        'headers': {'Access-Control-Allow-Origin': '*'}, 
+        'body': '[{"name": "1 hour", "value": 1}, {"name": "1 day", "value": 2}]'
     }
 
 
@@ -271,3 +288,5 @@ try:
     os.unlink(test_path.joinpath("api/library"))
 except:
     pass
+
+

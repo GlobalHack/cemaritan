@@ -192,7 +192,7 @@ functions:
     handler: download.get_download
     events:
       - http:
-          path: organizations/{organization_id}/download/{download_id}
+          path: organizations/{organization_id}/downloads/{download_id}
           method: get
           cors: true
           request:
@@ -204,7 +204,7 @@ functions:
     handler: download.get_download_link
     events:
       - http:
-          path: organizations/{organization_id}/download/{download_id}/link
+          path: organizations/{organization_id}/downloads/{download_id}/link
           method: get
           cors: true
           request:
@@ -224,7 +224,18 @@ functions:
             parameters:
               paths:
                 organization_id: true
-        
+  # Other
+  frequencies_list:
+    handler: transfer.get_frequencies_list
+    events:
+      - http:
+          path: organizations/{organization_id}/lists/frequencies
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
 
 plugins:
   - serverless-python-requirements
