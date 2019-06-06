@@ -4,6 +4,9 @@ import json
 
 from library.exceptions import DatabaseReturnedNone
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 def format_exception(e):
     """Format an exception to be returned in a function response."""
@@ -22,6 +25,7 @@ def awshandler(function):
             return {"statusCode": 400, "headers": {"Access-Control-Allow-Origin": "*"},  "body": json.dumps({'message': format_exception(e)})}
         except Exception as e:
             # TODO: Rethink what to return...dumping exceptions is scary for data leakage
+            logger.exception(e)
             return {"statusCode": 400, "headers": {"Access-Control-Allow-Origin": "*"},  "body": json.dumps({'message': "400 Bad Request\n\n" + format_exception(e)})} 
         # No errors, so convert payload to JSON and return http response.
         return {"statusCode": 200, "headers": {"Access-Control-Allow-Origin": "*"},  "body": json.dumps(payload)}
