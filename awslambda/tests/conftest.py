@@ -36,7 +36,7 @@ def sample_connections_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '[{"uid": 1, "organization": 1, "name": "SF", "createddate": "2019-03-09 20:42:03", "createdby": 1, "type": "A", "connectioninfo": "{conn string}"}, {"uid": 2, "organization": 1, "name": "CW", "createddate": "2019-03-10 04:42:03", "createdby": 1, "type": "B", "connectioninfo": "{conn string}"}, {"uid": 6, "organization": 1, "name": "Secure Download", "createddate": "2019-03-23 20:42:03", "createdby": 0, "type": "F", "connectioninfo": "0"}]',
+        "body": '[{"uid": 1, "organization": 1, "name": "SF", "created_datetime": "2019-03-09 20:42:03", "created_by": 1, "type": "A", "connection_info": "{conn string}"}, {"uid": 2, "organization": 1, "name": "CW", "created_datetime": "2019-03-10 04:42:03", "created_by": 1, "type": "B", "connection_info": "{conn string}"}, {"uid": 6, "organization": 1, "name": "Secure Download", "created_datetime": "2019-03-23 20:42:03", "created_by": 0, "type": "F", "connection_info": "0"}]',
     }
 
 
@@ -45,7 +45,7 @@ def sample_connection_single_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"uid": 1, "organization": 1, "name": "SF", "createddate": "2019-03-09 20:42:03", "createdby": 1, "type": "A", "connectioninfo": "{conn string}"}',
+        "body": '{"uid": 1, "organization": 1, "name": "SF", "created_datetime": "2019-03-09 20:42:03", "created_by": 1, "type": "A", "connection_info": "{conn string}"}',
     }
 
 
@@ -65,7 +65,7 @@ def sample_transfers_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '[{"uid": 1, "name": "CW to SF", "organization": "OLI", "createddate": "2019-03-20 20:42:03", "source": "CW", "sourcemapping": "CW to HUD", "destination": "SF", "destinationmapping": "SF to HUD", "active": "TRUE", "starttime": "2019-03-13 20:42:03", "frequency": "1 day"}, {"uid": 2, "name": "SF to CW", "organization": "OLI", "createddate": "2019-03-13 20:42:03", "source": "SF", "sourcemapping": "SF to HUD", "destination": "CW", "destinationmapping": "CW to HUD", "active": "FALSE", "starttime": "2019-03-13 20:42:03", "frequency": "1 hour"}]',
+        "body": '[{"uid": 1, "name": "CW to SF", "organization": "OLI", "created_datetime": "2019-03-20 20:42:03", "source": "CW", "source_mapping": "CW to HUD", "destination": "SF", "destination_mapping": "SF to HUD", "active": "TRUE", "start_datetime": "2019-03-13 20:42:03", "frequency": "1 day"}, {"uid": 2, "name": "SF to CW", "organization": "OLI", "created_datetime": "2019-03-13 20:42:03", "source": "SF", "source_mapping": "SF to HUD", "destination": "CW", "destination_mapping": "CW to HUD", "active": "FALSE", "start_datetime": "2019-03-13 20:42:03", "frequency": "1 hour"}]',
     }
 
 
@@ -74,7 +74,7 @@ def sample_transfer_single_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"uid": 1, "name": "CW to SF", "organization": "OLI", "createddate": "2019-03-20 20:42:03", "source": "CW", "sourcemapping": "CW to HUD", "destination": "SF", "destinationmapping": "SF to HUD", "active": "TRUE", "starttime": "2019-03-13 20:42:03", "frequency": "1 day"}',
+        "body": '{"uid": 1, "name": "CW to SF", "organization": "OLI", "created_datetime": "2019-03-20 20:42:03", "source": "CW", "source_mapping": "CW to HUD", "destination": "SF", "destination_mapping": "SF to HUD", "active": "TRUE", "start_datetime": "2019-03-13 20:42:03", "frequency": "1 day"}',
     }
 
 
@@ -82,7 +82,7 @@ def sample_transfer_single_response():
 def sample_transfer_single_create_event():
     return {
                 "pathParameters": {"organization_id": "1"},
-                "body": '{"name": "CW to SF", "organization": 10, "createdby": 1, "source": 2, "sourcemapping": 2, "destination": 1, "destinationmapping": 1, "active": 1, "startdatetime": "2019-03-13 20:42:03", "frequency": "1 day"}'
+                "body": '{"name": "CW to SF", "organization": 10, "created_by": 1, "source": 2, "source_mapping": 2, "destination": 1, "destination_mapping": 1, "active": 1, "start_datetime": "2019-03-13 20:42:03", "frequency": "1 day"}'
             }
 
 
@@ -111,7 +111,7 @@ def sample_histories_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '[{"uid": 2, "type": "Transfer", "action": null, "date": "2019-03-20 20:42:03", "name": null, "details": null, "sourceuid": 0, "organization": 1}, {"uid": 3, "type": "Transfer", "action": null, "date": "2019-03-20 20:42:03", "createdbyuser": 1, "name": null, "details": null, "sourceuid": 0, "organization": 1}, {"uid": 4, "type": "Transfer", "action": "Action B", "date": "2019-03-20 20:42:03", "createdbyuser": 1, "name": null, "details": null, "sourceuid": 0, "organization": 1}]',
+        "body": '[{"uid": 2, "type": "Transfer", "action": null, "datetime": "2019-03-20 20:42:03", "name": null, "details": null, "source_uid": 0, "organization": 1}, {"uid": 3, "type": "Transfer", "action": null, "datetime": "2019-03-20 20:42:03", "createdbyuser": 1, "name": null, "details": null, "source_uid": 0, "organization": 1}, {"uid": 4, "type": "Transfer", "action": "Action B", "datetime": "2019-03-20 20:42:03", "createdbyuser": 1, "name": null, "details": null, "source_uid": 0, "organization": 1}]',
     }
 
 
@@ -120,7 +120,7 @@ def sample_history_single_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"uid": 2, "type": "Transfer", "action": null, "date": "2019-03-20 20:42:03", "name": null, "details": null, "sourceuid": 0, "organization": 1}',
+        "body": '{"uid": 2, "type": "Transfer", "action": null, "datetime": "2019-03-20 20:42:03", "name": null, "details": null, "source_uid": 0, "organization": 1}',
     }
 
 
@@ -140,7 +140,7 @@ def sample_mappings_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '[{"uid": 1, "organization": 1, "name": "SF to HUD", "mappinginfo": "{}", "startformat": "csv", "endformat": "json", "numoftransfers": 1}, {"uid": 2, "organization": 1, "name": "CW to HUD", "mappinginfo": "{}", "startformat": "csv", "endformat": "json", "numoftransfers": 2}]',
+        "body": '[{"uid": 1, "organization": 1, "name": "SF to HUD", "mapping_info": "{}", "start_format": "csv", "end_format": "json", "num_of_transfers": 1}, {"uid": 2, "organization": 1, "name": "CW to HUD", "mapping_info": "{}", "start_format": "csv", "end_format": "json", "num_of_transfers": 2}]',
     }
 
 
@@ -149,7 +149,7 @@ def sample_mapping_single_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"uid": 1, "organization": 1, "name": "SF to HUD", "mappinginfo": "{}", "startformat": "csv", "endformat": "json", "numoftransfers": 1}',
+        "body": '{"uid": 1, "organization": 1, "name": "SF to HUD", "mapping_info": "{}", "start_format": "csv", "end_format": "json", "num_of_transfers": 1}',
     }
 
 
@@ -169,7 +169,7 @@ def sample_users_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '[{"uid": 1, "name": "Matt", "createddate": "2019-03-10 10:42:03", "organization": 1}]',
+        "body": '[{"uid": 1, "name": "Matt", "created_datetime": "2019-03-10 10:42:03", "organization": 1}]',
     }
 
 
@@ -178,7 +178,7 @@ def sample_user_single_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"uid": 1, "name": "Matt", "createddate": "2019-03-10 10:42:03", "organization": 1}',
+        "body": '{"uid": 1, "name": "Matt", "created_datetime": "2019-03-10 10:42:03", "organization": 1}',
     }
 
 
@@ -198,7 +198,7 @@ def sample_organizations_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '[{"uid": 1, "name": "OLI", "createddate": "2019-03-13 20:42:03"}, {"uid": 2, "name": "SPC", "createddate": "2019-03-15 01:03:03"}, {"uid": 3, "name": "OLI 2", "createddate": "2019-03-18 20:42:03"}]',
+        "body": '[{"uid": 1, "name": "OLI", "created_datetime": "2019-03-13 20:42:03"}, {"uid": 2, "name": "SPC", "created_datetime": "2019-03-15 01:03:03"}, {"uid": 3, "name": "OLI 2", "created_datetime": "2019-03-18 20:42:03"}]',
     }
 
 
@@ -207,7 +207,7 @@ def sample_organization_single_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"uid": 1, "name": "OLI", "createddate": "2019-03-13 20:42:03"}',
+        "body": '{"uid": 1, "name": "OLI", "created_datetime": "2019-03-13 20:42:03"}',
     }
 
 

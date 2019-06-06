@@ -8,9 +8,9 @@ class User:
 
         Example:
         {	
-            "UID": UID
-            "Org": UID
-            "CreatedDate": Timestamp
+            "uid": uid
+            "org": uid
+            "created_datetime": Timestamp
             "Roles": Array[string]
         }
 
@@ -26,10 +26,10 @@ class User:
                 "Parameter 'data' was not a valid input: dict, tuple, or JSON string"
             )
 
-        self._uid = self.data.get("UID", None)
+        self._uid = self.data.get("uid", None)
         self._name = self.data.get("Name", [])
-        self._created_date = self.data.get("CreatedDate", None)
-        self._organization = self.data.get("Organization", None)
+        self._created_date = self.data.get("created_datetime", None)
+        self._organization = self.data.get("organization", None)
 
     def from_dict(self, user_dict: Dict):
         try:

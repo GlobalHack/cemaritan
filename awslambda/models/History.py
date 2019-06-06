@@ -13,7 +13,7 @@ class History:
                 "Date": string,
                 "CreatedByUser": string,
                 "Name": string,
-                "UID": int,
+                "uid": int,
                 "Details": string,
                 "SourceUID": int,
                 "Organization": int
@@ -32,14 +32,14 @@ class History:
             )
 
         self._type = self.data.get("Type", None)
-        self._uid = self.data.get("UID", None)
+        self._uid = self.data.get("uid", None)
         self._action = self.data.get("Action", None)
         self._name = self.data.get("Name", None)
         self._date = self.data.get("Date", [])
         self._created_by_user = self.data.get("CreatedByUser", None)
         self._details = self.data.get("Details", None)
         self._source_uid = self.data.get("SourceUID", None)
-        self._organization = self.data.get("Organization", None)
+        self._organization = self.data.get("organization", None)
 
     def from_dict(self, dm_dict: Dict):
         try:
