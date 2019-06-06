@@ -33,3 +33,5 @@ tmp
 .DS_Store
 
 *.set_envvars
+
+**.pytest_cache

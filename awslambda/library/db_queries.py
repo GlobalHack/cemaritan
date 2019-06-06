@@ -1,7 +1,7 @@
 # functions for actually making the database calls
 from typing import Any, List, Tuple
 
-from models import Connection, Mapping, Organization, Transfer, User, History, Download
+from models import Connection, Mapping, Organization, Transfer, User, History, Download, Frequency
 
 
 ### Generic functions
@@ -29,19 +29,19 @@ def get_rows_by_organization(
                 ("uid", 1),
                 ("organization", 1),
                 ("name", "SF"),
-                ("createddate", "2019-03-09 20:42:03"),
-                ("createdby", 1),
+                ("created_datetime", "2019-03-09 20:42:03"),
+                ("created_by", 1),
                 ("type", "A"),
-                ("connectioninfo", "{conn string}")
+                ("connection_info", "{conn string}")
             ),
             (
                 ("uid", 2),
                 ("organization", 1),
                 ("name", "CW"),
-                ("createddate", "2019-03-10 04:42:03"),
-                ("createdby", 1),
+                ("created_datetime", "2019-03-10 04:42:03"),
+                ("created_by", 1),
                 ("type", "B"),
-                ("connectioninfo", "{conn string}")
+                ("connection_info", "{conn string}")
             )
         ]
 
@@ -67,7 +67,7 @@ def get_row_by_object_id(
     organization_id
         Id of Organization
     object_id
-        UID of object to return, if exists
+        uid of object to return, if exists
     
     Returns
     -------
@@ -79,16 +79,16 @@ def get_row_by_object_id(
             ("uid", 1),
             ("organization", 1),
             ("name", "SF"),
-            ("createddate", "2019-03-09 20:42:03"),
-            ("createdby", 1),
+            ("created_datetime", "2019-03-09 20:42:03"),
+            ("created_by", 1),
             ("type", "A"),
-            ("connectioninfo", "{conn string}")
+            ("connection_info", "{conn string}")
         )
 
     """
     try:
         if query is None:
-            query = f"select * from {table_name} where {table_name}.organization = {organization_id} and {table_name}.UID = {object_id}"
+            query = f"select * from {table_name} where {table_name}.organization = {organization_id} and {table_name}.uid = {object_id}"
         r = connection.query(query)
         return r[0]  # return only first element if possible
     except IndexError:
@@ -105,7 +105,7 @@ def delete_row_by_uid(connection, table_name: str, uid: int):
     table_name : str
         Name of table
     uid : int
-        UID of row to delete
+        uid of row to delete
     
     Returns
     -------
@@ -114,7 +114,7 @@ def delete_row_by_uid(connection, table_name: str, uid: int):
     """
 
     try:
-        query = f"DELETE from {table_name} where {table_name}.UID={uid}"
+        query = f"DELETE from {table_name} where {table_name}.uid={uid}"
         connection.query(query, null_return=True)
     except:
         return False
@@ -166,16 +166,16 @@ def get_connection(connection, organization_id: int, connection_id: int):
         (
             ("uid", 1),
             ("name", "CW to SF"),
-            ("createddate", "2019-03-20 20:42:03"),
-            ("createdby", 1),
+            ("created_datetime", "2019-03-20 20:42:03"),
+            ("created_by", 1),
             ("organization", 1),
             ("source", 2),
-            ("sourcemapping", 2),
+            ("source_mapping", 2),
             ("destination", 1),
-            ("destinationmapping", 1),
-            ("startdatetime", "2019-03-13 20:42:03"),
+            ("destination_mapping", 1),
+            ("start_datetime", "2019-03-13 20:42:03"),
             ("frequency", "1 day"),
-            ("recordfilter", "filter a"),
+            ("record_filter", "filter a"),
             ("active", 1)
         )
         
@@ -239,10 +239,10 @@ def get_history(connection, organization_id: int, history_id: int):
             ("uid", 2),
             ("type", "Transfer"),
             ("action", None),
-            ("date", "2019-03-20 20:42:03"),
+            ("datetime", "2019-03-20 20:42:03"),
             ("name", None),
             ("details", None),
-            ("sourceuid", 0),
+            ("source_uid", 0),
             ("organization", 1)
         )
         
@@ -260,7 +260,7 @@ def get_history(connection, organization_id: int, history_id: int):
         return None  # Unnecessary but good to be explicit
 
 
-# Transfers
+# transfers
 def get_transfers(connection, organization_id: int):
     """Get transfers for ``organization_id``
     
@@ -278,39 +278,39 @@ def get_transfers(connection, organization_id: int):
 
     """
     QUERY = f"""select 
-                    t6.UID,
-                    t6.Name,
-                    t6.Organization2 as Organization,
-                    t6.CreatedDate as CreatedDate,
-                    t6.Source2 as Source,
-                    t6.SourceMapping2 as SourceMapping,
-                    t6.Destination2 as Destination,
-                    t6.DestinationMapping2 as DestinationMapping,
-                    CASE WHEN t6.Active = 1 THEN 'TRUE' ELSE 'FALSE' END Active,
-                    t6.StartDateTime as StartTime,
-                    t6.frequency as Frequency
+                    t6.uid,
+                    t6.name,
+                    t6.organization2 as organization,
+                    t6.created_datetime as created_datetime,
+                    t6.source2 as source,
+                    t6.source_mapping2 as source_mapping,
+                    t6.destination2 as destination,
+                    t6.destination_mapping2 as destination_mapping,
+                    CASE WHEN t6.active = 1 THEN 'TRUE' ELSE 'FALSE' END active,
+                    t6.start_datetime as start_datetime,
+                    t6.frequency as frequency
                     from 
-                    (select t5.*, d2.Name as DestinationMapping2 from
-                    (select t4.*, d.Name as SourceMapping2 from 
-                    (Select t3.*, c2.Name as Destination2 from
-                    (select t2.*, c.Name as Source2 from
-                    (select t.*, o.Name as Organization2 from
-                    (select * from Transfers where Transfers.organization = {organization_id}) as t
+                    (select t5.*, d2.name as destination_mapping2 from
+                    (select t4.*, d.name as source_mapping2 from 
+                    (Select t3.*, c2.name as destination2 from
+                    (select t2.*, c.name as source2 from
+                    (select t.*, o.name as organization2 from
+                    (select * from transfers where transfers.organization = {organization_id}) as t
                     LEFT JOIN 
-                    Organizations as o
-                    on o.UID = t.Organization) as t2
+                    organizations as o
+                    on o.uid = t.organization) as t2
                     LEFT join
-                    Connections as c
-                    on t2.Source=c.UID) as t3
+                    connections as c
+                    on t2.source=c.uid) as t3
                     left join
-                    Connections as c2
-                    on t3.Destination=c2.UID) as t4
+                    connections as c2
+                    on t3.destination=c2.uid) as t4
                     left join
-                    Mappings as d
-                    on t4.SourceMapping=d.UID) as t5
+                    mappings as d
+                    on t4.source_mapping=d.uid) as t5
                     left join
-                    Mappings as d2
-                    on t5.DestinationMapping=d2.UID) as t6"""
+                    mappings as d2
+                    on t5.destination_mapping=d2.uid) as t6"""
     transfers = get_rows_by_organization(
         table_name="transfers",
         connection=connection,
@@ -341,54 +341,54 @@ def get_transfer(connection, organization_id: int, transfer_id: int):
         (
             ("uid", 1),
             ("name", "CW to SF"),
-            ("createddate", "2019-03-20 20:42:03"),
-            ("createdby", 1),
+            ("created_datetime", "2019-03-20 20:42:03"),
+            ("created_by", 1),
             ("organization", 1),
             ("source", 2),
-            ("sourcemapping", 2),
+            ("source_mapping", 2),
             ("destination", 1),
-            ("destinationmapping", 1),
-            ("startdatetime", "2019-03-13 20:42:03"),
+            ("destination_mapping", 1),
+            ("start_datetime", "2019-03-13 20:42:03"),
             ("frequency", "1 day"),
-            ("recordfilter", "filter a"),
+            ("record_filter", "filter a"),
             ("active", 1)
         )
         
     """
     QUERY = f"""select 
-                    t6.UID,
-                    t6.Name,
-                    t6.Organization2 as Organization,
-                    t6.CreatedDate as CreatedDate,
-                    t6.Source2 as Source,
-                    t6.SourceMapping2 as SourceMapping,
-                    t6.Destination2 as Destination,
-                    t6.DestinationMapping2 as DestinationMapping,
-                    CASE WHEN t6.Active = 1 THEN 'TRUE' ELSE 'FALSE' END Active,
-                    t6.StartDateTime as StartTime,
-                    t6.frequency as Frequency
+                    t6.uid,
+                    t6.name,
+                    t6.organization2 as organization,
+                    t6.created_datetime as created_datetime,
+                    t6.source2 as source,
+                    t6.source_mapping2 as source_mapping,
+                    t6.destination2 as destination,
+                    t6.destination_mapping2 as destination_mapping,
+                    CASE WHEN t6.active = 1 THEN 'TRUE' ELSE 'FALSE' END active,
+                    t6.start_datetime as start_datetime,
+                    t6.frequency as frequency
                     from 
-                    (select t5.*, d2.Name as DestinationMapping2 from
-                    (select t4.*, d.Name as SourceMapping2 from 
-                    (Select t3.*, c2.Name as Destination2 from
-                    (select t2.*, c.Name as Source2 from
-                    (select t.*, o.Name as Organization2 from
-                    (select * from Transfers where Transfers.organization = {organization_id} and Transfers.UID = {transfer_id}) as t
+                    (select t5.*, d2.name as destination_mapping2 from
+                    (select t4.*, d.name as source_mapping2 from 
+                    (Select t3.*, c2.name as destination2 from
+                    (select t2.*, c.name as source2 from
+                    (select t.*, o.name as organization2 from
+                    (select * from transfers where transfers.organization = {organization_id} and transfers.uid = {transfer_id}) as t
                     LEFT JOIN 
-                    Organizations as o
-                    on o.UID = t.Organization) as t2
+                    organizations as o
+                    on o.uid = t.organization) as t2
                     LEFT join
-                    Connections as c
-                    on t2.Source=c.UID) as t3
+                    connections as c
+                    on t2.source=c.uid) as t3
                     left join
-                    Connections as c2
-                    on t3.Destination=c2.UID) as t4
+                    connections as c2
+                    on t3.destination=c2.uid) as t4
                     left join
-                    Mappings as d
-                    on t4.SourceMapping=d.UID) as t5
+                    mappings as d
+                    on t4.source_mapping=d.uid) as t5
                     left join
-                    Mappings as d2
-                    on t5.DestinationMapping=d2.UID) as t6"""
+                    mappings as d2
+                    on t5.destination_mapping=d2.uid) as t6"""
     row = get_row_by_object_id(
         table_name="transfers",
         connection=connection,
@@ -400,6 +400,13 @@ def get_transfer(connection, organization_id: int, transfer_id: int):
         return Transfer(row)
     else:
         return None  # Unnecessary but good to be explicit
+
+
+def get_frequencies_list(connection):
+    """Get static list of frequencies."""
+    query = "Select name, value from list_frequencies"
+    frequencies = connection.query(query)
+    return [Frequency(tup) for tup in frequencies]
 
 
 # Users
@@ -446,7 +453,7 @@ def get_user(connection, organization_id: int, user_id: int):
         (
             ("uid", 1),
             ("name", "Matt"),
-            ("createddate", "2019-03-10 10:42:03"),
+            ("created_datetime", "2019-03-10 10:42:03"),
             ("organization", 1)
         )
         
@@ -573,10 +580,10 @@ def get_mapping(connection, organization_id: int, mapping_id: int):
             ("uid", 1),
             ("organization", 1),
             ("name", "SF to HUD"),
-            ("mappinginfo", "{}"),
-            ("startformat", "csv"),
-            ("endformat", "json"),
-            ("numoftransfers", 1)
+            ("mapping_info", "{}"),
+            ("start_format", "csv"),
+            ("end_format", "json"),
+            ("num_of_transfers", 1)
         )
         
     """
@@ -650,7 +657,7 @@ def get_organizations(connection):
 #         Date created
 
 #     """
-#     query = f"INSERT INTO Organizations (Name, CreatedDate) VALUES ('{name}', '{created_date}')"
+#     query = f"INSERT INTO organizations (name, created_datetime) VALUES ('{name}', '{created_date}')"
 #     connection.query(query)
 
 
@@ -667,7 +674,7 @@ def get_organizations(connection):
 #         Date created
 
 #     """
-#     query = f"INSERT INTO Mappings (Organization, Name, MappingInfo) VALUES ((select Organization from Users where Users.UID = {user_id}), '{name}', '{mapping_info}');"
+#     query = f"INSERT INTO mappings (Organization, name, MappingInfo) VALUES ((select Organization from users where users.uid = {user_id}), '{name}', '{mapping_info}');"
 #     connection.query(query)
 
 
@@ -692,7 +699,7 @@ def get_organizations(connection):
 #             Date created
 
 #         """
-#     query = f"INSERT INTO Connections (Organization, Name, CreatedDate, CreatedBy, Type, ConnectionInfo) VALUES ((select Organization from Users where Users.UID = {user_id}), '{name}', '{created_date}', '{created_by}', '{connection_type}', '{connection_info}');"
+#     query = f"INSERT INTO connections (Organization, name, created_datetime, created_by, Type, ConnectionInfo) VALUES ((select Organization from users where users.uid = {user_id}), '{name}', '{created_date}', '{created_by}', '{connection_type}', '{connection_info}');"
 #     connection.query(query)
 
 
@@ -712,7 +719,7 @@ def get_organizations(connection):
 
 #     """
 
-#     query = f"INSERT INTO Users (Organization, Name, CreatedDate) VALUES ('{organization_id}', '{name}', '{created_date}');"
+#     query = f"INSERT INTO users (Organization, name, created_datetime) VALUES ('{organization_id}', '{name}', '{created_date}');"
 #     connection.query(query)
 
 
@@ -731,18 +738,18 @@ def create_transfer(
     """
     model_as_dict = transfer.to_dict()
     uid = 9999  # temporary
-    createddate = "2019-03-20 20:42:03"  # temporary
+    created_datetime = "2019-03-20 20:42:03"  # temporary
     organization = model_as_dict['organization']
     name = model_as_dict['name']
-    createdby = model_as_dict['createdby']
+    created_by = model_as_dict['created_by']
     source = model_as_dict['source']
-    sourcemapping = model_as_dict['sourcemapping']
+    source_mapping = model_as_dict['source_mapping']
     destination = model_as_dict['destination']
-    destinationmapping = model_as_dict['destinationmapping']
-    startdatetime = model_as_dict['startdatetime']
+    destination_mapping = model_as_dict['destination_mapping']
+    start_datetime = model_as_dict['start_datetime']
     frequency = model_as_dict['frequency']
     active = model_as_dict['active']
-    query = f"INSERT INTO Transfers (Organization, Name, CreatedDate, CreatedBy, Source, SourceMapping, Destination, DestinationMapping, StartDateTime, Frequency, Active) VALUES ('{organization}', '{name}', '{createddate}', '{createdby}', '{source}', '{sourcemapping}', '{destination}', '{destinationmapping}', '{startdatetime}', '{frequency}', '{active}') \n RETURNING uid;"
+    query = f"INSERT INTO transfers (organization, name, created_datetime, created_by, source, source_mapping, destination, destination_mapping, start_datetime, frequency, active) VALUES ('{organization}', '{name}', '{created_datetime}', '{created_by}', '{source}', '{source_mapping}', '{destination}', '{destination_mapping}', '{start_datetime}', '{frequency}', '{active}') \n RETURNING uid;"
     return connection.query(query)
 
 
@@ -757,7 +764,7 @@ def delete_user(connection, user_id: int):
         Id of user
     
     """
-    return delete_row_by_uid(connection, "Users", user_id)
+    return delete_row_by_uid(connection, "users", user_id)
 
 
 def delete_organization(connection, organization_id: int):
@@ -771,7 +778,7 @@ def delete_organization(connection, organization_id: int):
         Id of organization
     
     """
-    return delete_row_by_uid(connection, "Organizations", organization_id)
+    return delete_row_by_uid(connection, "organizations", organization_id)
 
 
 def delete_data_mapping(connection, data_mapping_id: int):
@@ -785,7 +792,7 @@ def delete_data_mapping(connection, data_mapping_id: int):
         Id of data_mapping
     
     """
-    return delete_row_by_uid(connection, "Mappings", data_mapping_id)
+    return delete_row_by_uid(connection, "mappings", data_mapping_id)
 
 
 def delete_connection(connection, connection_id: int):
@@ -799,7 +806,7 @@ def delete_connection(connection, connection_id: int):
         Id of connection
     
     """
-    return delete_row_by_uid(connection, "Connections", connection_id)
+    return delete_row_by_uid(connection, "connections", connection_id)
 
 
 def delete_transfer(connection, transfer_id: int):
@@ -813,4 +820,9 @@ def delete_transfer(connection, transfer_id: int):
         Id of transfer
     
     """
+<<<<<<< HEAD
     return delete_row_by_uid(connection, "Transfers", transfer_id)
+
+=======
+    return delete_row_by_uid(connection, "transfers", transfer_id)
+>>>>>>> develop

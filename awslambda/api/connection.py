@@ -1,9 +1,8 @@
-
 import library.db_queries as db_queries
 
 from library.exceptions import DatabaseReturnedNone
 from library.db_connections import Postgres, get_conn
-from library.utils import awshandler, aws_get_path_parameter
+from library.utils import awshandler, aws_get_path_parameter, de_handler
 
 conn = Postgres()
 
@@ -22,3 +21,11 @@ def get_connection(event, context):
     if connection is None:
         raise DatabaseReturnedNone(f"Check object id: {connection_id}")
     return connection.to_dict()
+
+
+@awshandler
+def get_connections_list(event, context):
+    """Get the uid and name list of connections for form dropdowns."""
+    conns = de_handler(connections(event, context))
+    print(conns)
+    return [{'uid': v['uid'], 'name': v['name']} for v in conns]

@@ -8,10 +8,10 @@ class Organization:
 
         Example:
         {
-            UID	
-            CreatedDate	Timestamp
-            Connections	Array[Connection]
-            Transfers	Array[Transfer]
+            uid	
+            created_datetime	Timestamp
+            connections	Array[Connection]
+            transfers	Array[Transfer]
             Transfer History	Array[]
             Download History	Array[]
             Upload History	Array[]
@@ -28,12 +28,12 @@ class Organization:
                 "Parameter 'data' was not a valid input: dict, tuple, or JSON string"
             )
 
-        self._uid = self.data.get("UID", None)
+        self._uid = self.data.get("uid", None)
         self._name = self.data.get("Name", None)
-        self._created_date = self.data.get("CreatedDate", None)
+        self._created_date = self.data.get("created_datetime", None)
         # might want these later
-        # self._connections = self.data.get("Connections", None)
-        # self._transfers = self.data.get("Transfers", None)
+        # self._connections = self.data.get("connections", None)
+        # self._transfers = self.data.get("transfers", None)
         # self._transfer_history = self.data.get("TransferHistory", None)
         # self._download_history = self.data.get("DownloadHistory", None)
         # self._upload_history = self.data.get("UploadHistory", None)
