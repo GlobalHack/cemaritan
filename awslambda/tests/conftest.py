@@ -49,15 +49,6 @@ def sample_connection_single_response():
     }
 
 
-@pytest.fixture()
-def sample_connection_list():
-    return {
-        "statusCode": 200,
-        "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '[{"uid": 1, "name": "SF"}, {"uid": 2, "name": "CW"}, {"uid": 6, "name": "Secure Download"}]'
-    }
-
-
 ### Transfers
 @pytest.fixture()
 def transfers_event():
@@ -74,7 +65,7 @@ def sample_transfers_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '[{"uid": 1, "name": "CW to SF", "organization": "OLI", "created_datetime": "2019-03-20 20:42:03", "source": "CW", "source_mapping": "CW to HUD", "destination": "SF", "destination_mapping": "SF to HUD", "active": "TRUE", "start_datetime": "2019-03-13 20:42:03", "frequency": "1 day"}, {"uid": 2, "name": "SF to CW", "organization": "OLI", "created_datetime": "2019-03-13 20:42:03", "source": "SF", "source_mapping": "SF to HUD", "destination": "CW", "destination_mapping": "CW to HUD", "active": "FALSE", "start_datetime": "2019-03-13 20:42:03", "frequency": "1 hour"}]',
+        "body": '[{"uid": 1, "name": "CW to SF", "organization": "OLI", "created_datetime": "2019-03-20 20:42:03", "source": "CW", "source_uid": 2, "source_mapping": "CW to HUD", "destination": "SF", "destination_uid": 1, "destination_mapping": "SF to HUD", "destination_mapping_uid": 1, "active": "TRUE", "start_datetime": "2019-03-13 20:42:03", "frequency": "1 day"}, {"uid": 2, "name": "SF to CW", "organization": "OLI", "created_datetime": "2019-03-13 20:42:03", "source": "SF", "source_uid": 1, "source_mapping": "SF to HUD", "destination": "CW", "destination_uid": 2, "destination_mapping": "CW to HUD", "destination_mapping_uid": 2, "active": "FALSE", "start_datetime": "2019-03-13 20:42:03", "frequency": "1 hour"}]',
     }
 
 
@@ -83,7 +74,7 @@ def sample_transfer_single_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"uid": 1, "name": "CW to SF", "organization": "OLI", "created_datetime": "2019-03-20 20:42:03", "source": "CW", "source_mapping": "CW to HUD", "destination": "SF", "destination_mapping": "SF to HUD", "active": "TRUE", "start_datetime": "2019-03-13 20:42:03", "frequency": "1 day"}',
+        "body": '{"uid": 1, "name": "CW to SF", "organization": "OLI", "created_datetime": "2019-03-20 20:42:03", "source": "CW", "source_uid": 2, "source_mapping": "CW to HUD", "destination": "SF", "destination_uid": 1, "destination_mapping": "SF to HUD", "destination_mapping_uid": 1, "active": "TRUE", "start_datetime": "2019-03-13 20:42:03", "frequency": "1 day"}',
     }
 
 

@@ -162,23 +162,6 @@ def get_connection(connection, organization_id: int, connection_id: int):
     Tuple[Tuple[str, Any]]
         Tuple of 2-tuples representing a row of `connections` table matching ``organization_id``
         and ``connection_id``
-        Example: 
-        (
-            ("uid", 1),
-            ("name", "CW to SF"),
-            ("created_datetime", "2019-03-20 20:42:03"),
-            ("created_by", 1),
-            ("organization", 1),
-            ("source", 2),
-            ("source_mapping", 2),
-            ("destination", 1),
-            ("destination_mapping", 1),
-            ("start_datetime", "2019-03-13 20:42:03"),
-            ("frequency", "1 day"),
-            ("record_filter", "filter a"),
-            ("active", 1)
-        )
-        
     """
 
     row = get_row_by_object_id(
@@ -283,18 +266,22 @@ def get_transfers(connection, organization_id: int):
                     t6.organization2 as organization,
                     t6.created_datetime as created_datetime,
                     t6.source2 as source,
+                    t6.source_uid as source_uid,
                     t6.source_mapping2 as source_mapping,
+                    t6.source_mapping_uid as source_uid,
                     t6.destination2 as destination,
+                    t6.destination_uid as destination_uid,
                     t6.destination_mapping2 as destination_mapping,
+                    t6.destination_mapping_uid as destination_mapping_uid,
                     CASE WHEN t6.active = 1 THEN 'TRUE' ELSE 'FALSE' END active,
                     t6.start_datetime as start_datetime,
                     t6.frequency as frequency
                     from 
-                    (select t5.*, d2.name as destination_mapping2 from
-                    (select t4.*, d.name as source_mapping2 from 
-                    (Select t3.*, c2.name as destination2 from
-                    (select t2.*, c.name as source2 from
-                    (select t.*, o.name as organization2 from
+                    (select t5.*, d2.name as destination_mapping2, d2.uid as destination_mapping_uid from
+                    (select t4.*, d.name as source_mapping2, d.uid as source_mapping_uid from 
+                    (Select t3.*, c2.name as destination2, c2.uid as destination_uid from
+                    (select t2.*, c.name as source2, c.uid as source_uid from
+                    (select t.*, o.name as organization2, t.uid as transfer_uid from
                     (select * from transfers where transfers.organization = {organization_id}) as t
                     LEFT JOIN 
                     organizations as o
@@ -353,7 +340,7 @@ def get_transfer(connection, organization_id: int, transfer_id: int):
             ("record_filter", "filter a"),
             ("active", 1)
         )
-        
+         
     """
     QUERY = f"""select 
                     t6.uid,
@@ -361,18 +348,22 @@ def get_transfer(connection, organization_id: int, transfer_id: int):
                     t6.organization2 as organization,
                     t6.created_datetime as created_datetime,
                     t6.source2 as source,
+                    t6.source_uid as source_uid,
                     t6.source_mapping2 as source_mapping,
+                    t6.source_mapping_uid as source_uid,
                     t6.destination2 as destination,
+                    t6.destination_uid as destination_uid,
                     t6.destination_mapping2 as destination_mapping,
+                    t6.destination_mapping_uid as destination_mapping_uid,
                     CASE WHEN t6.active = 1 THEN 'TRUE' ELSE 'FALSE' END active,
                     t6.start_datetime as start_datetime,
                     t6.frequency as frequency
                     from 
-                    (select t5.*, d2.name as destination_mapping2 from
-                    (select t4.*, d.name as source_mapping2 from 
-                    (Select t3.*, c2.name as destination2 from
-                    (select t2.*, c.name as source2 from
-                    (select t.*, o.name as organization2 from
+                    (select t5.*, d2.name as destination_mapping2, d2.uid as destination_mapping_uid from
+                    (select t4.*, d.name as source_mapping2, d.uid as source_mapping_uid from 
+                    (Select t3.*, c2.name as destination2, c2.uid as destination_uid from
+                    (select t2.*, c.name as source2, c.uid as source_uid from
+                    (select t.*, o.name as organization2, t.uid as transfer_uid from
                     (select * from transfers where transfers.organization = {organization_id} and transfers.uid = {transfer_id}) as t
                     LEFT JOIN 
                     organizations as o
