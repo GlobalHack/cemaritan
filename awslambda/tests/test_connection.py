@@ -1,6 +1,6 @@
 import pytest
 
-from api.connection import connections, get_connection, get_connections_list
+from api.connection import connections, get_connection
 from api.transfer import transfers, get_transfer, create_transfer, delete_transfer, get_frequencies_list
 from api.history import histories, get_history
 from api.mapping import mappings, get_mapping
@@ -22,14 +22,11 @@ def test_connection_single_function(
         get_connection(connection_single_event, None)
         == sample_connection_single_response
     )
-
-
-def test_connection_list(connections_event, sample_connection_list):
-    assert(get_connections_list(connections_event, None) == sample_connection_list)
+    
 
 # ### Transfers
-# def test_transfers_function(transfers_event, sample_transfers_response):
-#     assert transfers(transfers_event, None) == sample_transfers_response
+def test_transfers_function(transfers_event, sample_transfers_response):
+    assert transfers(transfers_event, None) == sample_transfers_response
 
 
 def test_transfer_single_function(
