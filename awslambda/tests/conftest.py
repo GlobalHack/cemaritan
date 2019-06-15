@@ -89,18 +89,8 @@ def sample_transfer_single_response():
 @pytest.fixture()
 def sample_transfer_single_update_event():
     return {"pathParameters": {"organization_id": "1", "transfer_id": "1"},
-            "body": '{"name": "new", "source_uid": 3, "source_mapping_uid":2, "destination_uid": 4, "destination_mapping": "SP Validation", "destination_mapping_uid": 3, "active": "FALSE", "frequency": "1 day"}'
+            "body": '{"name": "new", "source_uid": 3, "source_mapping_uid":2, "destination_uid": 4, "destination_mapping_uid": 3, "active": "FALSE",  "start_datetime": "2019-03-13 20:42:03", "frequency": "1 day"}'
         }
-
-
-@pytest.fixture()
-def sample_transfer_single_update():
-    return{
-        "statusCode": 200,
-        "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"uid": 1, "name": "new", "organization": "OLI", "created_datetime": "2019-03-20 20:42:03", "source": "new", "source_uid": 99, "source_mapping": "new", "destination": "new", "destination_uid": 99, "destination_mapping": "new", "destination_mapping_uid": 99, "active": "FALSE", "start_datetime": "2019-03-13 20:42:03", "frequency": "new"}',
-
-    }
 
 
 @pytest.fixture()
