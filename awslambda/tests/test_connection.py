@@ -9,6 +9,11 @@ from api.organization import organizations, get_organization
 from api.download import downloads, get_download, get_download_link
 from api.upload import create_upload
 
+import logging
+
+for name in logging.Logger.manager.loggerDict.keys():
+    if ('boto' in name) or ('urllib3' in name) or ('s3transfer' in name) or ('boto3' in name) or ('botocore' in name) or ('nose' in name):
+        logging.getLogger(name).setLevel(logging.CRITICAL)
 
 ### Connections
 def test_connections_function(connections_event, sample_connections_response):
@@ -123,7 +128,7 @@ def test_download_single_function(
 
 def test_download_link_function(download_single_event, sample_download_link_response):
     result = get_download_link(download_single_event, None)
-    result['download_link'] = ""
+    result["download_link"] = ""
     assert result == sample_download_link_response
     #assert get_download_link(download_single_event, None) == sample_download_link_response
 

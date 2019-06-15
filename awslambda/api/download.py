@@ -68,5 +68,6 @@ def _create_presigned_url(bucket_name, obj_name, expiration=DOWNLOAD_LINK_EXPIRA
                                                     Params={'Bucket': bucket_name,
                                                             'Key': obj_name},
                                                     ExpiresIn=expiration)
+    print(response)
     # The response contains the presigned URL
     return response
