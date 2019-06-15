@@ -111,7 +111,8 @@ class Download(Model):
         self._history_uid = self.data.get("history_uid")
         self._expiration_date_time = self.data.get("expiration_datetime")
         self._organization = self.data.get("organization")
-        self._file_location_info = self.data.get("file_location_info")
+        self._bucket_name = self.data.get("bucket_name")
+        self._obj_name = self.data.get("obj_name")
 
 
 class History(Model):
