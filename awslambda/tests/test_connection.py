@@ -37,9 +37,9 @@ def test_transfer_single_function(
 
 # def test_transfer_single_update_response
 
-# def test_transfer_single_update(sample_transfer_single_update_event, 
-#     sample_transfer_single_update_response):
-    # assert update_transfer(sample_transfer_single_update_event, None) == sample_transfer_single_update_response
+def test_transfer_single_update(sample_transfer_single_update_event, 
+    sample_transfer_single_update_response):
+    assert update_transfer(sample_transfer_single_update_event, None) == sample_transfer_single_update_response
 
 
 # def test_transfer_single_create_function(

@@ -415,9 +415,12 @@ def update_transfer(connection, organization_id: int, transfer_id:int, transfer:
                 frequency='{frequency}',
                 
                 active='{active}'
-            Where organization='{organization_id}' and uid='{transfer_id}'
+            Where organization='{organization_id}' and uid='{transfer_id}' 
+            returning uid
             """
-    connection.query(query)
+    result = connection.query(query)
+    if result is None:
+        raise ValueError('Something went wrong with update_transfer query.')
     return True
 
 
