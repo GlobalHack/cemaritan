@@ -286,7 +286,7 @@ def sample_download_link_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"download_link": ""}'
+        "body": '{"download_link": "", "expiration": 120}'
     }
 
 

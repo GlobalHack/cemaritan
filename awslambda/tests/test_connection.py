@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 from api.connection import connections, get_connection
@@ -128,7 +130,9 @@ def test_download_single_function(
 
 def test_download_link_function(download_single_event, sample_download_link_response):
     result = get_download_link(download_single_event, None)
-    result["download_link"] = ""
+    body = json.loads(result['body'])
+    body["download_link"] = ""
+    result['body'] = json.dumps(body)
     assert result == sample_download_link_response
     #assert get_download_link(download_single_event, None) == sample_download_link_response
 
