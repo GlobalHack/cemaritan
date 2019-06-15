@@ -74,16 +74,49 @@ def sample_transfer_single_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"uid": 1, "name": "CW to SF", "organization": "OLI", "created_datetime": "2019-03-20 20:42:03", "source": "CW", "source_uid": 2, "source_mapping": "CW to HUD", "destination": "SF", "destination_uid": 1, "destination_mapping": "SF to HUD", "destination_mapping_uid": 1, "active": "TRUE", "start_datetime": "2019-03-13 20:42:03", "frequency": "1 day"}',
+        "body": '{"uid": 1, "name": "CW to SF", "organization": "OLI", "created_datetime": "2019-03-20 20:42:03", "source": "CW", "source_uid": 2, "source_mapping": "CW to HUD", "source_mapping_uid": 2, "destination": "SF", "destination_uid": 1, "destination_mapping": "SF to HUD", "destination_mapping_uid": 1, "active": "TRUE", "start_datetime": "2019-03-13 20:42:03", "frequency": "1 day"}',
+    }
+
+
+# @pytest.fixture()
+# def sample_transfer_single_create_event():
+#     return {
+#                 "pathParameters": {"organization_id": "1"},
+#                 "body": '{"name": "CW to SF", "organization": 10, "created_by": 1, "source": 2, "source_mapping": 2, "destination": 1, "destination_mapping": 1, "active": 1, "start_datetime": "2019-03-13 20:42:03", "frequency": "1 day"}'
+#             }
+
+
+@pytest.fixture()
+def sample_transfer_single_update_event():
+    return {"pathParameters": {"organization_id": "1", "transfer_id": "1"},
+            "body": '{"name": "new", "source_uid": 3, "source_mapping_uid":2, "destination_uid": 4, "destination_mapping_uid": 3, "active": "FALSE",  "start_datetime": "2019-03-13 20:42:03", "frequency": "1 day"}'
+        }
+
+
+@pytest.fixture()
+def sample_transfer_single_update_response():
+    return{
+        "statusCode": 200,
+        "headers": {"Access-Control-Allow-Origin": "*"},
+        "body": '{"message": "success"}'
+
     }
 
 
 @pytest.fixture()
-def sample_transfer_single_create_event():
+def sample_transfer_single_response_after_update():
     return {
-                "pathParameters": {"organization_id": "1"},
-                "body": '{"name": "CW to SF", "organization": 10, "created_by": 1, "source": 2, "source_mapping": 2, "destination": 1, "destination_mapping": 1, "active": 1, "start_datetime": "2019-03-13 20:42:03", "frequency": "1 day"}'
-            }
+        "statusCode": 200,
+        "headers": {"Access-Control-Allow-Origin": "*"},
+        "body": '{"uid": 1, "name": "new", "organization": "OLI", "created_datetime": "2019-03-20 20:42:03", "source": "SP", "source_uid": 3, "source_mapping": "CW to HUD", "source_mapping_uid": "2", "destination": "CW", "destination_uid": 4, "destination_mapping": "SP Validation", "destination_mapping_uid": 3, "active": "FALSE", "start_datetime": "2019-03-13 20:42:03", "frequency": "1 day"}',
+    }
+
+
+@pytest.fixture()
+def sample_transfer_single_update_event_2():
+    return {"pathParameters": {"organization_id": "1", "transfer_id": "1"},
+            "body": '{"name": "CW to SF", "source_uid": 2, "destination_uid": 1, "destination_mapping_uid": 1, "active": "TRUE", "frequency": "1 day"}'
+        }
 
 
 @pytest.fixture()

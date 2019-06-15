@@ -350,7 +350,7 @@ def get_transfer(connection, organization_id: int, transfer_id: int):
                     t6.source2 as source,
                     t6.source_uid as source_uid,
                     t6.source_mapping2 as source_mapping,
-                    t6.source_mapping_uid as source_uid,
+                    t6.source_mapping_uid as source_mapping_uid,
                     t6.destination2 as destination,
                     t6.destination_uid as destination_uid,
                     t6.destination_mapping2 as destination_mapping,
@@ -391,6 +391,37 @@ def get_transfer(connection, organization_id: int, transfer_id: int):
         return Transfer(row)
     else:
         return None  # Unnecessary but good to be explicit
+
+
+def update_transfer(connection, organization_id: int, transfer_id:int, transfer: Transfer):
+    """Update a Transfer in the database."""
+    
+    d = transfer.to_dict()
+    name = d['name']
+    source_uid = d['source_uid']
+    source_mapping_uid = d['source_mapping_uid']
+    destination_uid = d['destination_uid']
+    destination_mapping_uid = d['destination_mapping_uid']
+    frequency = d['frequency']
+    #record_filter = d['record_filter']
+    active = 1 if d['active'] else 0
+
+    query = f"""Update transfers
+            Set name='{name}',
+                source='{source_uid}',
+                source_mapping='{source_mapping_uid}',
+                destination='{destination_uid}',
+                destination_mapping='{destination_mapping_uid}',
+                frequency='{frequency}',
+                
+                active='{active}'
+            Where organization='{organization_id}' and uid='{transfer_id}' 
+            returning uid
+            """
+    result = connection.query(query)
+    if result is None:
+        raise ValueError('Something went wrong with update_transfer query.')
+    return True
 
 
 def get_frequencies_list(connection):
