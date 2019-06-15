@@ -1,2 +1,4 @@
+boto3
+botocore
 requests
 psycopg2-binary
