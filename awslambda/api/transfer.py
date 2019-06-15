@@ -42,6 +42,8 @@ def update_transfer(event, context):
     transfer_id = aws_get_path_parameter(event, "transfer_id")
     body = json.loads(event['body']) 
     transfer_obj = Transfer(body) 
+    result = db_queries.update_transfer(connection=conn, organization_id=organization_id, transfer_id=transfer_id, transfer=transfer_obj)
+    return {'message': 'success'}
 
 
 def delete_transfer(transfer_id):
