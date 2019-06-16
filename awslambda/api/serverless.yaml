@@ -213,12 +213,12 @@ functions:
                 organization_id: true
                 download_id: true
   # Upload
-  create_upload:
-    handler: upload.create_upload
+  get_upload_link:
+    handler: upload.get_upload_link
     events:
       - http:
-          path: organizations/{organization_id}/upload
-          method: post
+          path: organizations/{organization_id}/uploads
+          method: get
           cors: true
           request:
             parameters:
