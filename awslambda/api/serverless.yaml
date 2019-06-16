@@ -14,6 +14,8 @@ provider:
     DB_NAME: ${ssm:dbname}
     USER: ${ssm:user}
     PASSWORD: ${ssm:pw}
+  apiKeys:
+    - ${self:provider.stage}-api-key
 
 functions:
   ### This will only be used by some Cemaritan level admin
@@ -24,6 +26,7 @@ functions:
           path: organizations
           method: get
           cors: true
+          private: true
 
   ### Collections functions
   get_connections:
@@ -33,6 +36,7 @@ functions:
           path: organizations/{organization_id}/connections
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -44,6 +48,7 @@ functions:
           path: organizations/{organization_id}/mappings
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -56,6 +61,7 @@ functions:
           path: organizations/{organization_id}/transfers
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -67,6 +73,7 @@ functions:
           path: organizations/{organization_id}/users
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -78,6 +85,7 @@ functions:
           path: organizations/{organization_id}/histories
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -89,6 +97,7 @@ functions:
           path: organizations/{organization_id}/downloads
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -103,6 +112,7 @@ functions:
           path: organizations/{organization_id}
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -116,6 +126,7 @@ functions:
           path: organizations/{organization_id}/transfers
           method: post
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -127,6 +138,7 @@ functions:
           path: organizations/{organization_id}/transfers/{transfer_id}
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -140,6 +152,7 @@ functions:
           path: organizations/{organization_id}/connections/{connection_id}
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -154,6 +167,7 @@ functions:
           path: organizations/{organization_id}/mappings/{mapping_id}
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -168,6 +182,7 @@ functions:
           path: organizations/{organization_id}/users/{user_id}
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -182,6 +197,7 @@ functions:
           path: organizations/{organization_id}/histories/{history_id}
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -195,6 +211,7 @@ functions:
           path: organizations/{organization_id}/downloads/{download_id}
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -207,6 +224,7 @@ functions:
           path: organizations/{organization_id}/downloads/{download_id}/link
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -220,6 +238,7 @@ functions:
           path: organizations/{organization_id}/uploads
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -232,10 +251,19 @@ functions:
           path: organizations/{organization_id}/lists/frequencies
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
                 organization_id: true
+  fake:
+    handler: fake.test_api_key
+    events:
+      - http:
+          path: fake
+          method: get
+          cors: true
+          private: true
 
 plugins:
   - serverless-python-requirements
