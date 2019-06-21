@@ -6,6 +6,8 @@ import os
 import pytest
 from pathlib import Path
 
+import docker
+
 test_path = Path.cwd()
 
 try:
@@ -19,6 +21,77 @@ try:
 except:
     pass
 os.symlink(test_path.joinpath("library"), test_path.joinpath("api/library"))
+
+
+from library.db_connections import Postgres
+
+# @pytest.fixture(scope="session")
+# def setup_envvars():
+#     os.environ['DB_HOST'] = 'localhost'
+#     os.environ['PORT'] = '5432'
+#     os.environ['DB_NAME'] = 'postgres'
+#     os.environ['USER'] = 'postgres'
+#     os.environ['PASSWORD'] = ''
+
+os.environ['DB_HOST'] = 'localhost'
+os.environ['PORT'] = '5432'
+os.environ['DB_NAME'] = 'postgres'
+os.environ['USER'] = 'postgres'
+os.environ['PASSWORD'] = ''
+
+# @pytest.fixture(scope="session")
+# def setup_container():
+#     """Sets up and tears down the container for the test session"""
+#     print('Setting up db....')
+#     client = docker.from_env()
+#     container_id = client.containers.run(
+#         "postgres:latest", detach=True, ports={"5432/tcp": 5432}, remove=True
+#     ).id
+#     time.sleep(3)
+#     yield container_id
+#     container = client.containers.get(container_id)
+#     container.stop()
+
+import time
+print('Setting up db....')
+client = docker.from_env()
+try:
+    container_id = client.containers.run(
+        "postgres:latest", detach=True, ports={"5432/tcp": 5432}, remove=True
+    ).id
+    time.sleep(3)
+except Exception as e:
+    print(e)
+
+
+# @pytest.fixture(scope="session", autouse=True)
+# def tear_down_db():
+#     pass
+#     yield
+#     print('\nStopping database...')
+#     try:
+#         container = client.containers.get(container_id)
+#         container.stop()
+#     except:
+#         pass
+
+@pytest.fixture(scope="module")
+def db_conn(): # Pass setup_container
+    return Postgres()
+
+
+@pytest.fixture(scope="session")
+def sql_create_db():
+    return ''.join(open('../fake_db/data_storage_fixed.db.sql').readlines())
+
+
+@pytest.fixture(autouse=True)
+def reset_db(db_conn, sql_create_db):
+    #print('\nResetting db...')
+    with db_conn.connection() as conn:
+        cur = conn.cursor()
+        cur.execute(sql_create_db)
+
 
 ### Connections
 @pytest.fixture()
@@ -78,12 +151,21 @@ def sample_transfer_single_response():
     }
 
 
-# @pytest.fixture()
-# def sample_transfer_single_create_event():
-#     return {
-#                 "pathParameters": {"organization_id": "1"},
-#                 "body": '{"name": "CW to SF", "organization": 10, "created_by": 1, "source": 2, "source_mapping": 2, "destination": 1, "destination_mapping": 1, "active": 1, "start_datetime": "2019-03-13 20:42:03", "frequency": "1 day"}'
-#             }
+@pytest.fixture()
+def sample_transfer_single_create_event():
+    return {
+                "pathParameters": {"organization_id": "1"},
+                "body": '{"name": "CW to SF", "created_by": 1, "source_uid": 2, "source_mapping_uid": 2, "destination_uid": 1, "destination_mapping_uid": 1, "active": 1, "start_datetime": "2019-03-13 20:42:03", "frequency": "1 day"}'
+            }
+
+
+@pytest.fixture()
+def sample_transfer_single_create_response():
+    return {
+        "statusCode": 200,
+        "headers": {"Access-Control-Allow-Origin": "*"},
+        "body": '{"uid": 6, "name": "CW to SF", "organization": "OLI", "created_datetime": "2019-03-20 20:42:03", "source": "CW", "source_uid": 2, "source_mapping": "CW to HUD", "source_mapping_uid": 2, "destination": "SF", "destination_uid": 1, "destination_mapping": "SF to HUD", "destination_mapping_uid": 1, "active": "TRUE", "start_datetime": "2019-03-13 20:42:03", "frequency": "1 day"}',
+    }
 
 
 @pytest.fixture()
@@ -119,13 +201,13 @@ def sample_transfer_single_update_event_2():
         }
 
 
-@pytest.fixture()
-def sample_transfer_single_create_response():
-    return {
-        "statusCode": 200,
-        "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"uid": 1}'
-    }
+# @pytest.fixture()
+# def sample_transfer_single_create_response():
+#     return {
+#         "statusCode": 200,
+#         "headers": {"Access-Control-Allow-Origin": "*"},
+#         "body": '{"uid": 1}'
+#     }
 
 @pytest.fixture()
 def sample_frequencies_list_response():
