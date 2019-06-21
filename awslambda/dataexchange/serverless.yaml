@@ -1,0 +1,39 @@
+service: aws-cemaritan-dataexchange
+
+frameworkVersion: ">=1.2.0 <2.0.0"
+
+provider:
+  name: aws
+  runtime: python3.6
+  memorySize: 256
+  stage: dev
+  region: us-east-1
+  environment:
+    DB_HOST: ${ssm:host} 
+    PORT: ${ssm:port}
+    DB_NAME: ${ssm:dbname}
+    USER: ${ssm:user}
+    PASSWORD: ${ssm:pw}
+
+functions:
+  ### This will only be used by some Cemaritan level admin
+  get_organizations:
+    handler: organization.organizations
+    events:
+      - http:
+          path: data
+          method: get
+          cors: true
+
+
+plugins:
+  - serverless-python-requirements
+  - serverless-package-external
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
+  packageExternal:
+    external:
+      - '../models'
+      - '../library'
