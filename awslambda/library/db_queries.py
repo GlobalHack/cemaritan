@@ -393,6 +393,34 @@ def get_transfer(connection, organization_id: int, transfer_id: int):
         return None  # Unnecessary but good to be explicit
 
 
+def create_transfer(
+    connection, organization_id: int, transfer
+):
+    """Create transfer in database
+    
+    Parameters
+    ----------
+    connection
+        Connection to database
+    transfer
+        models.Transfer
+    """
+    model_as_dict = transfer.to_dict()
+    uid = 9999  # temporary
+    created_datetime = "2019-03-20 20:42:03"  # temporary
+    name = model_as_dict['name']
+    created_by = model_as_dict['created_by']
+    source = model_as_dict['source_uid']
+    source_mapping = model_as_dict['source_mapping_uid']
+    destination = model_as_dict['destination_uid']
+    destination_mapping = model_as_dict['destination_mapping_uid']
+    start_datetime = model_as_dict['start_datetime']
+    frequency = model_as_dict['frequency']
+    active = model_as_dict['active']
+    query = f"INSERT INTO transfers (organization, name, created_datetime, created_by, source, source_mapping, destination, destination_mapping, start_datetime, frequency, active) VALUES ('{organization_id}', '{name}', '{created_datetime}', '{created_by}', '{source}', '{source_mapping}', '{destination}', '{destination_mapping}', '{start_datetime}', '{frequency}', '{active}') \n RETURNING uid;"
+    return connection.query(query)
+
+
 def update_transfer(connection, organization_id: int, transfer_id:int, transfer: Transfer):
     """Update a Transfer in the database."""
     
@@ -744,35 +772,6 @@ def get_organizations(connection):
 #     query = f"INSERT INTO users (Organization, name, created_datetime) VALUES ('{organization_id}', '{name}', '{created_date}');"
 #     connection.query(query)
 
-
-def create_transfer(
-    connection,
-    transfer
-):
-    """Create transfer in database
-    
-    Parameters
-    ----------
-    connection
-        Connection to database
-    transfer
-        models.Transfer
-    """
-    model_as_dict = transfer.to_dict()
-    uid = 9999  # temporary
-    created_datetime = "2019-03-20 20:42:03"  # temporary
-    organization = model_as_dict['organization']
-    name = model_as_dict['name']
-    created_by = model_as_dict['created_by']
-    source = model_as_dict['source']
-    source_mapping = model_as_dict['source_mapping']
-    destination = model_as_dict['destination']
-    destination_mapping = model_as_dict['destination_mapping']
-    start_datetime = model_as_dict['start_datetime']
-    frequency = model_as_dict['frequency']
-    active = model_as_dict['active']
-    query = f"INSERT INTO transfers (organization, name, created_datetime, created_by, source, source_mapping, destination, destination_mapping, start_datetime, frequency, active) VALUES ('{organization}', '{name}', '{created_datetime}', '{created_by}', '{source}', '{source_mapping}', '{destination}', '{destination_mapping}', '{start_datetime}', '{frequency}', '{active}') \n RETURNING uid;"
-    return connection.query(query)
 
 
 def delete_user(connection, user_id: int):

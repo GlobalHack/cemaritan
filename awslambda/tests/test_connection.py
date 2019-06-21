@@ -17,6 +17,7 @@ for name in logging.Logger.manager.loggerDict.keys():
     if ('boto' in name) or ('urllib3' in name) or ('s3transfer' in name) or ('boto3' in name) or ('botocore' in name) or ('nose' in name):
         logging.getLogger(name).setLevel(logging.CRITICAL)
 
+
 ### Connections
 def test_connections_function(connections_event, sample_connections_response):
     assert connections(connections_event, None) == sample_connections_response
@@ -44,32 +45,25 @@ def test_transfer_single_function(
 
 # def test_transfer_single_update_response
 
-def test_transfer_single_update(sample_transfer_single_update_event, 
+def test_transfer_single_update_function(sample_transfer_single_update_event, 
     sample_transfer_single_update_response):
     assert update_transfer(sample_transfer_single_update_event, None) == sample_transfer_single_update_response
 
 
-# def test_transfer_single_create_function(
-#     sample_transfer_single_create_event, sample_transfer_single_create_response
-# ):
-#     # delete_transfer(9999)
-#     _id = create_transfer(sample_transfer_single_create_event, None)['body']['uid']
-#     sample_transfer_single_create_response['body']['uid'] = _id
-#     transfer_single_event['pathParameters']['transfer_id] = _id']
+def test_transfer_single_create_function(
+    sample_transfer_single_create_event, sample_transfer_single_create_response, transfer_single_event
+):
+    _id = json.loads(create_transfer(sample_transfer_single_create_event, None)['body'])['uid']
+    transfer_single_event['pathParameters']['transfer_id'] = _id
+    body = json.loads(sample_transfer_single_create_response['body'])
+    body['uid'] = _id
+    sample_transfer_single_create_response['body'] = json.dumps(body)
+    assert (
+        get_transfer(transfer_single_event, None)
+        == sample_transfer_single_create_response
+    )
 
-#     assert (
-#         get_transfer(transfer_single_event)
-#         == sample_transfer_single_create_response
-#     )
-#     delete_transfer(_id)
 
-
-# need pytest -s flag to see print statements
-# def test_print(
-#     sample_transfer_single_create_event, sample_transfer_single_create_response):
-#     # print(create_transfer(sample_transfer_single_create_event, None))
-    
-#     print(create_transfer(sample_transfer_single_create_event, None))
 
 
 ### Histories
