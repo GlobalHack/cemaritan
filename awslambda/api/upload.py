@@ -1,3 +1,5 @@
+import json
+
 from datetime import datetime
 
 import library.db_queries as db_queries
@@ -58,3 +60,24 @@ def _create_presigned_post(bucket_name, object_name,
 
 def _get_date():
     return datetime.today().strftime('%Y%m%d')
+
+
+@awshandler
+def create_upload(event, context):
+    """Create an Upload record."""
+    organization_id = aws_get_path_parameter(event, "organization_id")
+    body = json.loads(event['body'])
+    upload_obj = Upload(body)
+    response = db_queries.create_upload(connection=conn, organization_id=organization_id, upload=upload_obj)
+    tup = response[0][0]
+    return {tup[0]: tup[1]}
+
+
+@awshandler
+def get_upload(event, context):
+    organization_id = aws_get_path_parameter(event, "organization_id")
+    upload_uid = aws_get_path_parameter(event, "upload_uid")
+    upload = db_queries.get_upload(connection=conn, organization_id=organization_id, upload_uid=upload_uid)
+    if upload is None:
+        raise DatabaseReturnedNone(f"Check object id: {upload_uid}")
+    return upload.to_dict()

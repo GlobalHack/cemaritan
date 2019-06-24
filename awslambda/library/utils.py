@@ -1,4 +1,4 @@
-
+import datetime
 import functools
 import json
 
@@ -50,3 +50,18 @@ def aws_get_path_parameters(event):
 def aws_get_path_parameter(event, parameter):
     """Extract specific path parameter from AWS Lambda event object."""
     return aws_get_path_parameters(event)[parameter]
+
+
+def get_future_datetime(days):
+    return datetime.datetime.now() + datetime.timedelta(days=days)
+
+
+def format_dt(dt):
+    return dt.strftime('%Y-%m-%d %H:%M:%S')
+
+
+def get_future_datetime_formatted(days):
+    return format_dt(get_future_datetime(days))
+
+def get_now_datetime_formatted():
+    return format_dt(datetime.datetime.now())

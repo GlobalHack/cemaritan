@@ -374,8 +374,10 @@ def sample_download_link_response():
 
 # Upload
 @pytest.fixture()
-def upload_event():
-    return {"pathParameters": {"organization_id": "1"}}
+def upload_single_create_event():
+    return {"pathParameters": {"organization_id": "1"},
+            "body": '{"organization": 1, "location": "http://aws2.com", "created_by": 1, "source_mapping_uid": 1, "destination_uid": 1, "destination_mapping_uid": 1, "expiration_datetime": "2019-03-09 20:42:03"}'
+    }
 
 @pytest.fixture()
 def sample_upload_response():
@@ -384,6 +386,21 @@ def sample_upload_response():
         "headers": {"Access-Control-Allow-Origin": "*"},
         "body": '{"message": "File uploaded"}'
     }
+
+
+@pytest.fixture()
+def sample_upload_single_event():
+    return {"pathParameters": {"organization_id": "1", "upload_uid": 1}}
+
+
+@pytest.fixture()
+def sample_upload_single_response():
+    return {
+        "statusCode": 200,
+        "headers": {"Access-Control-Allow-Origin": "*"},
+        "body": '{"uid": 1, "organization": 1, "location": "http://aws2.com", "created_by": 1, "source_mapping_uid": 1, "destination_uid": 1, "destination_mapping_uid": 1}'
+    }
+
 
 try:
     os.unlink(test_path.joinpath("api/models"))
