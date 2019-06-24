@@ -69,8 +69,14 @@ class Upload(Model):
         super(Upload, self).__init__(data, *args, **kwargs)
 
     def _set_data(self):
-        self._organization = self.data.get("organization")
-        self._transfer = self.data.get("transfer")
+        self._organization_uid = self.data["organization"]
+        self._location = self.data["location"]
+        self._created_by = self.data["created_by"]
+        self._source_mapping_uid = self.data["source_mapping_uid"]
+        self._destination_uid = self.data["destination_uid"]
+        self._destination_mapping_uid = self.data["destination_mapping_uid"]
+
+        self._expiration_datetime = self.data.get("expiration_datetime")
 
 
 class Frequency(Model):
@@ -146,15 +152,15 @@ class Mapping(Model):
         self._created_by = self.data.get("created_by")
 
     
-class Mapping(Model):
+# class Mapping(Model):
     
-    def __init__(self, data, *args, **kwargs):
-        super(Mapping, self).__init__(data, *args, **kwargs)
+#     def __init__(self, data, *args, **kwargs):
+#         super(Mapping, self).__init__(data, *args, **kwargs)
     
-    def _set_data(self): 
-        self._uid = self.data.get("uid")
-        self._name = self.data.get("name")
-        self._created_date = self.data.get("created_datetime")
+#     def _set_data(self): 
+#         self._uid = self.data.get("uid")
+#         self._name = self.data.get("name")
+#         self._created_date = self.data.get("created_datetime")
 
     
 class Transfer(Model):

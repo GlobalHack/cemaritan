@@ -101,7 +101,6 @@ CREATE TABLE IF NOT EXISTS downloads (
 	obj_name text NOT NULL
 );
 INSERT INTO downloads (name, transfer_name, history_uid, expiration_datetime, organization, bucket_name, obj_name) VALUES ('Download 1', 'CW to SF', 1, '2019-03-09 20:42:03', 1, 'cemaritan-dev-downloads', 'test_download.txt');
-COMMIT;
 
 DROP TABLE IF EXISTS list_frequencies;
 CREATE TABLE IF NOT EXISTS list_frequencies (
@@ -110,3 +109,19 @@ CREATE TABLE IF NOT EXISTS list_frequencies (
 	value int NOT NULL
 );
 INSERT INTO list_frequencies (name, value) VALUES ('1 hour', 1), ('1 day', 2);
+
+DROP TABLE IF EXISTS uploads;
+CREATE TABLE IF NOT EXISTS uploads (
+	uid SERIAL PRIMARY KEY,
+	organization int4 NOT NULL,
+	location text NOT NULL,
+	created_by int4 NOT NULL,
+	created_datetime text NOT NULL,
+	source_mapping_uid int4 NOT NULL,
+	destination_uid int4 NOT NULL,
+	destination_mapping_uid int4 NOT NULL,
+	expiration_datetime text NOT NULL
+);
+INSERT INTO uploads (location, organization, created_by, created_datetime, source_mapping_uid, destination_uid, destination_mapping_uid, expiration_datetime) VALUES ('http://aws.com', 1, 1, '2019-03-09 20:42:03', 1, 1, 1, '2019-03-09 20:42:03');
+
+COMMIT;

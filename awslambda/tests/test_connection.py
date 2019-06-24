@@ -9,7 +9,7 @@ from api.mapping import mappings, get_mapping
 from api.user import users, get_user
 from api.organization import organizations, get_organization
 from api.download import downloads, get_download, get_download_link
-from api.upload import get_upload_link
+from api.upload import get_upload_link, create_upload, get_upload
 
 import logging
 
@@ -132,5 +132,19 @@ def test_download_link_function(download_single_event, sample_download_link_resp
 
 
 # Upload
-# def test_upload_function(upload_event, sample_upload_response):
-#     assert create_upload(upload_event, None) == sample_upload_response
+def test_upload_function(upload_single_create_event, sample_upload_single_event, sample_upload_single_response):
+    _id = json.loads(create_upload(upload_single_create_event, None)['body'])['uid']
+    print(_id)
+    sample_upload_single_event['pathParameters']['upload_uid'] = _id
+    body = json.loads(sample_upload_single_response['body'])
+    body['uid'] = _id
+    sample_upload_single_response['body'] = json.dumps(body)
+    response = get_upload(sample_upload_single_event, None)
+    d = json.loads(response['body'])
+    del d['expiration_datetime']
+    del d['created_datetime']
+    response['body'] = json.dumps(d)
+    assert (
+        response
+        == sample_upload_single_response
+    )
