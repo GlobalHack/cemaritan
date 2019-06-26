@@ -1,0 +1,41 @@
+service: aws-cemaritan-dataexchange
+
+frameworkVersion: ">=1.2.0 <2.0.0"
+
+provider:
+  name: aws
+  runtime: python3.6
+  # memorySize: 256
+  stage: dev
+  region: us-east-1
+  environment:
+    DB_HOST: ${ssm:host} 
+    PORT: ${ssm:port}
+    DB_NAME: ${ssm:dbname}
+    USER: ${ssm:user}
+    PASSWORD: ${ssm:pw}
+
+
+functions:
+  check_for_transfers:
+    handler: __init__.get_transfers_for_org
+    events:
+      - http:
+          path: check_for_transfers
+          method: get
+          cors: true
+  do_transfer:
+    handler: __init__.do_transfer
+
+
+plugins:
+  - serverless-python-requirements
+  - serverless-package-external
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
+  packageExternal:
+    external:
+      - '../models'
+      - '../library'
