@@ -10,11 +10,6 @@ import docker
 
 test_path = Path.cwd()
 
-try:
-    os.unlink(test_path.joinpath("api/models"))
-except:
-    pass
-os.symlink(test_path.joinpath("models"), test_path.joinpath("api/models"))
 
 try:
     os.unlink(test_path.joinpath("api/library"))

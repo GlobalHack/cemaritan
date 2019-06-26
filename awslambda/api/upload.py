@@ -8,7 +8,7 @@ from library.exceptions import DatabaseReturnedNone
 from library.db_connections import Postgres, get_conn
 from library.utils import awshandler, aws_get_path_parameter
 
-from models.Models import Upload
+from library.models import Upload
 
 import boto3 
 

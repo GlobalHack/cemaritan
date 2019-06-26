@@ -257,5 +257,4 @@ custom:
     dockerizePip: non-linux
   packageExternal:
     external:
-      - '../models'
       - '../library'
