@@ -5,7 +5,7 @@ frameworkVersion: ">=1.2.0 <2.0.0"
 provider:
   name: aws
   runtime: python3.6
-  memorySize: 256
+  # memorySize: 256
   stage: dev
   region: us-east-1
   environment:
@@ -15,15 +15,17 @@ provider:
     USER: ${ssm:user}
     PASSWORD: ${ssm:pw}
 
+
 functions:
-  ### This will only be used by some Cemaritan level admin
-  get_organizations:
-    handler: organization.organizations
+  check_for_transfers:
+    handler: __init__.get_transfers_for_org
     events:
       - http:
-          path: data
+          path: check_for_transfers
           method: get
           cors: true
+  do_transfer:
+    handler: __init__.do_transfer
 
 
 plugins:
