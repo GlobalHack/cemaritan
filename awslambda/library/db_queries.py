@@ -1,7 +1,7 @@
 # functions for actually making the database calls
 from typing import Any, List, Tuple
 
-from models import Connection, Mapping, Organization, Transfer, User, History, Download, Frequency, Upload
+from library.models import Connection, Mapping, Organization, Transfer, User, History, Download, Frequency, Upload
 from library.utils import get_future_datetime_formatted, get_now_datetime_formatted
 
 ### Generic functions

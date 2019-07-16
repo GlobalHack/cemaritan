@@ -269,5 +269,9 @@ custom:
     dockerizePip: non-linux
   packageExternal:
     external:
+<<<<<<< HEAD
+      - '../library'
+=======
       - '../library'
       - '../models'
+>>>>>>> master
