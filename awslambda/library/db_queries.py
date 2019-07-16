@@ -429,6 +429,7 @@ def update_transfer(connection, organization_id: int, transfer_id:int, transfer:
     source_mapping_uid = d['source_mapping_uid']
     destination_uid = d['destination_uid']
     destination_mapping_uid = d['destination_mapping_uid']
+    start_datetime = d['start_datetime']
     frequency = d['frequency']
     #record_filter = d['record_filter']
     active = 1 if d['active'] else 0
@@ -439,6 +440,7 @@ def update_transfer(connection, organization_id: int, transfer_id:int, transfer:
                 source_mapping='{source_mapping_uid}',
                 destination='{destination_uid}',
                 destination_mapping='{destination_mapping_uid}',
+                start_datetime='{start_datetime}',
                 frequency='{frequency}',
                 
                 active='{active}'

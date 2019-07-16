@@ -132,7 +132,19 @@ functions:
               paths:
                 organization_id: true
                 transfer_id: true
-  # Connection
+  update_transfer:
+    handler: transfer.update_transfer
+    events:
+      - http:
+          path: organizations/{organization_id}/transfers/{transfer_id}
+          method: put
+          cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
+                transfer_id: true
+# Connection
   get_connection:
     handler: connection.get_connection
     events:
@@ -257,4 +269,9 @@ custom:
     dockerizePip: non-linux
   packageExternal:
     external:
+<<<<<<< HEAD
       - '../library'
+=======
+      - '../library'
+      - '../models'
+>>>>>>> master
