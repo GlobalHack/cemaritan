@@ -461,65 +461,81 @@ def get_frequencies_list(connection):
 
 
 # Users
-def get_users(connection, organization_id: int):
-    """Get users for ``organization_id``
-    
-    Parameters
-    ----------
-    connection
-        Connection to database
-    organization_id : int
-        Organization Id
-    
-    Returns
-    -------
-    List[models.User]
-        List of User objects
-
-    """
-    users = get_rows_by_organization(
-        table_name="users", connection=connection, organization_id=organization_id
-    )
-    return [User(tup) for tup in users]
+def get_user_by_auth_id(connection, auth_id: str, auth_service: str=None):
+    """Get the Cemaritan ID for the auth service ID."""
+    if auth_service is None:
+        auth_service = 'firebase'
+    query = f"Select cemaritan_id from auth where firebase_id='{auth_id}' and auth_service='{auth_service}'"
+    users = connection.query(query)
+    return User({'uid': users[0][0][1]})
 
 
-def get_user(connection, organization_id: int, user_id: int):
-    """Get user matching ``organization_id`` and ``user_id``
+def get_user_by_uid(connection, user_uid):
+    """Get all user info by Cemaritan id."""
+    query = f"Select * from users where uid='{user_uid}'"
+    users = connection.query(query)
+    return User(users[0])
+
+
+# def get_users(connection, organization_id: int):
+#     """Get users for ``organization_id``
     
-    Parameters
-    ----------
-    connection : 
-        Connection to database
-    organization_id : int
-        Organization Id
-    user_id : int
-        user Id
+#     Parameters
+#     ----------
+#     connection
+#         Connection to database
+#     organization_id : int
+#         Organization Id
     
-    Returns
-    -------
-    Tuple[Tuple[str, Any]]
-        Tuple of 2-tuples representing a row of `users` table matching ``organization_id``
-        and ``user_id``
-        Example: 
-        (
-            ("uid", 1),
-            ("name", "Matt"),
-            ("created_datetime", "2019-03-10 10:42:03"),
-            ("organization", 1)
-        )
+#     Returns
+#     -------
+#     List[models.User]
+#         List of User objects
+
+#     """
+#     users = get_rows_by_organization(
+#         table_name="users", connection=connection, organization_id=organization_id
+#     )
+#     return [User(tup) for tup in users]
+
+
+# def get_user(connection, organization_id: int, user_id: int):
+#     """Get user matching ``organization_id`` and ``user_id``
+    
+#     Parameters
+#     ----------
+#     connection : 
+#         Connection to database
+#     organization_id : int
+#         Organization Id
+#     user_id : int
+#         user Id
+    
+#     Returns
+#     -------
+#     Tuple[Tuple[str, Any]]
+#         Tuple of 2-tuples representing a row of `users` table matching ``organization_id``
+#         and ``user_id``
+#         Example: 
+#         (
+#             ("uid", 1),
+#             ("name", "Matt"),
+#             ("created_datetime", "2019-03-10 10:42:03"),
+#             ("organization", 1)
+#         )
         
-    """
+#     """
 
-    row = get_row_by_object_id(
-        table_name="users",
-        connection=connection,
-        organization_id=organization_id,
-        object_id=user_id,
-    )
-    if row is not None:
-        return User(row)
-    else:
-        return None  # Unnecessary but good to be explicit
+#     row = get_row_by_object_id(
+#         table_name="users",
+#         connection=connection,
+#         organization_id=organization_id,
+#         object_id=user_id,
+#     )
+#     if row is not None:
+#         return User(row)
+#     else:
+#         return None  # Unnecessary but good to be explicit
 
 
 # Downloads
