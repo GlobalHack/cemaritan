@@ -14,8 +14,21 @@ provider:
     DB_NAME: ${ssm:dbname}
     USER: ${ssm:user}
     PASSWORD: ${ssm:pw}
+    AUTH_CRED: ${ssm:auth_cred}
 
 functions:
+  firebase_authorizer:
+    handler: auth.authorizer_user
+  ### Authentication
+  get_user:
+    handler: user.get_user
+    events:
+      - http:
+          path: user
+          method: get
+          cors: true
+          authorizer: firebase_authorizer
+
   ### This will only be used by some Cemaritan level admin
   get_organizations:
     handler: organization.organizations
@@ -54,17 +67,6 @@ functions:
     events:
       - http:
           path: organizations/{organization_id}/transfers
-          method: get
-          cors: true
-          request:
-            parameters:
-              paths:
-                organization_id: true
-  get_users:
-    handler: user.users
-    events:
-      - http:
-          path: organizations/{organization_id}/users
           method: get
           cors: true
           request:
@@ -171,20 +173,6 @@ functions:
               paths:
                 organization_id: true
                 mapping_id: true
-    
-  # User
-  get_user:
-    handler: user.get_user
-    events:
-      - http:
-          path: organizations/{organization_id}/users/{user_id}
-          method: get
-          cors: true
-          request:
-            parameters:
-              paths:
-                organization_id: true
-                user_id: true
 
   # History
   get_history:
@@ -269,9 +257,4 @@ custom:
     dockerizePip: non-linux
   packageExternal:
     external:
-<<<<<<< HEAD
       - '../library'
-=======
-      - '../library'
-      - '../models'
->>>>>>> master
