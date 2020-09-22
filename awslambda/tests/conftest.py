@@ -284,13 +284,13 @@ def user_single_event():
     return {"pathParameters": {"organization_id": "1", "user_id": "1"}}
 
 
-@pytest.fixture()
-def sample_users_response():
-    return {
-        "statusCode": 200,
-        "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '[{"uid": 1, "name": "Matt", "created_datetime": "2019-03-10 10:42:03", "organization": 1}]',
-    }
+# @pytest.fixture()
+# def sample_users_response():
+#     return {
+#         "statusCode": 200,
+#         "headers": {"Access-Control-Allow-Origin": "*"},
+#         "body": '[{"uid": 1, "name": "Matt", "created_datetime": "2019-03-10 10:42:03", "organization": 1}]',
+#     }
 
 
 @pytest.fixture()
@@ -387,7 +387,7 @@ def sample_upload_response():
 
 @pytest.fixture()
 def sample_upload_single_event():
-    return {"pathParameters": {"organization_id": "1", "upload_uid": 1}}
+    return {"pathParameters": {"organization_id": "1", "upload_id": 1}}
 
 
 @pytest.fixture()
@@ -398,11 +398,18 @@ def sample_upload_single_response():
         "body": '{"uid": 1, "organization": 1, "location": "http://aws2.com", "created_by": 1, "source_mapping_uid": 1, "destination_uid": 1, "destination_mapping_uid": 1}'
     }
 
+##############################################################################################################################
+# data exchange fixtures
+##############################################################################################################################
 
-try:
-    os.unlink(test_path.joinpath("api/models"))
-except:
-    pass
+@pytest.fixture()
+def sample_do_upload_event():
+    return {'organization_id':1, 'uid': 1}
+
+@pytest.fixture()
+def sample_do_transfer_event():
+    return {'organization_id':1, 'uid': 6}
+
 
 try:
     os.unlink(test_path.joinpath("api/library"))

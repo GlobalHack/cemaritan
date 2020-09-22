@@ -5,7 +5,7 @@ frameworkVersion: ">=1.2.0 <2.0.0"
 provider:
   name: aws
   runtime: python3.6
-  # memorySize: 256
+  memorySize: 256
   stage: dev
   region: us-east-1
   environment:
@@ -14,19 +14,28 @@ provider:
     DB_NAME: ${ssm:dbname}
     USER: ${ssm:user}
     PASSWORD: ${ssm:pw}
+    client_id: ${ssm:sf_client_id}
+    client_secret: ${ssm:sf_client_secret} 
+    security_token: ${ssm:sf_security_token} 
+    username: ${ssm:sf_username}
+    password: ${ssm:sf_password}
 
 
 functions:
-  check_for_transfers:
-    handler: __init__.get_transfers_for_org
-    events:
-      - http:
-          path: check_for_transfers
-          method: get
-          cors: true
-  do_transfer:
-    handler: __init__.do_transfer
-
+  # check_for_transfers:
+  #   handler: __init__.get_transfers_for_org
+  #   events:
+  #     - http:
+  #         path: check_for_transfers
+  #         method: get
+  #         cors: true
+    do_transfer:
+      handler: upload.do_transfer
+      timeout: 300 # let it go for up to 5 minutes
+    do_upload:
+      handler: upload.do_upload
+      timeout: 300 # let it go for up to 5 minutes
+      
 
 plugins:
   - serverless-python-requirements
@@ -37,5 +46,4 @@ custom:
     dockerizePip: non-linux
   packageExternal:
     external:
-      - '../models'
       - '../library'

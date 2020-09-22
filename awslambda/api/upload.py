@@ -70,14 +70,25 @@ def create_upload(event, context):
     upload_obj = Upload(body)
     response = db_queries.create_upload(connection=conn, organization_id=organization_id, upload=upload_obj)
     tup = response[0][0]
+    call_do_upload(organization_id, tup[1])
     return {tup[0]: tup[1]}
 
 
 @awshandler
 def get_upload(event, context):
     organization_id = aws_get_path_parameter(event, "organization_id")
-    upload_uid = aws_get_path_parameter(event, "upload_uid")
+    upload_uid = aws_get_path_parameter(event, "upload_id")
     upload = db_queries.get_upload(connection=conn, organization_id=organization_id, upload_uid=upload_uid)
     if upload is None:
         raise DatabaseReturnedNone(f"Check object id: {upload_uid}")
     return upload.to_dict()
+
+
+def call_do_upload(org_id: str, uid: str):
+    """Call the `do_upload` function with the uid of an upload record."""
+    print(uid)
+    msg = {"organization_id" : org_id, "uid": uid}
+    lambda_client = boto3.client('lambda')
+    lambda_client.invoke(FunctionName='aws-cemaritan-dataexchange-dev-do_upload',
+                            InvocationType='Event',
+                            Payload=json.dumps(msg))

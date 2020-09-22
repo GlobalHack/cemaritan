@@ -141,6 +141,7 @@ class Postgres:
         except Exception as e:
             print(str(type(e)) + str(e))
             self._connection.rollback()
+            # Should this raise an error here???
         finally:
             c.close()
 

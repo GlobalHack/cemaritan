@@ -4,9 +4,11 @@ import library.db_queries as db_queries
 
 from library.exceptions import DatabaseReturnedNone
 from library.db_connections import Postgres, get_conn
-from library.utils import awshandler, aws_get_path_parameter
+from library.utils import awshandler, aws_get_path_parameter, get_now_datetime_formatted
 
-from library.models import Transfer
+from library.models import Transfer, History
+
+import boto3 
 
 conn = Postgres()
 
@@ -34,6 +36,19 @@ def create_transfer(event, context):
     transfer_obj = Transfer(body)
     response = db_queries.create_transfer(connection=conn, organization_id=organization_id, transfer=transfer_obj)
     tup = response[0][0]
+    transfer_dict = transfer_obj.to_dict()
+    db_queries.create_history(connection=conn,
+                                organization_id=organization_id,
+                                history=History({'type': 'Transfer',
+                                'action': 'Created',
+                                'datetime': get_now_datetime_formatted(),
+                                'name': transfer_dict['name'],
+                                'details': '',
+                                'source_uid': transfer_dict['source_uid'],
+                                'organization': organization_id
+                                }))
+    # Run transfer immediately
+    call_do_transfer(organization_id, tup[1])
     return {tup[0]: tup[1]}
 
 
@@ -51,6 +66,16 @@ def delete_transfer(transfer_id):
     """Temporary function for testing. Eventually this 
     will be built out into a full handler."""
     db_queries.delete_transfer(conn, transfer_id)
+
+
+def call_do_transfer(org_id: str, uid: str):
+    """Call the `do_upload` function with the uid of an upload record."""
+    # print(uid)
+    msg = {"organization_id" : org_id, "uid": uid}
+    lambda_client = boto3.client('lambda')
+    lambda_client.invoke(FunctionName='aws-cemaritan-dataexchange-dev-do_transfer',
+                            InvocationType='Event',
+                            Payload=json.dumps(msg))
 
 
 @awshandler

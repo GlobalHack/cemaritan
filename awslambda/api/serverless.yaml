@@ -7,7 +7,7 @@ provider:
   runtime: python3.6
   memorySize: 256
   stage: dev
-  region: us-east-1
+  region: us-ohio
   environment:
     DB_HOST: ${ssm:host} 
     PORT: ${ssm:port}
@@ -27,7 +27,11 @@ functions:
           path: user
           method: get
           cors: true
-          authorizer: firebase_authorizer
+          authorizer:
+            name: firebase_authorizer
+            identitySource: method.request.header.Authorization
+            type: token
+        #   authorizer: firebase_authorizer
 
   ### This will only be used by some Cemaritan level admin
   get_organizations:
@@ -213,6 +217,18 @@ functions:
                 organization_id: true
                 download_id: true
   # Upload
+  get_upload:
+    handler: upload.get_upload
+    events:
+      - http:
+          path: organizations/{organization_id}/uploads/{upload_id}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
+                upload_id: true
   get_upload_link:
     handler: upload.get_upload_link
     events:

@@ -243,6 +243,21 @@ def get_history(connection, organization_id: int, history_id: int):
         return None  # Unnecessary but good to be explicit
 
 
+def create_history(connection, organization_id, history):
+    """Create a history record."""
+    history_dict = history.to_dict()
+    type_ = history_dict["type"]
+    action = history_dict["action"]
+    name = history_dict["name"]
+    datetime = history_dict["datetime"]
+    details = history_dict["details"]
+    source_uid = history_dict["source_uid"]
+    organization_id = history_dict["organization"]
+    query = f"INSERT INTO histories (organization, type, action,  datetime, name, details, source_uid) VALUES ('{organization_id}', '{type_}', '{action}', '{datetime}', '{name}', '{details}', '{source_uid}') \n RETURNING uid;"
+    return connection.query(query)
+
+
+
 # transfers
 def get_transfers(connection, organization_id: int):
     """Get transfers for ``organization_id``
@@ -602,6 +617,22 @@ def get_download(connection, organization_id: int, download_id: int):
         return None  # Unnecessary but good to be explicit
 
 
+def create_download(connection, organization_id: int, download):
+    """Create a download record in the database."""
+    model_as_dict = download.to_dict()
+    organization = int(organization_id)
+    # created_datetime = get_now_datetime_formatted()
+    name = model_as_dict['name']
+    transfer_name = model_as_dict['transfer_name']
+    history_uid = int(model_as_dict['history_uid'])
+    bucket_name = model_as_dict['bucket_name']
+    obj_name = model_as_dict['obj_name']
+    expiration_datetime = get_future_datetime_formatted(days=14)
+    query = f"INSERT INTO downloads (name, transfer_name, history_uid, expiration_datetime, organization, bucket_name, obj_name) VALUES('{name}', '{transfer_name}', '{history_uid}', '{expiration_datetime}', '{organization}', '{bucket_name}', '{obj_name}' ) \n RETURNING uid;"
+    return connection.query(query)
+
+
+
 # Mappings
 def get_mappings(connection, organization_id: int):
     """Get data mappings for ``organization_id``
@@ -713,15 +744,15 @@ def get_organizations(connection):
 
 # Uploads
 def create_upload(connection, organization_id: int, upload):
-    """Create upload.
+    """Create upload. Return UID of new record.
     """
     model_as_dict = upload.to_dict()
-    organization = organization_id
+    organization = int(organization_id)
     created_datetime = get_now_datetime_formatted()
     created_by_uid = model_as_dict['created_by']
-    source_mapping_uid = model_as_dict['source_mapping_uid']
-    destination_uid = model_as_dict['destination_uid']
-    destination_mapping_uid = model_as_dict['destination_mapping_uid']
+    source_mapping_uid = int(model_as_dict['source_mapping_uid'])
+    destination_uid = int(model_as_dict['destination_uid'])
+    destination_mapping_uid = int(model_as_dict['destination_mapping_uid'])
     location = model_as_dict['location']
     expiration_dt = get_future_datetime_formatted(days=14)
     query = f"INSERT INTO uploads (organization, created_datetime, created_by, source_mapping_uid, destination_uid, destination_mapping_uid, location, expiration_datetime) VALUES ('{organization_id}', '{created_datetime}', '{created_by_uid}', '{source_mapping_uid}', '{destination_uid}', '{destination_mapping_uid}', '{location}', '{expiration_dt}') \n RETURNING uid;"

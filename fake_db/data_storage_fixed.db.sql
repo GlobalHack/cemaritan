@@ -29,7 +29,8 @@ INSERT INTO transfers (name,created_datetime,created_by,organization,source,sour
  ('SF to CW','2019-03-13 20:42:03',1,1,1,1,2,2,'2019-03-13 20:42:03','1 hour','filter b',0),
  ('SP to CW','2019-03-13 20:42:03',2,2,3,3,4,4,'2019-03-13 20:42:03','2 hour','filter c',1),
  ('CW to SP','2019-03-13 20:42:03',2,2,4,4,3,3,'2019-03-13 20:42:03','5 min','filter d',0),
- ('CW to DL','2019-03-19 23:42:03',3,3,5,5,0,NULL,'2019-03-34 05:42:03','10 min','filter e',1);
+ ('CW to DL','2019-03-19 23:42:03',3,3,5,5,7,NULL,'2019-03-34 05:42:03','10 min','filter e',1),
+ ('SF to DL','2019-08-19 23:42:03',1,1,1,1,5,NULL,'2019-03-34 05:42:03','10 min','filter e',1);
 DROP TABLE IF EXISTS organizations;
 CREATE TABLE IF NOT EXISTS organizations (
 	uid	SERIAL PRIMARY KEY,
@@ -69,7 +70,8 @@ INSERT INTO Mappings (organization,name,mapping_info,start_format,end_format,num
  (1,'CW to HUD','{}','csv','json',2),
  (2,'SP Validation','{}','csv','json',1),
  (2,'CW Validation','{}','json','csv',0),
- (3,'CW to HUD','{}','csv','json',2);
+ (3,'CW to HUD','{}','csv','json',2),
+ (1,'HUD to HUD','{}','csv','csv',2);
 DROP TABLE IF EXISTS Connections;
 CREATE TABLE IF NOT EXISTS Connections (
 	uid	SERIAL PRIMARY KEY,
@@ -108,7 +110,7 @@ CREATE TABLE IF NOT EXISTS list_frequencies (
 	name text NOT NULL,
 	value int NOT NULL
 );
-INSERT INTO list_frequencies (name, value) VALUES ('1 hour', 1), ('1 day', 2);
+INSERT INTO list_frequencies (name, value) VALUES ('1 day', 1);
 
 DROP TABLE IF EXISTS uploads;
 CREATE TABLE IF NOT EXISTS uploads (
@@ -122,6 +124,6 @@ CREATE TABLE IF NOT EXISTS uploads (
 	destination_mapping_uid int4 NOT NULL,
 	expiration_datetime text NOT NULL
 );
-INSERT INTO uploads (location, organization, created_by, created_datetime, source_mapping_uid, destination_uid, destination_mapping_uid, expiration_datetime) VALUES ('http://aws.com', 1, 1, '2019-03-09 20:42:03', 1, 1, 1, '2019-03-09 20:42:03');
+INSERT INTO uploads (location, organization, created_by, created_datetime, source_mapping_uid, destination_uid, destination_mapping_uid, expiration_datetime) VALUES ('https://cemaritan-dev-uploads.s3.amazonaws.com/Clean_CSV_Export.zip', 1, 1, '2019-03-09 20:42:03', 1, 1, 1, '2019-03-09 20:42:03');
 
 COMMIT;

@@ -3,10 +3,11 @@ This module exposes the conversion functionality as an API and
 is ready to be deployed an AWS Lambda function.
 
 The boto3 python library for working with AWS is available in AWS Lambda
-environments without importing them, but it is imported here for local testing.
+environments without importing them, but it is imported here for local testing,
+it is also recommended that you import to ensure correct version.
 
 ENVIRONMENTAL VARIABLES:
-s3_bucket' containing the name of the S3 bucket that the csv files should be saved in.
+'s3_bucket' containing the name of the S3 bucket that the csv files should be saved in.
 
 """
 
