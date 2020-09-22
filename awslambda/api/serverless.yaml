@@ -14,10 +14,23 @@ provider:
     DB_NAME: ${ssm:dbname}
     USER: ${ssm:user}
     PASSWORD: ${ssm:pw}
+    AUTH_CRED: ${ssm:auth_cred}
   apiKeys:
     - ${self:provider.stage}-api-key
 
 functions:
+  firebase_authorizer:
+    handler: auth.authorizer_user
+  ### Authentication
+  get_user:
+    handler: user.get_user
+    events:
+      - http:
+          path: user
+          method: get
+          cors: true
+          authorizer: firebase_authorizer
+
   ### This will only be used by some Cemaritan level admin
   get_organizations:
     handler: organization.organizations
@@ -66,6 +79,7 @@ functions:
             parameters:
               paths:
                 organization_id: true
+
   get_users:
     handler: user.users
     events:
@@ -78,6 +92,7 @@ functions:
             parameters:
               paths:
                 organization_id: true
+
   get_histories:
     handler: history.histories
     events:
@@ -144,7 +159,19 @@ functions:
               paths:
                 organization_id: true
                 transfer_id: true
-  # Connection
+  update_transfer:
+    handler: transfer.update_transfer
+    events:
+      - http:
+          path: organizations/{organization_id}/transfers/{transfer_id}
+          method: put
+          cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
+                transfer_id: true
+# Connection
   get_connection:
     handler: connection.get_connection
     events:
@@ -173,6 +200,7 @@ functions:
               paths:
                 organization_id: true
                 mapping_id: true
+
     
   # User
   get_user:
@@ -188,6 +216,7 @@ functions:
               paths:
                 organization_id: true
                 user_id: true
+
 
   # History
   get_history:
@@ -243,6 +272,17 @@ functions:
             parameters:
               paths:
                 organization_id: true
+  create_upload:
+    handler: upload.create_upload
+    events:
+      - http:
+          path: organizations/{organization_id}/uploads
+          method: post
+          cors: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
   # Other
   frequencies_list:
     handler: transfer.get_frequencies_list
@@ -274,5 +314,4 @@ custom:
     dockerizePip: non-linux
   packageExternal:
     external:
-      - '../models'
       - '../library'

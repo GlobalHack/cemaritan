@@ -9,13 +9,14 @@ from api.mapping import mappings, get_mapping
 from api.user import users, get_user
 from api.organization import organizations, get_organization
 from api.download import downloads, get_download, get_download_link
-from api.upload import create_upload
+from api.upload import get_upload_link, create_upload, get_upload
 
 import logging
 
 for name in logging.Logger.manager.loggerDict.keys():
     if ('boto' in name) or ('urllib3' in name) or ('s3transfer' in name) or ('boto3' in name) or ('botocore' in name) or ('nose' in name):
         logging.getLogger(name).setLevel(logging.CRITICAL)
+
 
 ### Connections
 def test_connections_function(connections_event, sample_connections_response):
@@ -44,32 +45,28 @@ def test_transfer_single_function(
 
 # def test_transfer_single_update_response
 
-def test_transfer_single_update(sample_transfer_single_update_event, 
-    sample_transfer_single_update_response):
+def test_transfer_single_update_function(sample_transfer_single_update_event, 
+    sample_transfer_single_update_response,
+    transfer_single_event,
+    sample_transfer_single_response_after_update):
     assert update_transfer(sample_transfer_single_update_event, None) == sample_transfer_single_update_response
+    assert get_transfer(transfer_single_event, None) == sample_transfer_single_response_after_update
 
 
-# def test_transfer_single_create_function(
-#     sample_transfer_single_create_event, sample_transfer_single_create_response
-# ):
-#     # delete_transfer(9999)
-#     _id = create_transfer(sample_transfer_single_create_event, None)['body']['uid']
-#     sample_transfer_single_create_response['body']['uid'] = _id
-#     transfer_single_event['pathParameters']['transfer_id] = _id']
+def test_transfer_single_create_function(
+    sample_transfer_single_create_event, sample_transfer_single_create_response, transfer_single_event
+):
+    _id = json.loads(create_transfer(sample_transfer_single_create_event, None)['body'])['uid']
+    transfer_single_event['pathParameters']['transfer_id'] = _id
+    body = json.loads(sample_transfer_single_create_response['body'])
+    body['uid'] = _id
+    sample_transfer_single_create_response['body'] = json.dumps(body)
+    assert (
+        get_transfer(transfer_single_event, None)
+        == sample_transfer_single_create_response
+    )
 
-#     assert (
-#         get_transfer(transfer_single_event)
-#         == sample_transfer_single_create_response
-#     )
-#     delete_transfer(_id)
 
-
-# need pytest -s flag to see print statements
-# def test_print(
-#     sample_transfer_single_create_event, sample_transfer_single_create_response):
-#     # print(create_transfer(sample_transfer_single_create_event, None))
-    
-#     print(create_transfer(sample_transfer_single_create_event, None))
 
 
 ### Histories
@@ -138,5 +135,19 @@ def test_download_link_function(download_single_event, sample_download_link_resp
 
 
 # Upload
-def test_upload_function(upload_event, sample_upload_response):
-    assert create_upload(upload_event, None) == sample_upload_response
+def test_upload_function(upload_single_create_event, sample_upload_single_event, sample_upload_single_response):
+    _id = json.loads(create_upload(upload_single_create_event, None)['body'])['uid']
+    print(_id)
+    sample_upload_single_event['pathParameters']['upload_uid'] = _id
+    body = json.loads(sample_upload_single_response['body'])
+    body['uid'] = _id
+    sample_upload_single_response['body'] = json.dumps(body)
+    response = get_upload(sample_upload_single_event, None)
+    d = json.loads(response['body'])
+    del d['expiration_datetime']
+    del d['created_datetime']
+    response['body'] = json.dumps(d)
+    assert (
+        response
+        == sample_upload_single_response
+    )

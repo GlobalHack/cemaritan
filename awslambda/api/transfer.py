@@ -6,7 +6,7 @@ from library.exceptions import DatabaseReturnedNone
 from library.db_connections import Postgres, get_conn
 from library.utils import awshandler, aws_get_path_parameter
 
-from models import Transfer
+from library.models import Transfer
 
 conn = Postgres()
 
@@ -32,7 +32,7 @@ def create_transfer(event, context):
     organization_id = aws_get_path_parameter(event, "organization_id")
     body = json.loads(event['body'])
     transfer_obj = Transfer(body)
-    response = db_queries.create_transfer(connection=conn, transfer=transfer_obj)
+    response = db_queries.create_transfer(connection=conn, organization_id=organization_id, transfer=transfer_obj)
     tup = response[0][0]
     return {tup[0]: tup[1]}
 
@@ -42,7 +42,7 @@ def update_transfer(event, context):
     organization_id = aws_get_path_parameter(event, "organization_id")
     transfer_id = aws_get_path_parameter(event, "transfer_id")
     body = json.loads(event['body']) 
-    transfer_obj = Transfer(body) 
+    transfer_obj = Transfer(body)
     result = db_queries.update_transfer(connection=conn, organization_id=organization_id, transfer_id=transfer_id, transfer=transfer_obj)
     return {'message': 'success'}
 

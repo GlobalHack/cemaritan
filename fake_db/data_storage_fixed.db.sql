@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS users (
 	organization	INTEGER NOT NULL
 );
 INSERT INTO users (name,created_datetime,organization) VALUES ('Matt','2019-03-10 10:42:03',1),
- ('Kyle','2019-02-11 12:42:03',2),
- ('Kelly','2019-02-16 12:42:03',3);
+ ('Katie','2019-02-11 12:42:03',2),
+ ('Jake','2019-02-16 12:42:03',3);
 DROP TABLE IF EXISTS transfers;
 CREATE TABLE IF NOT EXISTS transfers (
 	uid	SERIAL PRIMARY KEY,
@@ -100,8 +100,8 @@ CREATE TABLE IF NOT EXISTS downloads (
 	bucket_name text NOT NULL,
 	obj_name text NOT NULL
 );
-INSERT INTO downloads (name, transfer_name, history_uid, expiration_datetime, organization, bucket_name, obj_name) VALUES ('Download 1', 'CW to SF', 1, '2019-03-09 20:42:03', 1, 'cemaritan-dev-downloads', 'test_download.txt');
-COMMIT;
+INSERT INTO downloads (name, transfer_name, history_uid, expiration_datetime, organization, bucket_name, obj_name) VALUES ('Download 1', 'CW to SF', 1, '2019-03-09 20:42:03', 1, 'cemaritan-dev-downloads', 'test_download.txt'),
+('Download 2', 'CW to SF', 1, '2019-03-09 20:42:03', 2, 'cemaritan-dev-downloads', 'test_download.txt');
 
 DROP TABLE IF EXISTS list_frequencies;
 CREATE TABLE IF NOT EXISTS list_frequencies (
@@ -109,4 +109,31 @@ CREATE TABLE IF NOT EXISTS list_frequencies (
 	name text NOT NULL,
 	value int NOT NULL
 );
-INSERT INTO list_frequencies (name, value) VALUES ('1 hour', 1), ('1 day', 2);
+INSERT INTO list_frequencies (name, value) VALUES ('1 day', 1);
+
+DROP TABLE IF EXISTS uploads;
+CREATE TABLE IF NOT EXISTS uploads (
+	uid SERIAL PRIMARY KEY,
+	organization int4 NOT NULL,
+	location text NOT NULL,
+	created_by int4 NOT NULL,
+	created_datetime text NOT NULL,
+	source_mapping_uid int4 NOT NULL,
+	destination_uid int4 NOT NULL,
+	destination_mapping_uid int4 NOT NULL,
+	expiration_datetime text NOT NULL
+);
+INSERT INTO uploads (location, organization, created_by, created_datetime, source_mapping_uid, destination_uid, destination_mapping_uid, expiration_datetime) VALUES ('http://aws.com', 1, 1, '2019-03-09 20:42:03', 1, 1, 1, '2019-03-09 20:42:03');
+
+DROP TABLE IF EXISTS auth;
+CREATE TABLE IF NOT EXISTS auth (
+	uid SERIAL PRIMARY KEY,
+	cemaritan_id text NOT NULL,
+	firebase_id text,
+	auth_service text
+);
+INSERT INTO auth (cemaritan_id) VALUES (1),
+(2),
+(3);
+
+COMMIT;
