@@ -268,7 +268,7 @@ def sample_downloads_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '[{"uid": 1, "name": "Download 1", "transfer_name": "CW to SF", "history_uid": 1, "expiration_datetime": "2019-03-09 20:42:03", "organization": 1, "file_location_info": "file_location_info_1"}]',
+        "body": '[{"uid": 1, "name": "Download 1", "transfer_name": "CW to SF", "history_uid": 1, "expiration_datetime": "2019-03-09 20:42:03", "organization": 1, "bucket_name": "cemaritan-dev-downloads", "obj_name": "test_download.txt"}]',
     }
 
 
@@ -277,7 +277,7 @@ def sample_download_single_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"uid": 1, "name": "Download 1", "transfer_name": "CW to SF", "history_uid": 1, "expiration_datetime": "2019-03-09 20:42:03", "organization": 1, "file_location_info": "file_location_info_1"}'
+        "body": '{"uid": 1, "name": "Download 1", "transfer_name": "CW to SF", "history_uid": 1, "expiration_datetime": "2019-03-09 20:42:03", "organization": 1, "bucket_name": "cemaritan-dev-downloads", "obj_name": "test_download.txt"}'
     }
 
 
@@ -286,7 +286,7 @@ def sample_download_link_response():
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": '{"download_link": "fake_link_for_file_location_info_1"}'
+        "body": '{"download_link": "", "expiration": 120}'
     }
 
 

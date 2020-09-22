@@ -1,3 +1,6 @@
+import boto3
+from botocore.exceptions import ClientError
+
 import library.db_queries as db_queries
 
 from library.exceptions import DatabaseReturnedNone
@@ -5,6 +8,8 @@ from library.db_connections import Postgres
 from library.utils import awshandler, aws_get_path_parameter
 
 conn = Postgres()
+
+DOWNLOAD_LINK_EXPIRATION = 120
 
 
 @awshandler
@@ -33,13 +38,35 @@ def get_download_link(event, context):
     download = db_queries.get_download(
         connection=conn, organization_id=organization_id, download_id=download_id
     )
-    file_location_info = download._file_location_info
-    if file_location_info is not None:
-        link = _generate_download_link(file_location_info)
+    bucket_name = download._bucket_name
+    obj_name = download._obj_name
+    if bucket_name is not None:
+        link = _generate_download_link(bucket_name, obj_name)
+        expiration = DOWNLOAD_LINK_EXPIRATION
     else:
         link = 'No link created'
-    return {'download_link': link}
+        expiration = 0
+    return {'download_link': link, 'expiration': expiration}
 
 
-def _generate_download_link(file_location_info: str) -> str:
-    return f'fake_link_for_{file_location_info}'
+def _generate_download_link(bucket_name: str, obj_name: str) -> str:
+    return _create_presigned_url(bucket_name=bucket_name, obj_name=obj_name)
+
+
+def _create_presigned_url(bucket_name, obj_name, expiration=DOWNLOAD_LINK_EXPIRATION):
+    """Generate a presigned URL to share an S3 object
+
+    :param bucket_name: string
+    :param object_name: string
+    :param expiration: Time in seconds for the presigned URL to remain valid
+    :return: Presigned URL as string. If error, returns None.
+    """
+
+    # Generate a presigned URL for the S3 object
+    s3_client = boto3.client('s3')
+    response = s3_client.generate_presigned_url('get_object',
+                                                    Params={'Bucket': bucket_name,
+                                                            'Key': obj_name},
+                                                    ExpiresIn=expiration)
+    # The response contains the presigned URL
+    return response

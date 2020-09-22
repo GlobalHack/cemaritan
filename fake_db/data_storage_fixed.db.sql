@@ -97,9 +97,10 @@ CREATE TABLE IF NOT EXISTS downloads (
 	history_uid int4 NOT NULL,
 	expiration_datetime text NULL,
 	organization int4 NOT NULL,
-	file_location_info text NOT NULL
+	bucket_name text NOT NULL,
+	obj_name text NOT NULL
 );
-INSERT INTO downloads (name, transfer_name, history_uid, expiration_datetime, organization, file_location_info) VALUES ('Download 1', 'CW to SF', 1, '2019-03-09 20:42:03', 1, 'file_location_info_1');
+INSERT INTO downloads (name, transfer_name, history_uid, expiration_datetime, organization, bucket_name, obj_name) VALUES ('Download 1', 'CW to SF', 1, '2019-03-09 20:42:03', 1, 'cemaritan-dev-downloads', 'test_download.txt');
 COMMIT;
 
 DROP TABLE IF EXISTS list_frequencies;
