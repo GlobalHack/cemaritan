@@ -15,6 +15,8 @@ provider:
     USER: ${ssm:user}
     PASSWORD: ${ssm:pw}
     AUTH_CRED: ${ssm:auth_cred}
+  apiKeys:
+    - ${self:provider.stage}-api-key
 
 functions:
   firebase_authorizer:
@@ -37,6 +39,7 @@ functions:
           path: organizations
           method: get
           cors: true
+          private: true
 
   ### Collections functions
   get_connections:
@@ -46,6 +49,7 @@ functions:
           path: organizations/{organization_id}/connections
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -57,6 +61,7 @@ functions:
           path: organizations/{organization_id}/mappings
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -69,10 +74,25 @@ functions:
           path: organizations/{organization_id}/transfers
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
                 organization_id: true
+
+  get_users:
+    handler: user.users
+    events:
+      - http:
+          path: organizations/{organization_id}/users
+          method: get
+          cors: true
+          private: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
+
   get_histories:
     handler: history.histories
     events:
@@ -80,6 +100,7 @@ functions:
           path: organizations/{organization_id}/histories
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -91,6 +112,7 @@ functions:
           path: organizations/{organization_id}/downloads
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -105,6 +127,7 @@ functions:
           path: organizations/{organization_id}
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -118,6 +141,7 @@ functions:
           path: organizations/{organization_id}/transfers
           method: post
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -129,6 +153,7 @@ functions:
           path: organizations/{organization_id}/transfers/{transfer_id}
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -154,6 +179,7 @@ functions:
           path: organizations/{organization_id}/connections/{connection_id}
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -168,11 +194,29 @@ functions:
           path: organizations/{organization_id}/mappings/{mapping_id}
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
                 organization_id: true
                 mapping_id: true
+
+    
+  # User
+  get_user:
+    handler: user.get_user
+    events:
+      - http:
+          path: organizations/{organization_id}/users/{user_id}
+          method: get
+          cors: true
+          private: true
+          request:
+            parameters:
+              paths:
+                organization_id: true
+                user_id: true
+
 
   # History
   get_history:
@@ -182,6 +226,7 @@ functions:
           path: organizations/{organization_id}/histories/{history_id}
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -195,6 +240,7 @@ functions:
           path: organizations/{organization_id}/downloads/{download_id}
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -207,6 +253,7 @@ functions:
           path: organizations/{organization_id}/downloads/{download_id}/link
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -220,6 +267,7 @@ functions:
           path: organizations/{organization_id}/uploads
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
@@ -243,10 +291,19 @@ functions:
           path: organizations/{organization_id}/lists/frequencies
           method: get
           cors: true
+          private: true
           request:
             parameters:
               paths:
                 organization_id: true
+  fake:
+    handler: fake.test_api_key
+    events:
+      - http:
+          path: fake
+          method: get
+          cors: true
+          private: true
 
 plugins:
   - serverless-python-requirements
